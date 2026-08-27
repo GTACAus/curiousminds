@@ -1,0 +1,271 @@
+/* ==================================================
+   CONFIG
+   Create a free workspace at https://counterapi.dev and put its
+   slug here. All counters below (attention_noticed_yes,
+   attention_noticed_no, memory_attempts) will be created
+   automatically the first time they're hit.
+   ================================================== */
+const COUNTERAPI_WORKSPACE = "REPLACE_WITH_YOUR_WORKSPACE";
+const COUNTERAPI_BASE = `https://api.counterapi.dev/v1/${COUNTERAPI_WORKSPACE}`;
+
+/* ==================================================
+   FOLDER TABS
+   ================================================== */
+function initialiseFolderTabs() {
+  const tabs = document.querySelectorAll(".folder-tab");
+  const panels = document.querySelectorAll(".tab-panel");
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const targetId = "panel-" + tab.dataset.tab;
+
+      tabs.forEach((otherTab) => {
+        const isActive = otherTab === tab;
+        otherTab.classList.toggle("is-active", isActive);
+        otherTab.setAttribute("aria-selected", String(isActive));
+        otherTab.tabIndex = isActive ? 0 : -1;
+      });
+
+      panels.forEach((panel) => {
+        panel.hidden = panel.id !== targetId;
+      });
+    });
+  });
+}
+
+/* ==================================================
+   SHARED VIDEO MODAL
+   ================================================== */
+function openVideoModal(videoSource, videoTitle) {
+  const modal = document.getElementById("videoModal");
+  const player = document.getElementById("videoModalPlayer");
+  const title = document.getElementById("videoModalTitle");
+
+  if (!modal || !player) return;
+
+  title.textContent = videoTitle || "Video";
+  player.pause();
+  player.src = videoSource;
+  player.load();
+
+  modal.classList.add("is-open");
+}
+
+function closeVideoModal() {
+  const modal = document.getElementById("videoModal");
+  const player = document.getElementById("videoModalPlayer");
+
+  if (!modal || !player) return;
+
+  player.pause();
+  player.removeAttribute("src");
+  player.load();
+
+  modal.classList.remove("is-open");
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const modal = document.getElementById("videoModal");
+
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) closeVideoModal();
+  });
+});
+
+/* ==================================================
+   GENERIC "REVEAL NEXT STEP" HELPER
+   Used by Next buttons and by inline onclick calls.
+   ================================================== */
+function revealPanelStep(stepId) {
+  const step = document.getElementById(stepId);
+  if (!step) return;
+
+  step.hidden = false;
+  step.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+/* ==================================================
+   NUMBER ENTRY — press Enter to submit an answer.
+   Add data-reveal-target="stepId" to a .number-entry
+   block to automatically reveal the next step once the
+   student submits a value.
+   ================================================== */
+function initialiseNumberEntries() {
+  document.querySelectorAll("[data-number-entry]").forEach((block) => {
+    const input = block.querySelector(".table-number-input");
+    const answerBox = block.querySelector(".entry-answer");
+    const revealTarget = block.dataset.revealTarget;
+
+    if (!input || !answerBox) return;
+
+    function submitAnswer() {
+      const value = input.value.trim();
+      if (value === "") return;
+
+      answerBox.innerHTML = "";
+
+      const text = document.createElement("span");
+      text.textContent = value;
+
+      const clearButton = document.createElement("button");
+      clearButton.type = "button";
+      clearButton.className = "clear-answer";
+      clearButton.textContent = "\u00d7";
+      clearButton.setAttribute("aria-label", "Clear answer");
+      clearButton.addEventListener("click", () => {
+        answerBox.classList.remove("visible");
+        answerBox.innerHTML = "";
+        input.value = "";
+        input.focus();
+      });
+
+      answerBox.appendChild(text);
+      answerBox.appendChild(clearButton);
+      answerBox.classList.add("visible");
+
+      if (revealTarget) revealPanelStep(revealTarget);
+    }
+
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        submitAnswer();
+      }
+    });
+  });
+}
+
+/* ==================================================
+   COUNTERAPI HELPERS
+   ================================================== */
+async function counterApiHit(counterName, direction) {
+  try {
+    const response = await fetch(`${COUNTERAPI_BASE}/${counterName}/${direction}`);
+    const data = await response.json();
+    return data.count;
+  } catch (error) {
+    console.error("CounterAPI request failed:", error);
+    return null;
+  }
+}
+
+async function counterApiRead(counterName) {
+  try {
+    const response = await fetch(`${COUNTERAPI_BASE}/${counterName}`);
+    const data = await response.json();
+    return data.count;
+  } catch (error) {
+    console.error("CounterAPI request failed:", error);
+    return null;
+  }
+}
+
+/* ==================================================
+   LIVE YES/NO TALLY
+   ================================================== */
+function initialiseTallyBlocks() {
+  document.querySelectorAll("[data-tally]").forEach((block) => {
+    const yesCounter = block.dataset.tallyYes;
+    const noCounter = block.dataset.tallyNo;
+
+    const yesButton = block.querySelector('[data-tally-vote="yes"]');
+    const noButton = block.querySelector('[data-tally-vote="no"]');
+
+    const yesCountEl = block.querySelector("[data-tally-yes-count]");
+    const noCountEl = block.querySelector("[data-tally-no-count]");
+    const yesBar = block.querySelector(".tally-bar-yes");
+    const noBar = block.querySelector(".tally-bar-no");
+
+    function renderCounts(yesCount, noCount) {
+      const total = yesCount + noCount || 1;
+
+      yesCountEl.textContent = yesCount;
+      noCountEl.textContent = noCount;
+      yesBar.style.width = (yesCount / total) * 100 + "%";
+      noBar.style.width = (noCount / total) * 100 + "%";
+    }
+
+    async function loadCurrentCounts() {
+      const [yesCount, noCount] = await Promise.all([
+        counterApiRead(yesCounter),
+        counterApiRead(noCounter),
+      ]);
+
+      renderCounts(yesCount || 0, noCount || 0);
+    }
+
+    async function castVote(vote) {
+      if (block.dataset.voted === "true") return;
+      block.dataset.voted = "true";
+
+      yesButton.setAttribute("data-selected", String(vote === "yes"));
+      noButton.setAttribute("data-selected", String(vote === "no"));
+
+      const counterName = vote === "yes" ? yesCounter : noCounter;
+      await counterApiHit(counterName, "up");
+      await loadCurrentCounts();
+    }
+
+    yesButton.addEventListener("click", () => castVote("yes"));
+    noButton.addEventListener("click", () => castVote("no"));
+
+    loadCurrentCounts();
+  });
+}
+
+/* ==================================================
+   SIMPLE COUNTER (Memory tab)
+   ================================================== */
+function initialiseCounterBlocks() {
+  document.querySelectorAll("[data-counter]").forEach((block) => {
+    const counterName = block.dataset.counterName;
+    const valueEl = block.querySelector("[data-counter-value]");
+    const incrementButton = block.querySelector("[data-counter-increment]");
+    const decrementButton = block.querySelector("[data-counter-decrement]");
+
+    async function refresh() {
+      const count = await counterApiRead(counterName);
+      valueEl.textContent = count === null ? "0" : count;
+    }
+
+    incrementButton.addEventListener("click", async () => {
+      await counterApiHit(counterName, "up");
+      refresh();
+    });
+
+    decrementButton.addEventListener("click", async () => {
+      await counterApiHit(counterName, "down");
+      refresh();
+    });
+
+    refresh();
+  });
+}
+
+/* ==================================================
+   ANXIETY — WHICH MOUSE CHOICE
+   ================================================== */
+function initialiseMouseChoice() {
+  const buttons = document.querySelectorAll(".mouse-choice-button");
+  const answer = document.getElementById("mouseChoiceAnswer");
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      buttons.forEach((otherButton) => otherButton.removeAttribute("data-selected"));
+      button.setAttribute("data-selected", "true");
+
+      if (answer) answer.hidden = false;
+    });
+  });
+}
+
+/* ==================================================
+   INIT
+   ================================================== */
+document.addEventListener("DOMContentLoaded", () => {
+  initialiseFolderTabs();
+  initialiseNumberEntries();
+  initialiseTallyBlocks();
+  initialiseCounterBlocks();
+  initialiseMouseChoice();
+});
