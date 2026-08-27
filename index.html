@@ -1,36 +1,874 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <style>:root {
+  --color-bg: #fbf6e8;
+  --color-ink: #26211c;
+  --color-ink-soft: #57503f;
+  --color-purple: #4a2fe3;
+  --color-orange: #f0653c;
+
+  --color-manila: #e7cf98;
+  --color-manila-dark: #cdad6c;
+  --color-manila-tab: #ecdcac;
+  --color-manila-tab-inactive: #ded0a2;
+  --color-manila-body: #fbf3dd;
+
+  --color-card-border: #e4dcc6;
+
+  --font-display: "Figtree", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: "Figtree", -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --radius-md: 14px;
+  --radius-lg: 20px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: inherit;
+}
+
 /* ==================================================
-   CONFIG
-   Create a free workspace at https://counterapi.dev and put its
-   slug here. All counters below (attention_noticed_yes,
-   attention_noticed_no, memory_attempts) will be created
-   automatically the first time they're hit.
+   HEADER
    ================================================== */
-const COUNTERAPI_WORKSPACE = "REPLACE_WITH_YOUR_WORKSPACE";
-const COUNTERAPI_BASE = `https://api.counterapi.dev/v1/${COUNTERAPI_WORKSPACE}`;
+.site-header {
+  display: flex;
+  align-items: center;
+  padding: 28px 40px 0;
+}
+
+.logo-placeholder {
+  display: flex;
+  align-items: left;
+  gap: 10px;
+}
+
+.logo-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--color-purple) 0deg 90deg,
+    var(--color-orange) 90deg 180deg,
+    #f4c94b 180deg 270deg,
+    #3fb27f 270deg 360deg
+  );
+}
+
+.logo-word {
+  font-weight: 800;
+  font-size: 1.35rem;
+  color: var(--color-ink);
+}
+
+/* ==================================================
+   PAGE LAYOUT
+   ================================================== */
+.page {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+}
+
+.page-intro-block {
+  margin-bottom: 40px;
+}
+
+.page-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.1rem, 4vw, 3rem);
+  color: var(--color-purple);
+  margin: 0 0 14px;
+  letter-spacing: -0.01em;
+}
+
+.page-summary {
+  max-width: 640px;
+  color: var(--color-ink-soft);
+  font-size: 1.05rem;
+  margin: 0 0 0;
+  padding-top: 16px;
+  border-top: 4px solid var(--color-orange);
+}
+
+/* ==================================================
+   MANILA FOLDER TABS
+   Three overlapping trapezoid tabs sitting on top of a
+   folder-coloured body, like a physical manila folder.
+   ================================================== */
+.folder-wrap {
+  margin-top: 8px;
+}
+
+.folder-tabs {
+  display: flex;
+  align-items: flex-end;
+  padding-left: 24px;
+}
+
+.folder-tab {
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  background: var(--color-manila-tab-inactive);
+  color: var(--color-ink-soft);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  padding: 14px 28px;
+  border-radius: 12px 12px 6px 6px;
+  margin-left: -18px;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.12s ease;
+  z-index: 1;
+}
+
+.folder-tab:first-child {
+  margin-left: 0;
+}
+
+.folder-tab:hover {
+  background: var(--color-manila);
+  color: var(--color-ink);
+  box-shadow: 0 8px 20px -18px rgba(38,33,28,0.45);
+}
+
+.folder-tab:focus-visible {
+  outline: 3px solid var(--color-purple);
+  outline-offset: 2px;
+}
+
+.folder-tab.tab-memory {
+  z-index: 2;
+}
+
+.folder-tab.tab-anxiety {
+  z-index: 3;
+}
+
+.folder-tab.is-active {
+  background: var(--color-manila-body);
+  color: var(--color-purple);
+  z-index: 4;
+  transform: translateY(2px);
+  box-shadow: 0 12px 30px -22px rgba(74,47,227,0.18);
+}
+
+/* small rounded flap to emphasize the manila-tab look */
+.folder-tab::after {
+  content: "";
+  position: absolute;
+  right: -8px;
+  bottom: 6px;
+  width: 18px;
+  height: 10px;
+  background: linear-gradient(180deg, rgba(0,0,0,0.04), rgba(0,0,0,0.02));
+  border-radius: 4px;
+  transform: rotate(-6deg);
+  opacity: 0.7;
+}
+
+.folder-body {
+  background: var(--color-manila-body);
+  border: 1px solid var(--color-card-border);
+  border-radius: 0 var(--radius-lg) var(--radius-lg) var(--radius-lg);
+  box-shadow: 0 18px 40px -24px rgba(38, 33, 28, 0.35);
+  padding: 36px 32px 40px;
+  position: relative;
+}
+
+@media (max-width: 640px) {
+  .folder-tabs {
+    padding-left: 0;
+  }
+
+  .folder-tab {
+    padding: 14px 16px 12px;
+    font-size: 0.92rem;
+  }
+
+  .folder-body {
+    padding: 26px 18px 30px;
+  }
+}
+
+/* ==================================================
+   PANEL CONTENT
+   ================================================== */
+.tab-panel[hidden] {
+  display: none;
+}
+
+.panel-step + .panel-step {
+  margin-top: 30px;
+  padding-top: 26px;
+  border-top: 1px dashed var(--color-manila-dark);
+}
+
+.panel-eyebrow {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+  color: var(--color-orange);
+  margin: 0 0 6px;
+}
+
+.panel-heading {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.4rem;
+  color: var(--color-ink);
+  margin: 0 0 16px;
+}
+
+.panel-body-text {
+  color: var(--color-ink-soft);
+  max-width: 60ch;
+}
+
+/* Buttons -------------------------------------------------- */
+.general-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  cursor: pointer;
+  background: var(--color-purple);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 12px 22px;
+  border-radius: 999px;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.general-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px -8px rgba(74, 47, 227, 0.55);
+}
+
+.general-button:focus-visible {
+  outline: 3px solid var(--color-orange);
+  outline-offset: 2px;
+}
+
+.watch-video-button {
+  background: var(--color-ink);
+}
+
+.next-button {
+  background: var(--color-orange);
+  margin-top: 22px;
+}
+
+.bounce-symbol {
+  display: inline-block;
+}
+
+/* Question / number entry ----------------------------------- */
+.question-block {
+  margin-top: 26px;
+}
+
+.question-label {
+  font-weight: 600;
+  margin: 0 0 10px;
+}
+
+.number-entry-row {
+  display: flex;
+  gap: 10px;
+}
+
+.table-number-input {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--color-manila-dark);
+  background: #fff;
+  width: 180px;
+  max-width: 100%;
+}
+
+.table-number-input:focus-visible {
+  outline: 3px solid var(--color-purple);
+  outline-offset: 1px;
+}
+
+.entry-hint {
+  margin: 8px 0 0;
+  font-size: 0.85rem;
+  color: var(--color-ink-soft);
+}
+
+.entry-answer {
+  margin-top: 10px;
+  display: none;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid var(--color-manila-dark);
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.entry-answer.visible {
+  display: inline-flex;
+}
+
+.entry-answer .clear-answer {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--color-ink-soft);
+}
+
+/* Live yes/no tally ------------------------------------------ */
+.tally-block {
+  margin: 18px 0 4px;
+}
+
+.tally-buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.tally-button[data-selected="true"] {
+  background: var(--color-orange);
+}
+
+.tally-bar {
+  display: flex;
+  height: 14px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--color-manila-dark);
+  max-width: 420px;
+}
+
+.tally-bar-yes {
+  background: var(--color-purple);
+}
+
+.tally-bar-no {
+  background: var(--color-orange);
+}
+
+.tally-counts {
+  margin: 10px 0 0;
+  font-size: 0.9rem;
+  color: var(--color-ink-soft);
+}
+
+/* Memory image ------------------------------------------------ */
+.memory-image-frame {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--color-manila-dark);
+  max-width: 480px;
+  margin-bottom: 8px;
+}
+
+.memory-image-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Simple counter ------------------------------------------------ */
+.counter-block {
+  margin-top: 30px;
+  padding-top: 24px;
+  border-top: 1px dashed var(--color-manila-dark);
+}
+
+.counter-label {
+  font-weight: 600;
+  margin: 0 0 12px;
+}
+
+.counter-display {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  background: #fff;
+  border: 1px solid var(--color-manila-dark);
+  border-radius: 999px;
+  padding: 6px 10px;
+}
+
+.counter-button {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background: var(--color-purple);
+  color: #fff;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.counter-value {
+  min-width: 2ch;
+  text-align: center;
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+
+/* Mouse choice -------------------------------------------------- */
+.mouse-choice-buttons {
+  display: flex;
+  gap: 14px;
+  margin: 16px 0;
+}
+
+.mouse-choice-button[data-selected="true"] {
+  background: var(--color-orange);
+}
+
+.mouse-choice-answer {
+  margin-top: 14px;
+  background: #fff;
+  border: 1px solid var(--color-manila-dark);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  max-width: 60ch;
+}
+
+/* ==================================================
+   VIDEO MODAL
+   ================================================== */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(38, 33, 28, 0.6);
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 50;
+}
+
+.modal.is-open {
+  display: flex;
+}
+
+.modal-content {
+  background: var(--color-manila-body);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  width: min(720px, 100%);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.modal-header h2 {
+  font-family: var(--font-display);
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--color-purple);
+}
+
+.close-button {
+  border: none;
+  background: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: var(--color-ink);
+  line-height: 1;
+}
+
+.video-modal-player {
+  width: 100%;
+  border-radius: var(--radius-md);
+  background: #000;
+  max-height: 70vh;
+}
+    </style>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>How do we study the mind?</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+  </head>
+
+  <body>
+ 
+    <header class="site-header">
+      <div class="logo-placeholder" aria-hidden="true">
+      <img src="gtac_primary_onyx.png" alt="GTAC logo" width="180" height="80">
+      </div>
+    </header>
+
+    <main class="page">
+      <!-- ==================================================
+           PAGE TITLE
+           Placeholder title/intro copy — replace with the real
+           wording for this lesson.
+           ================================================== -->
+      <section class="page-intro-block">
+        <h1 class="page-title">How can we study the mind?</h1>
+        <p class="page-summary">
+          <h3>Psychology is the study of the human mind and behaviour.</h3>
+          <h4>The mind itself is hard to study directly, because it doesn't always produce results we can measure. That's why psychologists look at both the biology of the brain and the behaviours we can observe, to build a clearer picture of how the mind works.</h4>
+          This resource will walk you through three short psychology investigations. 
+          <br> Choose one of the human behaviours to get started. 
+          <br> Record your own results, and see how your answers compare with everyone else's.
+        </p>
+      </section>
+
+      <!-- ==================================================
+           MANILA FOLDER TABS
+           ================================================== -->
+      <div class="folder-wrap">
+        <nav class="folder-tabs" role="tablist" aria-label="Choose a topic">
+          <button
+            type="button"
+            class="folder-tab tab-attention is-active"
+            role="tab"
+            id="tab-attention"
+            aria-selected="true"
+            aria-controls="panel-attention"
+            data-tab="attention"
+          >
+            <span class="folder-tab-label">Attention</span>
+          </button>
+
+          <button
+            type="button"
+            class="folder-tab tab-memory"
+            role="tab"
+            id="tab-memory"
+            aria-selected="false"
+            aria-controls="panel-memory"
+            tabindex="-1"
+            data-tab="memory"
+          >
+            <span class="folder-tab-label">Memory</span>
+          </button>
+
+          <button
+            type="button"
+            class="folder-tab tab-anxiety"
+            role="tab"
+            id="tab-anxiety"
+            aria-selected="false"
+            aria-controls="panel-anxiety"
+            tabindex="-1"
+            data-tab="anxiety"
+          >
+            <span class="folder-tab-label">Anxiety</span>
+          </button>
+        </nav>
+
+        <section class="folder-body">
+          <!-- ============================================
+               PANEL 1 — ATTENTION
+               ============================================ -->
+          <div class="tab-panel" id="panel-attention" role="tabpanel" aria-labelledby="tab-attention">
+            <div class="panel-step" id="attention-step-1">
+              <p class="panel-eyebrow">Step 1</p>
+              <h2 class="panel-heading">Click to test your attention</h2>
+
+              <button
+                type="button"
+                class="general-button watch-video-button"
+                onclick="openYouTubeModal('vJG698U2Mvo', 5, 39, 'Attention clip')"
+              >
+                <span class="bounce-symbol">&#9654;</span>
+                <span>Watch video</span>
+              </button>
+
+              <div class="question-block">
+                <p class="question-label">How many times did the mouse cross the centre line?</p>
+
+                <div class="number-entry" data-number-entry data-reveal-target="attention-step-2">
+                  <div class="number-entry-row">
+                    <input
+                      type="number"
+                      inputmode="numeric"
+                      step="1"
+                      class="table-number-input"
+                      aria-label="Number of times the mouse crossed the centre line"
+                      placeholder="Enter a number"
+                    />
+                  </div>
+                  <p class="entry-hint">Press Enter to submit.</p>
+                  <div class="entry-answer" aria-live="polite"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel-step" id="attention-step-2" hidden>
+              <p class="panel-eyebrow">Step 2</p>
+              <h2 class="panel-heading">What does everyone else think?</h2>
+
+              <p class="question-label">Did the mouse appear to notice the new object?</p>
+
+              <!-- ============================================
+                   LIVE YES/NO TALLY — powered by CounterAPI
+                   Replace WORKSPACE below with your own
+                   counterapi.dev workspace slug.
+                   ============================================ -->
+              <div
+                class="tally-block"
+                data-tally
+                data-tally-yes="attention_noticed_yes"
+                data-tally-no="attention_noticed_no"
+              >
+                <div class="tally-buttons">
+                  <button type="button" class="general-button tally-button" data-tally-vote="yes">Yes</button>
+                  <button type="button" class="general-button tally-button" data-tally-vote="no">No</button>
+                </div>
+
+                <div class="tally-results" aria-live="polite">
+                  <div class="tally-bar">
+                    <div class="tally-bar-fill tally-bar-yes" style="width: 50%"></div>
+                    <div class="tally-bar-fill tally-bar-no" style="width: 50%"></div>
+                  </div>
+                  <p class="tally-counts">
+                    <span data-tally-yes-count>0</span> said yes &middot;
+                    <span data-tally-no-count>0</span> said no
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                class="next-button general-button"
+                onclick="revealPanelStep('attention-step-3')"
+              >
+                Next
+              </button>
+            </div>
+
+            <div class="panel-step" id="attention-step-3" hidden>
+              <p class="panel-eyebrow">Step 3</p>
+              <h2 class="panel-heading">What this tells us</h2>
+              <p class="panel-body-text">
+                Placeholder wrap-up text for the attention task — replace with the real explanation of what
+                the crossing count and the class tally show about attention.
+              </p>
+            </div>
+          </div>
+
+          <!-- ============================================
+               PANEL 2 — MEMORY
+               ============================================ -->
+          <div class="tab-panel" id="panel-memory" role="tabpanel" aria-labelledby="tab-memory" hidden>
+            <p class="panel-eyebrow">Step 1</p>
+            <h2 class="panel-heading">Look at the image</h2>
+
+            <div class="memory-image-frame">
+              <!-- Replace with the real memory-task image -->
+              <img src="images/memory-placeholder.jpg" alt="Memory task reference image" />
+            </div>
+
+            <div class="question-block">
+              <p class="question-label">How many objects can you remember from the image?</p>
+
+              <div class="number-entry" data-number-entry>
+                <div class="number-entry-row">
+                  <input
+                    type="number"
+                    inputmode="numeric"
+                    step="1"
+                    class="table-number-input"
+                    aria-label="Number of objects remembered"
+                    placeholder="Enter a number"
+                  />
+                </div>
+                <p class="entry-hint">Press Enter to submit.</p>
+                <div class="entry-answer" aria-live="polite"></div>
+              </div>
+            </div>
+
+            <!-- ============================================
+                 SIMPLE COUNTER — powered by CounterAPI
+                 ============================================ -->
+            <div class="counter-block" data-counter data-counter-name="memory_attempts">
+              <p class="counter-label">Times this activity has been tried</p>
+              <div class="counter-display">
+                <button type="button" class="counter-button" data-counter-decrement aria-label="Decrease">&minus;</button>
+                <span class="counter-value" data-counter-value>0</span>
+                <button type="button" class="counter-button" data-counter-increment aria-label="Increase">&plus;</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============================================
+               PANEL 3 — ANXIETY
+               ============================================ -->
+          <div class="tab-panel" id="panel-anxiety" role="tabpanel" aria-labelledby="tab-anxiety" hidden>
+            <div class="panel-step" id="anxiety-step-1">
+              <p class="panel-eyebrow">Step 1</p>
+              <h2 class="panel-heading">Background</h2>
+              <p class="panel-body-text">
+                Placeholder introduction to the anxiety task — replace with the real background information
+                about the open-field or elevated-maze test being shown in the videos below.
+              </p>
+
+              <button
+                type="button"
+                class="general-button watch-video-button"
+                onclick="openVideoModal('videos/anxiety-mouse-a.mp4', 'Mouse A'); revealPanelStep('anxiety-step-2')"
+              >
+                <span class="bounce-symbol">&#9654;</span>
+                <span>Watch Mouse A</span>
+              </button>
+            </div>
+
+            <div class="panel-step" id="anxiety-step-2" hidden>
+              <p class="panel-eyebrow">Step 2</p>
+              <h2 class="panel-heading">Second video</h2>
+
+              <button
+                type="button"
+                class="general-button watch-video-button"
+                onclick="openVideoModal('videos/anxiety-mouse-b.mp4', 'Mouse B'); revealPanelStep('anxiety-step-3')"
+              >
+                <span class="bounce-symbol">&#9654;</span>
+                <span>Watch Mouse B</span>
+              </button>
+            </div>
+
+            <div class="panel-step" id="anxiety-step-3" hidden>
+              <p class="panel-eyebrow">Step 3</p>
+              <h2 class="panel-heading">Compare the two</h2>
+              <p class="question-label">Which mouse is experiencing anxiety?</p>
+
+              <div class="mouse-choice-buttons">
+                <button type="button" class="general-button mouse-choice-button" data-mouse-choice="a">Mouse A</button>
+                <button type="button" class="general-button mouse-choice-button" data-mouse-choice="b">Mouse B</button>
+              </div>
+
+              <div class="mouse-choice-answer" id="mouseChoiceAnswer" hidden>
+                <!-- Placeholder explanation — replace with the real answer/reasoning -->
+                Placeholder explanation of which mouse showed anxious behaviour (e.g. thigmotaxis, freezing,
+                reduced centre-time) and why.
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- ==================================================
+         SHARED VIDEO MODAL
+         ================================================== -->
+    <div class="modal video-modal" id="videoModal" role="dialog" aria-modal="true" aria-labelledby="videoModalTitle">
+      <div class="modal-content video-modal-content">
+        <div class="modal-header">
+          <h2 id="videoModalTitle">Video</h2>
+          <button type="button" class="close-button" onclick="closeVideoModal()" aria-label="Close video">&times;</button>
+        </div>
+
+        <!-- HTML5 video player (for local mp4s) -->
+        <video id="videoModalPlayer" class="video-modal-player" controls preload="metadata">
+          Your browser does not support video playback.
+        </video>
+
+        <!-- YouTube player container (used by the IFrame API) -->
+        <div id="youtubePlayer" style="display:none; width:100%; height:360px;"></div>
+      </div>
+    </div>
+    
+    <script>
+      const COUNTERAPI_WORKSPACE = "gene-technology-access-centres-team-5261";
+const COUNTERAPI_BASE = `https://api.counterapi.dev/v1/first-counter-5261`;
 
 /* ==================================================
    FOLDER TABS
    ================================================== */
 function initialiseFolderTabs() {
-  const tabs = document.querySelectorAll(".folder-tab");
+  const tabs = Array.from(document.querySelectorAll(".folder-tab"));
   const panels = document.querySelectorAll(".tab-panel");
 
-  tabs.forEach((tab) => {
-    tab.addEventListener("click", () => {
-      const targetId = "panel-" + tab.dataset.tab;
+  function activateTab(tab) {
+    const targetId = "panel-" + tab.dataset.tab;
 
-      tabs.forEach((otherTab) => {
-        const isActive = otherTab === tab;
-        otherTab.classList.toggle("is-active", isActive);
-        otherTab.setAttribute("aria-selected", String(isActive));
-        otherTab.tabIndex = isActive ? 0 : -1;
-      });
+    tabs.forEach((otherTab) => {
+      const isActive = otherTab === tab;
+      otherTab.classList.toggle("is-active", isActive);
+      otherTab.setAttribute("aria-selected", String(isActive));
+      otherTab.tabIndex = isActive ? 0 : -1;
+      if (isActive) otherTab.focus({ preventScroll: true });
+    });
 
-      panels.forEach((panel) => {
-        panel.hidden = panel.id !== targetId;
-      });
+    panels.forEach((panel) => {
+      panel.hidden = panel.id !== targetId;
+    });
+  }
+
+  tabs.forEach((tab, idx) => {
+    tab.addEventListener("click", () => activateTab(tab));
+
+    tab.addEventListener("keydown", (e) => {
+      // support arrow navigation and home/end
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        const next = tabs[(idx + 1) % tabs.length];
+        activateTab(next);
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        const prev = tabs[(idx - 1 + tabs.length) % tabs.length];
+        activateTab(prev);
+      } else if (e.key === "Home") {
+        e.preventDefault();
+        activateTab(tabs[0]);
+      } else if (e.key === "End") {
+        e.preventDefault();
+        activateTab(tabs[tabs.length - 1]);
+      } else if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        activateTab(tab);
+      }
     });
   });
+
+  // ensure one tab is active on init
+  const initiallyActive = tabs.find((t) => t.classList.contains("is-active")) || tabs[0];
+  if (initiallyActive) activateTab(initiallyActive);
 }
 
 /* ==================================================
@@ -45,6 +883,11 @@ function openVideoModal(videoSource, videoTitle) {
 
   title.textContent = videoTitle || "Video";
   player.pause();
+  // ensure youtube container is hidden when using HTML5 video
+  const ytContainer = document.getElementById("youtubePlayer");
+  if (ytContainer) ytContainer.style.display = "none";
+
+  player.style.display = "block";
   player.src = videoSource;
   player.load();
 
@@ -61,7 +904,107 @@ function closeVideoModal() {
   player.removeAttribute("src");
   player.load();
 
+  // destroy youtube player if present
+  if (window.ytPlayer) {
+    try {
+      window.ytPlayer.stopVideo();
+      window.ytPlayer.destroy();
+    } catch (e) {
+      // ignore
+    }
+    window.ytPlayer = null;
+  }
+
+  // hide youtube container
+  const ytContainer = document.getElementById("youtubePlayer");
+  if (ytContainer) ytContainer.style.display = "none";
+
   modal.classList.remove("is-open");
+}
+
+/* ==================================================
+   YouTube IFrame API helpers
+   Usage: openYouTubeModal('VIDEO_ID', startInSeconds, endInSeconds, 'Optional title')
+   ================================================== */
+window.ytApiReady = false;
+window.ytPlayer = null;
+window._pendingYouTube = null;
+
+function _loadYouTubeApi() {
+  if (window.ytApiReady) return;
+  if (document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) return;
+  const tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  document.body.appendChild(tag);
+}
+
+function onYouTubeIframeAPIReady() {
+  window.ytApiReady = true;
+  if (window._pendingYouTube) {
+    const cfg = window._pendingYouTube;
+    window._pendingYouTube = null;
+    _createYouTubePlayer(cfg.videoId, cfg.start, cfg.end, cfg.title);
+  }
+}
+
+function _createYouTubePlayer(videoId, start, end, title) {
+  const modal = document.getElementById('videoModal');
+  const titleEl = document.getElementById('videoModalTitle');
+  const html5 = document.getElementById('videoModalPlayer');
+  const ytContainer = document.getElementById('youtubePlayer');
+
+  if (!ytContainer) return;
+
+  // hide html5 player
+  if (html5) html5.style.display = 'none';
+  ytContainer.style.display = 'block';
+
+  // destroy previous player if exists
+  if (window.ytPlayer) {
+    try { window.ytPlayer.destroy(); } catch (e) {}
+    window.ytPlayer = null;
+  }
+
+  titleEl.textContent = title || 'Video';
+
+  window.ytPlayer = new YT.Player('youtubePlayer', {
+    height: '360',
+    width: '100%',
+    videoId: videoId,
+    playerVars: { start: start || 0, rel: 0 },
+    events: {
+      onReady: function(e) {
+        try { e.target.playVideo(); } catch (err) {}
+      },
+      onStateChange: function(e) {
+        if (e.data === YT.PlayerState.PLAYING && typeof end === 'number') {
+          const checker = setInterval(() => {
+            try {
+              if (window.ytPlayer && window.ytPlayer.getCurrentTime() >= end) {
+                window.ytPlayer.pauseVideo();
+                clearInterval(checker);
+              }
+            } catch (err) {
+              clearInterval(checker);
+            }
+          }, 200);
+        }
+      }
+    }
+  });
+
+  if (modal) modal.classList.add('is-open');
+}
+
+function openYouTubeModal(videoId, start, end, title) {
+  // ensure API is loaded and then create player
+  if (window.ytApiReady && window.YT && window.YT.Player) {
+    _createYouTubePlayer(videoId, start, end, title);
+  } else {
+    window._pendingYouTube = { videoId, start, end, title };
+    _loadYouTubeApi();
+    // if API loads quickly it will call onYouTubeIframeAPIReady
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -269,3 +1212,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initialiseCounterBlocks();
   initialiseMouseChoice();
 });
+
+    </script>
+  </body>
+</html>
