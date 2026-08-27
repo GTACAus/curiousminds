@@ -317,6 +317,12 @@ button {
   outline-offset: 1px;
 }
 
+.table-number-input[readonly] {
+  background: #f7f4ea;
+  border-color: var(--color-manila-dark);
+  color: var(--color-ink-soft);
+}
+
 .entry-hint {
   margin: 8px 0 0;
   font-size: 0.85rem;
@@ -613,6 +619,9 @@ button {
               <button
                 type="button"
                 class="general-button watch-video-button"
+                data-youtube-id="vJG698U2Mvo"
+                data-youtube-start="5"
+                data-youtube-end="39"
                 onclick="openYouTubeModal('vJG698U2Mvo', 5, 39, 'Attention clip')"
               >
                 <span class="bounce-symbol">&#9654;</span>
@@ -641,9 +650,9 @@ button {
 
             <div class="panel-step" id="attention-step-2" hidden>
               <p class="panel-eyebrow">Step 2</p>
-              <h2 class="panel-heading">What does everyone else think?</h2>
+              <h2 class="panel-heading">Did you notice the gorilla in the background?</h2>
 
-              <p class="question-label">Did the mouse appear to notice the new object?</p>
+              <p class="question-label">Answer Yes or No</p>
 
               <!-- ============================================
                    LIVE YES/NO TALLY — powered by CounterAPI
@@ -1045,26 +1054,35 @@ function initialiseNumberEntries() {
       const value = input.value.trim();
       if (value === "") return;
 
+      // lock the input so it cannot be edited further
+      input.readOnly = true;
+      input.setAttribute('aria-readonly', 'true');
+
+      // show a fixed answer message (do not display the user's entered value)
       answerBox.innerHTML = "";
-
       const text = document.createElement("span");
-      text.textContent = value;
-
-      const clearButton = document.createElement("button");
-      clearButton.type = "button";
-      clearButton.className = "clear-answer";
-      clearButton.textContent = "\u00d7";
-      clearButton.setAttribute("aria-label", "Clear answer");
-      clearButton.addEventListener("click", () => {
-        answerBox.classList.remove("visible");
-        answerBox.innerHTML = "";
-        input.value = "";
-        input.focus();
-      });
-
+      text.textContent = "Answer: 15 passes";
       answerBox.appendChild(text);
-      answerBox.appendChild(clearButton);
       answerBox.classList.add("visible");
+
+      // hide the panel's watch-video button (if present) and attach youtube info to the tally block
+      const panel = block.closest('.tab-panel');
+      if (panel) {
+        const watchBtn = panel.querySelector('.watch-video-button');
+        if (watchBtn) {
+          // hide original watch button
+          watchBtn.style.display = 'none';
+
+          // find tally block in the same panel and copy youtube metadata so we can recreate the button later
+          const tally = panel.querySelector('[data-tally]');
+          if (tally) {
+            if (watchBtn.dataset.youtubeId) tally.dataset.youtubeId = watchBtn.dataset.youtubeId;
+            if (watchBtn.dataset.youtubeStart) tally.dataset.youtubeStart = watchBtn.dataset.youtubeStart;
+            if (watchBtn.dataset.youtubeEnd) tally.dataset.youtubeEnd = watchBtn.dataset.youtubeEnd;
+            tally.dataset.videoHidden = 'true';
+          }
+        }
+      }
 
       if (revealTarget) revealPanelStep(revealTarget);
     }
@@ -1147,6 +1165,32 @@ function initialiseTallyBlocks() {
       const counterName = vote === "yes" ? yesCounter : noCounter;
       await counterApiHit(counterName, "up");
       await loadCurrentCounts();
+
+      // if the original watch button was hidden after submitting an answer,
+      // recreate a "Watch the video again" button under the tally after the user votes
+      try {
+        if (block.dataset.videoHidden === 'true' && block.dataset.youtubeId) {
+          if (!block.querySelector('.watch-again-button')) {
+            const againBtn = document.createElement('button');
+            againBtn.type = 'button';
+            againBtn.className = 'general-button watch-again-button';
+            againBtn.textContent = 'Watch the video again';
+            againBtn.style.marginTop = '12px';
+            againBtn.addEventListener('click', () => {
+              const id = block.dataset.youtubeId;
+              const start = block.dataset.youtubeStart ? Number(block.dataset.youtubeStart) : 0;
+              const end = block.dataset.youtubeEnd ? Number(block.dataset.youtubeEnd) : undefined;
+              openYouTubeModal(id, start, end, 'Watch again');
+            });
+
+            const results = block.querySelector('.tally-results');
+            if (results && results.parentNode) results.parentNode.insertBefore(againBtn, results.nextSibling);
+            else block.appendChild(againBtn);
+          }
+        }
+      } catch (err) {
+        // ignore
+      }
     }
 
     yesButton.addEventListener("click", () => castVote("yes"));
