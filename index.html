@@ -715,6 +715,83 @@ button, .folder-tab, .general-button, .table-number-input {
         .poll-row { grid-template-columns: 1fr; gap: 4px; }
         .word-timer-track { max-width: none; }
       }
+      /* --- fullscreen video (title stays above the player) --- */
+      /* :fullscreen and :-webkit-full-screen must be separate rules —
+         one unknown selector would kill the whole block. */
+      .modal-content:fullscreen {
+        width: 100vw;
+        height: 100vh;
+        max-width: none;
+        max-height: none;
+        border-radius: 0;
+        background: var(--color-ink);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 24px 32px;
+      }
+      .modal-content:fullscreen .modal-header h2 { font-size: clamp(1.1rem, 2.4vw, 1.8rem); color: #fff; }
+      .modal-content:fullscreen .close-button { color: #fff; font-size: 2rem; }
+      .modal-content:fullscreen .video-modal-player { max-height: 82vh; border-radius: 8px; }
+
+      .modal-content:-webkit-full-screen {
+        width: 100vw;
+        height: 100vh;
+        max-width: none;
+        max-height: none;
+        border-radius: 0;
+        background: var(--color-ink);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 24px 32px;
+      }
+      .modal-content:-webkit-full-screen .modal-header h2 { font-size: clamp(1.1rem, 2.4vw, 1.8rem); color: #fff; }
+      .modal-content:-webkit-full-screen .close-button { color: #fff; font-size: 2rem; }
+      .modal-content:-webkit-full-screen .video-modal-player { max-height: 82vh; border-radius: 8px; }
+
+      /* --- Rat A / Rat B choice --- */
+      .choice-buttons { display: flex; flex-wrap: wrap; gap: 14px; margin: 16px 0 0; }
+      .choice-button[data-selected="true"] { background: var(--color-orange); }
+      .choice-button.is-correct { background: var(--color-green); }
+      .choice-button.is-wrong { background: var(--color-orange); }
+      .choice-button[disabled] { opacity: 1; }
+
+      /* --- fill in the blanks --- */
+      .blank-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+      .blank-row label { font-weight: 700; min-width: 4.5rem; }
+
+      .blank-input {
+        font-family: var(--font-body);
+        font-size: 1rem;
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1px solid var(--color-manila-dark);
+        background: #fff;
+        width: 170px;
+        max-width: 100%;
+      }
+      .blank-input:focus-visible { outline: 3px solid var(--color-purple); outline-offset: 1px; }
+      .blank-input.is-correct { border: 2px solid var(--color-green); background: #f2fbf7; }
+      .blank-input.is-wrong { border: 2px solid var(--color-orange); background: #fef4f1; }
+      .blank-input[readonly] { background: #f7f4ea; color: var(--color-ink-soft); }
+
+      .gut-brain-box {
+        margin-top: 26px;
+        padding: 18px 20px;
+        background: #fff;
+        border: 1px solid var(--color-manila-dark);
+        border-left: 5px solid var(--color-purple);
+        border-radius: var(--radius-md);
+        max-width: 62ch;
+      }
+      .gut-brain-box[hidden] { display: none; }
+      .gut-brain-box p { margin: 0; color: var(--color-ink-soft); }
+
+      @media (max-width: 640px) {
+        .blank-row { flex-wrap: wrap; gap: 8px; }
+      }
+
     </style>
   <head>
     <meta charset="UTF-8" />
@@ -1161,59 +1238,141 @@ button, .folder-tab, .general-button, .table-number-input {
           <!-- ============================================
                PANEL 3 — ANXIETY
                ============================================ -->
-          <div class="tab-panel" id="panel-anxiety" role="tabpanel" aria-labelledby="tab-anxiety" hidden>
-            <div class="panel-step" id="anxiety-step-1">
-              <p class="panel-eyebrow">Step 1</p>
-              <h2 class="panel-heading">Background</h2>
-              <p class="panel-body-text">
-                Placeholder introduction to the anxiety task — replace with the real background information
-                about the open-field or elevated-maze test being shown in the videos below.
+          <div class="tab-panel" id="panel-anxiety" role="tabpanel" aria-labelledby="tab-anxiety">
+
+          <!-- ============ STEP 1 — Rat A ============ -->
+          <div class="panel-step" id="anxiety-step-1">
+            <p class="panel-eyebrow">Step 1</p>
+            <h2 class="panel-heading">Watch Rat A</h2>
+            <p class="panel-body-text">
+              [INFO PLACEHOLDER — replace with your background on the open field test: a rat is placed in
+              an open arena and filmed from above, and where it chooses to spend its time tells us
+              something about how anxious it is.]
+            </p>
+
+            <button
+              type="button"
+              class="general-button watch-video-button"
+              onclick="openVideoFullscreen('videos/Group A rats.mp4', 'Use the clear whiteboard to follow Rat A&#39;s movements'); revealPanelStep('anxiety-step-1-next')"
+            >
+              <span class="bounce-symbol">&#9654;</span>
+              <span>Watch Rat A</span>
+            </button>
+
+            <div id="anxiety-step-1-next" hidden>
+              <button type="button" class="next-button general-button" onclick="revealPanelStep('anxiety-step-2')">
+                Next
+              </button>
+            </div>
+          </div>
+
+          <!-- ============ STEP 2 — Rat B + question ============ -->
+          <div class="panel-step" id="anxiety-step-2" hidden>
+            <p class="panel-eyebrow">Step 2</p>
+            <h2 class="panel-heading">Watch Rat B</h2>
+
+            <button
+              type="button"
+              class="general-button watch-video-button"
+              onclick="openVideoFullscreen('videos/Group B rats.mp4', 'Use another clear whiteboard to follow Rat B&#39;s movements'); revealPanelStep('anxiety-step-2-questions')"
+            >
+              <span class="bounce-symbol">&#9654;</span>
+              <span>Watch Rat B</span>
+            </button>
+
+            <div id="anxiety-step-2-questions" hidden>
+              <p class="panel-body-text" style="margin-top: 22px;">
+                <b>THINK:</b> What do you notice when you compare the movements of Rat A to Rat B?
               </p>
 
-              <button
-                type="button"
-                class="general-button watch-video-button"
-                onclick="openVideoModal('videos/anxiety-mouse-a.mp4', 'Mouse A'); revealPanelStep('anxiety-step-2')"
+              <div
+                class="question-block"
+                data-rat-choice
+                data-correct="a"
+                data-reveal-target="anxiety-step-2-next"
               >
-                <span class="bounce-symbol">&#9654;</span>
-                <span>Watch Mouse A</span>
-              </button>
-            </div>
+                <p class="question-label">Which of the rats do you think is the anxious rat?</p>
 
-            <div class="panel-step" id="anxiety-step-2" hidden>
-              <p class="panel-eyebrow">Step 2</p>
-              <h2 class="panel-heading">Second video</h2>
+                <div class="choice-buttons">
+                  <button type="button" class="general-button choice-button" data-choice-value="a">Rat A</button>
+                  <button type="button" class="general-button choice-button" data-choice-value="b">Rat B</button>
+                </div>
 
-              <button
-                type="button"
-                class="general-button watch-video-button"
-                onclick="openVideoModal('videos/anxiety-mouse-b.mp4', 'Mouse B'); revealPanelStep('anxiety-step-3')"
-              >
-                <span class="bounce-symbol">&#9654;</span>
-                <span>Watch Mouse B</span>
-              </button>
-            </div>
-
-            <div class="panel-step" id="anxiety-step-3" hidden>
-              <p class="panel-eyebrow">Step 3</p>
-              <h2 class="panel-heading">Compare the two</h2>
-              <p class="question-label">Which mouse is experiencing anxiety?</p>
-
-              <div class="mouse-choice-buttons">
-                <button type="button" class="general-button mouse-choice-button" data-mouse-choice="a">Mouse A</button>
-                <button type="button" class="general-button mouse-choice-button" data-mouse-choice="b">Mouse B</button>
+                <div class="feedback-box" data-rat-answer hidden>
+                  <p>
+                    <b>Rat A is the anxious rat.</b> It stuck to the edges to try and find a way to escape and
+                    does not explore curiously.
+                  </p>
+                </div>
               </div>
 
-              <div class="mouse-choice-answer" id="mouseChoiceAnswer" hidden>
-                <!-- Placeholder explanation — replace with the real answer/reasoning -->
-                Placeholder explanation of which mouse showed anxious behaviour (e.g. thigmotaxis, freezing,
-                reduced centre-time) and why.
-              </div>
-              <div style="margin-top:18px">
-                <button type="button" class="general-button next-activity-button" onclick="gotoTab('attention')">Next activity: Attention</button>
+              <div id="anxiety-step-2-next" hidden>
+                <button type="button" class="next-button general-button" onclick="revealPanelStep('anxiety-step-3')">
+                  Next
+                </button>
               </div>
             </div>
           </div>
+
+          <!-- ============ STEP 3 — read the data ============ -->
+          <div class="panel-step" id="anxiety-step-3" hidden>
+            <p class="panel-eyebrow">Step 3</p>
+            <h2 class="panel-heading">Become a behavioural scientist</h2>
+            <p class="panel-body-text">This is the data from the two rats over 10 minutes of activity.</p>
+
+            <div class="memory-image-frame" style="max-width: 560px; margin-top: 16px;">
+              <img src="Mouse_experiment.png" alt="Movement traces of two rats recorded over ten minutes" />
+            </div>
+
+            <div class="question-block" data-blank-quiz data-reveal-target="anxiety-gut-brain">
+              <p class="question-label">Which rat is which? Type <b>red</b> or <b>blue</b>.</p>
+
+              <div class="blank-row">
+                <label for="ratABlank">Rat A =</label>
+                <input
+                  type="text"
+                  id="ratABlank"
+                  class="blank-input"
+                  data-blank="a"
+                  autocomplete="off"
+                  autocapitalize="none"
+                  placeholder="red or blue"
+                />
+              </div>
+
+              <div class="blank-row">
+                <label for="ratBBlank">Rat B =</label>
+                <input
+                  type="text"
+                  id="ratBBlank"
+                  class="blank-input"
+                  data-blank="b"
+                  autocomplete="off"
+                  autocapitalize="none"
+                  placeholder="red or blue"
+                />
+              </div>
+
+              <button type="button" class="general-button" data-blank-check>Check my answers</button>
+              <div class="feedback-box" data-blank-feedback hidden></div>
+            </div>
+
+            <div class="gut-brain-box" id="anxiety-gut-brain" hidden>
+              <p>
+                Using these animal models, the scientists found out that a faecal transplant was able to reduce
+                the anxiety of the anxious rats. This suggested that the gut might play a vital role in the
+                brain's activity relating to these emotions. This is called the <b>gut-brain axis</b>.
+              </p>
+            </div>
+
+            <div style="margin-top: 18px">
+              <button type="button" class="general-button next-activity-button" onclick="gotoTab('attention')">
+                Next activity: Attention
+              </button>
+            </div>
+          </div>
+        </div>
+
         </section>
       </div>
     </main>
@@ -1438,6 +1597,48 @@ document.addEventListener("DOMContentLoaded", () => {
   modal.addEventListener("click", (event) => {
     if (event.target === modal) closeVideoModal();
   });
+});
+
+// Ensure watch-video buttons always work even if inline onclick was removed.
+function initialiseWatchButtons() {
+  document.querySelectorAll('.watch-video-button').forEach(btn => {
+    // if button already has an explicit onclick, assume it's fine
+    if (btn.getAttribute('onclick')) return;
+
+    btn.addEventListener('click', (e) => {
+      // prefer YouTube dataset
+      const yid = btn.dataset.youtubeId;
+      const ystart = Number(btn.dataset.youtubeStart) || 0;
+      const yend = btn.dataset.youtubeEnd ? Number(btn.dataset.youtubeEnd) : undefined;
+      const title = btn.dataset.youtubeTitle || btn.dataset.videoTitle || btn.textContent.trim();
+
+      if (yid) {
+        openYouTubeModal(yid, ystart, yend, title);
+        return;
+      }
+
+      // fallback to local video source stored in data-video-src
+      const src = btn.dataset.videoSrc || btn.dataset.src;
+      if (src) {
+        openVideoModal(src, title);
+        return;
+      }
+
+      // last resort: try to find a nearby data attribute on the same panel
+      const panel = btn.closest('.tab-panel');
+      if (panel) {
+        const watch = panel.querySelector('.watch-video-button[onclick]');
+        if (watch) {
+          // invoke the other button's onclick if present
+          try { watch.click(); } catch (err) { /* ignore */ }
+        }
+      }
+    });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initialiseWatchButtons();
 });
 
 /* ==================================================
@@ -2065,6 +2266,200 @@ function initialiseMouseChoice() {
     });
   });
 }
+
+      /* ----------------------------------------------------------
+         ANSWER KEY — check this against Mouse_experiment.png and
+         change the colours if they're the other way around.
+         ---------------------------------------------------------- */
+      const RAT_TRACE_COLOURS = { a: "red", b: "blue" };
+
+      /* ==================================================
+         FULLSCREEN VIDEO
+         Opens the shared modal, then puts the modal content
+         into fullscreen so the title stays above the player.
+         Usage: openVideoFullscreen('videos/Group A rats.mp4', 'Title')
+         ================================================== */
+      function openVideoFullscreen(videoSource, videoTitle) {
+        const modal = document.getElementById("videoModal");
+        const content = modal ? modal.querySelector(".modal-content") : null;
+        const player = document.getElementById("videoModalPlayer");
+        const titleEl = document.getElementById("videoModalTitle");
+        const ytContainer = document.getElementById("youtubePlayer");
+
+        if (!modal || !player || !content) return;
+
+        if (ytContainer) ytContainer.style.display = "none";
+        titleEl.textContent = videoTitle || "Video";
+
+        player.pause();
+        player.style.display = "block";
+        // encodeURI keeps the spaces in the filename valid in a src attribute
+        player.src = encodeURI(videoSource);
+        player.load();
+
+        modal.classList.add("is-open");
+        modal.dataset.fullscreenVideo = "true";
+
+        const requestFullscreen =
+          content.requestFullscreen ||
+          content.webkitRequestFullscreen ||
+          content.msRequestFullscreen;
+
+        if (requestFullscreen) {
+          try {
+            const result = requestFullscreen.call(content);
+            if (result && result.catch) result.catch(() => {});
+          } catch (error) {
+            /* stays in the normal modal */
+          }
+        } else if (player.webkitEnterFullscreen) {
+          // iPhone: only the <video> element itself can go fullscreen
+          player.addEventListener("loadedmetadata", () => {
+            try { player.webkitEnterFullscreen(); } catch (e) {}
+          }, { once: true });
+        }
+
+        const playAttempt = player.play();
+        if (playAttempt && playAttempt.catch) playAttempt.catch(() => {});
+      }
+
+      /* Closing fullscreen (Esc or the system control) closes the modal too. */
+      function handleFullscreenExit() {
+        const modal = document.getElementById("videoModal");
+        if (!modal || modal.dataset.fullscreenVideo !== "true") return;
+        if (document.fullscreenElement || document.webkitFullscreenElement) return;
+        closeVideoModal();
+      }
+
+      document.addEventListener("fullscreenchange", handleFullscreenExit);
+      document.addEventListener("webkitfullscreenchange", handleFullscreenExit);
+
+      /* ==================================================
+         RAT A / RAT B QUESTION
+         data-correct="a" marks which answer is right.
+         ================================================== */
+      function initialiseRatChoice() {
+        document.querySelectorAll("[data-rat-choice]").forEach((block) => {
+          const buttons = Array.from(block.querySelectorAll("[data-choice-value]"));
+          const answer = block.querySelector("[data-rat-answer]");
+          const correct = block.dataset.correct;
+          const revealTarget = block.dataset.revealTarget;
+
+          buttons.forEach((button) => {
+            button.addEventListener("click", () => {
+              if (block.dataset.answered === "true") return;
+              block.dataset.answered = "true";
+
+              buttons.forEach((other) => {
+                other.disabled = true;
+                if (other === button) {
+                  other.setAttribute("data-selected", "true");
+                  other.classList.add(other.dataset.choiceValue === correct ? "is-correct" : "is-wrong");
+                } else if (other.dataset.choiceValue === correct) {
+                  other.classList.add("is-correct");
+                }
+              });
+
+              if (answer) answer.hidden = false;
+              if (revealTarget) revealPanelStep(revealTarget);
+            });
+          });
+        });
+      }
+
+      /* ==================================================
+         FILL IN THE BLANKS — Rat A = ___ / Rat B = ___
+         Three attempts, then the explanation appears anyway.
+         ================================================== */
+      function initialiseBlankQuiz() {
+        document.querySelectorAll("[data-blank-quiz]").forEach((block) => {
+          const inputs = Array.from(block.querySelectorAll("[data-blank]"));
+          const checkButton = block.querySelector("[data-blank-check]");
+          const feedback = block.querySelector("[data-blank-feedback]");
+          const revealTarget = block.dataset.revealTarget;
+          let attempts = 0;
+
+          if (!inputs.length || !checkButton || !feedback) return;
+
+          function check() {
+            const answers = inputs.map((input) => ({
+              input,
+              typed: input.value.trim().toLowerCase(),
+              expected: RAT_TRACE_COLOURS[input.dataset.blank]
+            }));
+
+            if (answers.some((entry) => entry.typed === "")) {
+              feedback.innerHTML = "<p>Fill in both blanks before checking.</p>";
+              feedback.hidden = false;
+              return;
+            }
+
+            if (answers.some((entry) => entry.typed !== "red" && entry.typed !== "blue")) {
+              feedback.innerHTML = "<p>Type either <b>red</b> or <b>blue</b> in each blank.</p>";
+              feedback.hidden = false;
+              return;
+            }
+
+            attempts += 1;
+            let allCorrect = true;
+
+            answers.forEach(({ input, typed, expected }) => {
+              input.classList.remove("is-correct", "is-wrong");
+              if (typed === expected) {
+                input.classList.add("is-correct");
+              } else {
+                input.classList.add("is-wrong");
+                allCorrect = false;
+              }
+            });
+
+            if (allCorrect) {
+              feedback.innerHTML =
+                `<p class="feedback-score">Both correct.</p>
+                 <p>The anxious rat's trace hugs the walls of the arena. The calm rat crosses the open middle,
+                 because exploring it doesn't feel risky.</p>`;
+              inputs.forEach((input) => { input.readOnly = true; });
+              checkButton.disabled = true;
+            } else if (attempts >= 3) {
+              feedback.innerHTML =
+                `<p>The answers are Rat A = <b>${RAT_TRACE_COLOURS.a}</b> and Rat B = <b>${RAT_TRACE_COLOURS.b}</b>.</p>
+                 <p>The anxious rat's trace hugs the walls of the arena. The calm rat crosses the open middle,
+                 because exploring it doesn't feel risky.</p>`;
+              inputs.forEach((input) => { input.readOnly = true; });
+              checkButton.disabled = true;
+            } else {
+              feedback.innerHTML =
+                "<p>Not quite. Look again at which trace stays around the edges of the arena and which one " +
+                "crosses the middle.</p>";
+            }
+
+            feedback.hidden = false;
+            if (allCorrect || attempts >= 3) {
+              if (revealTarget) revealPanelStep(revealTarget);
+            }
+          }
+
+          checkButton.addEventListener("click", check);
+          inputs.forEach((input) => {
+            input.addEventListener("keydown", (event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                check();
+              }
+            });
+          });
+        });
+      }
+
+      /* ==================================================
+         INIT — add these two calls to your existing
+         DOMContentLoaded listener.
+         ================================================== */
+      document.addEventListener("DOMContentLoaded", () => {
+        initialiseRatChoice();
+        initialiseBlankQuiz();
+      });
+
 
 /* ==================================================
    INIT
