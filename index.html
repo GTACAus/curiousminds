@@ -901,6 +901,9 @@ button, .folder-tab, .general-button, .table-number-input {
                   <img src="multitasking.png" alt="Illustration of multitasking" />
                 </div>
               </div>
+              <div style="margin-top:18px">
+                <button type="button" class="general-button next-activity-button" onclick="gotoTab('memory')">Next activity: Memory</button>
+              </div>
             </div>
           </div>
 
@@ -978,6 +981,9 @@ button, .folder-tab, .general-button, .table-number-input {
               </button>
               <div class="after-questions-placeholder" hidden>
                 <p class="panel-body-text">Nice work — you've completed both questions. When you're ready, continue to the next activity.</p>
+              </div>
+              <div style="margin-top:18px">
+                <button type="button" class="general-button next-activity-button" onclick="gotoTab('anxiety')">Next activity: Anxiety</button>
               </div>
             </div>
           </div>
@@ -1202,6 +1208,9 @@ button, .folder-tab, .general-button, .table-number-input {
                 <!-- Placeholder explanation — replace with the real answer/reasoning -->
                 Placeholder explanation of which mouse showed anxious behaviour (e.g. thigmotaxis, freezing,
                 reduced centre-time) and why.
+              </div>
+              <div style="margin-top:18px">
+                <button type="button" class="general-button next-activity-button" onclick="gotoTab('attention')">Next activity: Attention</button>
               </div>
             </div>
           </div>
@@ -1441,6 +1450,18 @@ function revealPanelStep(stepId) {
 
   step.hidden = false;
   step.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+/* ==================================================
+   GOTO TAB helper — switch to a named tab (data-tab)
+   Usage: gotoTab('memory')
+   ================================================== */
+function gotoTab(tabName) {
+  const tab = document.querySelector(`.folder-tab[data-tab="${tabName}"]`);
+  if (tab) {
+    tab.click();
+    try { tab.focus({preventScroll:true}); } catch (e) {}
+  }
 }
 
 /* ==================================================
