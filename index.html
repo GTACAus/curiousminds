@@ -15,6 +15,7 @@
   --color-manila-body: #fbf3dd;
 
   --color-card-border: #e4dcc6;
+  --color-green: #3fb27f;
 
   --font-display: "Figtree", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-body: "Figtree", -apple-system, BlinkMacSystemFont, sans-serif;
@@ -244,6 +245,19 @@ button {
 .panel-body-text {
   color: var(--color-ink-soft);
   max-width: 60ch;
+}
+
+/* Side-by-side body + image for explanatory panels */
+.panel-body-row{
+  display:flex;
+  gap:20px;
+  align-items:flex-start;
+}
+.panel-image{flex:0 0 280px}
+.panel-image img{display:block;width:100%;height:auto;border-radius:12px;border:1px solid var(--color-manila-dark)}
+@media(max-width:640px){
+  .panel-body-row{flex-direction:column}
+  .panel-image{flex:0 0 auto}
 }
 
 /* Buttons -------------------------------------------------- */
@@ -523,6 +537,184 @@ button {
   background: #000;
   max-height: 70vh;
 }
+
+/* iPad / touch improvements */
+button, .folder-tab, .general-button, .table-number-input {
+  -webkit-tap-highlight-color: rgba(0,0,0,0.08);
+  touch-action: manipulation;
+}
+
+.general-button {
+  min-height: 44px; /* comfortable touch target */
+}
+
+#youtubePlayer, .video-modal-player {
+  aspect-ratio: 16/9;
+  height: auto;
+  max-height: 70vh;
+}
+
+.modal-content {
+  max-height: 94vh;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Make folder tabs easier to tap on tablets */
+@media (max-width: 900px) {
+  .folder-tabs { padding-left: 12px; }
+  .folder-tab { margin-left: -8px; padding: 16px 20px; }
+}
+
+@media (max-width: 640px) {
+  .folder-tabs { padding-left: 8px; }
+  .folder-tab { margin-left: -6px; padding: 14px 14px; }
+  .general-button { padding: 14px 18px; }
+  .table-number-input { padding: 12px 14px; font-size: 1.05rem; }
+}
+      /* --- word reveal + countdown --- */
+      .word-task { margin-top: 20px; }
+
+      .word-stage[hidden] { display: none; }
+
+      .word-timer {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 12px;
+      }
+
+      .word-timer-value {
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: 1.35rem;
+        color: var(--color-purple);
+        font-variant-numeric: tabular-nums;
+        min-width: 3.2ch;
+      }
+
+      .word-timer-track {
+        flex: 1;
+        max-width: 340px;
+        height: 10px;
+        border-radius: 999px;
+        background: var(--color-manila-dark);
+        overflow: hidden;
+      }
+
+      .word-timer-fill {
+        display: block;
+        height: 100%;
+        width: 100%;
+        background: var(--color-purple);
+        transition: width 1s linear;
+      }
+
+      .word-timer.is-low .word-timer-value { color: var(--color-orange); }
+      .word-timer.is-low .word-timer-fill { background: var(--color-orange); }
+
+      .word-frame {
+        display: block;
+        width: 100%;
+        height: 300px;
+        border: 1px solid var(--color-manila-dark);
+        border-radius: var(--radius-md);
+        background: #fff;
+      }
+
+      .word-task-done {
+        margin: 14px 0 0;
+        font-weight: 600;
+        color: var(--color-ink-soft);
+      }
+
+      /* --- free recall (type the words) --- */
+      .recall-textarea {
+        font-family: var(--font-body);
+        font-size: 1rem;
+        width: 100%;
+        max-width: 520px;
+        min-height: 130px;
+        padding: 12px 14px;
+        border-radius: 10px;
+        border: 1px solid var(--color-manila-dark);
+        background: #fff;
+        resize: vertical;
+      }
+
+      .recall-textarea:focus-visible { outline: 3px solid var(--color-purple); outline-offset: 1px; }
+
+      .feedback-box {
+        margin-top: 14px;
+        background: #fff;
+        border: 1px solid var(--color-manila-dark);
+        border-radius: var(--radius-md);
+        padding: 14px 18px;
+        max-width: 60ch;
+      }
+
+      .feedback-box[hidden] { display: none; }
+      .feedback-box p { margin: 0 0 8px; }
+      .feedback-box p:last-child { margin-bottom: 0; }
+      .feedback-score { font-weight: 800; font-size: 1.05rem; color: var(--color-purple); }
+
+      /* --- clickable word chips --- */
+      .word-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+
+      .word-chip {
+        border: 1px solid var(--color-manila-dark);
+        background: #fff;
+        color: var(--color-ink);
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 0.95rem;
+        padding: 10px 16px;
+        border-radius: 999px;
+        cursor: pointer;
+        min-height: 44px;
+      }
+
+      .word-chip:focus-visible { outline: 3px solid var(--color-purple); outline-offset: 2px; }
+      .word-chip[data-selected="true"] { background: var(--color-purple); border-color: var(--color-purple); color: #fff; }
+      .word-chip.is-correct { background: var(--color-green); border-color: var(--color-green); color: #fff; }
+      .word-chip.is-wrong { background: var(--color-orange); border-color: var(--color-orange); color: #fff; }
+      .word-chip.is-missed { border: 2px dashed var(--color-green); color: var(--color-green); }
+      .word-chip[disabled] { cursor: default; }
+
+      /* --- multiple-choice poll (CounterAPI) --- */
+      .poll-options { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; }
+      .poll-option[data-selected="true"] { background: var(--color-orange); }
+      .poll-results[hidden] { display: none; }
+
+      .poll-row {
+        display: grid;
+        grid-template-columns: minmax(120px, 1fr) 2fr auto;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+        color: var(--color-ink-soft);
+      }
+
+      .poll-row-track {
+        height: 12px;
+        border-radius: 999px;
+        background: var(--color-manila-dark);
+        overflow: hidden;
+      }
+
+      .poll-row-fill { display: block; height: 100%; background: var(--color-purple); transition: width 0.3s ease; }
+
+      @media (max-width: 640px) {
+        .word-frame { height: 340px; }
+        .poll-row { grid-template-columns: 1fr; gap: 4px; }
+        .word-timer-track { max-width: none; }
+      }
     </style>
   <head>
     <meta charset="UTF-8" />
@@ -556,7 +748,7 @@ button {
         <h1 class="page-title">How can we study the mind?</h1>
         <p class="page-summary">
           <h3>Psychology is the study of the human mind and behaviour.</h3>
-          <h4>The mind itself is hard to study directly, because it doesn't always produce results we can measure. That's why psychologists look at both the biology of the brain and the behaviours we can observe, to build a clearer picture of how the mind works.</h4>
+          <h4>The mind itself is hard to study directly, because it doesn't always produce results we can measure. That's why behavioural neuroscientists and psychologists look at both the biology of the brain and the behaviours we can observe, to build a clearer picture of how the mind works.</h4>
           This resource will walk you through three short psychology investigations. 
           <br> Choose one of the human behaviours to get started. 
           <br> Record your own results, and see how your answers compare with everyone else's.
@@ -613,6 +805,7 @@ button {
                ============================================ -->
           <div class="tab-panel" id="panel-attention" role="tabpanel" aria-labelledby="tab-attention">
             <div class="panel-step" id="attention-step-1">
+              <p><b>Attention</b> describes the process when a person concentrates on some features of the environment. It is the first step in committing something to memory, and therefore the first step for the brain to learn. </p>
               <p class="panel-eyebrow">Step 1</p>
               <h2 class="panel-heading">Click to test your attention</h2>
 
@@ -622,14 +815,14 @@ button {
                 data-youtube-id="vJG698U2Mvo"
                 data-youtube-start="5"
                 data-youtube-end="39"
-                onclick="openYouTubeModal('vJG698U2Mvo', 5, 39, 'Attention clip')"
+                onclick="openYouTubeModal('vJG698U2Mvo', 5, 39, 'Test your attention')"
               >
                 <span class="bounce-symbol">&#9654;</span>
                 <span>Watch video</span>
               </button>
 
               <div class="question-block">
-                <p class="question-label">How many times did the mouse cross the centre line?</p>
+                <p class="question-label">How many times do the players wearing white pass the ball?</p>
 
                 <div class="number-entry" data-number-entry data-reveal-target="attention-step-2">
                   <div class="number-entry-row">
@@ -655,6 +848,9 @@ button {
               <p class="question-label">Answer Yes or No</p>
 
               <!-- ============================================
+                <div class="memory-image-frame">
+                  <img src="images/attention-step3.jpg" alt="Attention task results" />
+                </div>
                    LIVE YES/NO TALLY — powered by CounterAPI
                    Replace WORKSPACE below with your own
                    counterapi.dev workspace slug.
@@ -694,57 +890,268 @@ button {
             <div class="panel-step" id="attention-step-3" hidden>
               <p class="panel-eyebrow">Step 3</p>
               <h2 class="panel-heading">What this tells us</h2>
-              <p class="panel-body-text">
-                Placeholder wrap-up text for the attention task — replace with the real explanation of what
-                the crossing count and the class tally show about attention.
-              </p>
+              <div class="panel-body-row">
+                <div class="panel-body-text"> 
+                  This happens because of something called <b>selective attention</b>. When your brain concentrates hard on one task, like counting passes, it filters out other information to avoid getting overloaded. <b> Attention is limited.</b> If you're trying to listen to your teacher while checking messages, thinking about something else, or switching between lots of tasks, your brain has to divide its attention. You might feel like you're following the lesson, but you can actually miss important information.
+                  <br>It also explains why <b>“multi-tasking” is misleading.</b> Your brain doesn't really do several demanding tasks at the same time very well, it rapidly switches between them. Each switch can mean that you miss or forget information.
+                  <br><b>You don't always notice what you're not paying attention to.</b>
+                  <br>This is why giving your brain a chance to <b>focus on one thing at a time </b>can make learning easier. When you're studying, listening to instructions or learning something new, reducing distractions gives your attention more of a chance to do its job.
+                </div>
+                <div class="panel-image">
+                  <img src="multitasking.png" alt="Illustration of multitasking" />
+                </div>
+              </div>
             </div>
           </div>
 
           <!-- ============================================
                PANEL 2 — MEMORY
                ============================================ -->
-          <div class="tab-panel" id="panel-memory" role="tabpanel" aria-labelledby="tab-memory" hidden>
+           <div class="tab-panel" id="panel-memory" role="tabpanel" aria-labelledby="tab-memory">
+
+          <!-- ============ STEP 1 — plain rehearsal ============ -->
+          <div class="panel-step" id="memory-step-1">
             <p class="panel-eyebrow">Step 1</p>
-            <h2 class="panel-heading">Look at the image</h2>
+            <h2 class="panel-heading">How good is your memory?</h2>
+            <p class="panel-body-text">
+              Your <b>working memory</b> is the part of your mind that holds information while you're actually using it e.g. the phone number you repeat to yourself until you type it in, or the start of a sentence while your teacher finishes it. It's fast, but it's small. 
+<br> <b>You will be presented with 20 words for 1 minute and then you will need to recall as many of those words as possible</b>
+ </p>
 
-            <div class="memory-image-frame">
-              <!-- Replace with the real memory-task image -->
-              <img src="images/memory-placeholder.jpg" alt="Memory task reference image" />
-            </div>
+            <div
+              class="word-task"
+              data-word-task
+              data-set="1"
+              data-duration="60"
+              data-reveal-target="memory-step-1-questions"
+            >
+              <button type="button" class="general-button" data-reveal-words>
+                <span class="bounce-symbol">&#9654;</span>
+                <span>Show the words</span>
+              </button>
 
-            <div class="question-block">
-              <p class="question-label">How many objects can you remember from the image?</p>
-
-              <div class="number-entry" data-number-entry>
-                <div class="number-entry-row">
-                  <input
-                    type="number"
-                    inputmode="numeric"
-                    step="1"
-                    class="table-number-input"
-                    aria-label="Number of objects remembered"
-                    placeholder="Enter a number"
-                  />
+              <div class="word-stage" data-word-stage hidden>
+                <div class="word-timer" data-timer>
+                  <span class="word-timer-value" data-timer-value aria-live="off">1:00</span>
+                  <span class="word-timer-track"><span class="word-timer-fill" data-timer-fill></span></span>
                 </div>
-                <p class="entry-hint">Press Enter to submit.</p>
-                <div class="entry-answer" aria-live="polite"></div>
+                <iframe class="word-frame" data-word-frame title="Word list"></iframe>
               </div>
+
+              <p class="word-task-done" data-word-done hidden>Time's up — the words are hidden now.</p>
             </div>
 
-            <!-- ============================================
-                 SIMPLE COUNTER — powered by CounterAPI
-                 ============================================ -->
-            <div class="counter-block" data-counter data-counter-name="memory_attempts">
-              <p class="counter-label">Times this activity has been tried</p>
-              <div class="counter-display">
-                <button type="button" class="counter-button" data-counter-decrement aria-label="Decrease">&minus;</button>
-                <span class="counter-value" data-counter-value>0</span>
-                <button type="button" class="counter-button" data-counter-increment aria-label="Increase">&plus;</button>
+            <div id="memory-step-1-questions" hidden>
+              <div class="question-block">
+                <p class="question-label">1. Type as many words from that list as you can remember.</p>
+                <div data-recall data-set="1">
+                  <textarea
+                    class="recall-textarea"
+                    data-recall-input
+                    aria-label="Words you remember"
+                    placeholder="One word per line"
+                  ></textarea>
+                  <div class="number-entry-row" style="margin-top: 12px;">
+                    <button type="button" class="general-button" data-recall-check>Check my words</button>
+                  </div>
+                  <div class="feedback-box" data-recall-feedback hidden></div>
+                </div>
+              </div>
+
+              <div class="question-block">
+                <p class="question-label">2. Which of these words were <b>not</b> in the list? Tap all that apply.</p>
+                <div
+                  data-word-choice
+                  data-set="1"
+                  data-choice-mode="not-in-list"
+                  data-real-count="6"
+                  data-lure-count="4"
+                >
+                  <div class="word-chips" data-chips></div>
+                  <button type="button" class="general-button" data-choice-check>Check my answer</button>
+                  <div class="feedback-box" data-choice-feedback hidden></div>
+                </div>
+              </div>
+
+              <button type="button" class="next-button general-button" onclick="revealPanelStep('memory-step-2')">
+                Next
+              </button>
+              <div class="after-questions-placeholder" hidden>
+                <p class="panel-body-text">Nice work — you've completed both questions. When you're ready, continue to the next activity.</p>
               </div>
             </div>
           </div>
 
+          <!-- ============ STEP 2 — chunking ============ -->
+          <div class="panel-step" id="memory-step-2" hidden>
+            <p class="panel-eyebrow">Step 2</p>
+            <h2 class="panel-heading">Now try chunking</h2>
+            <p class="panel-body-text">
+              Working memory can only hold a handful of items, so the trick is to make each item bigger. 
+<br>That's called <b>chunking</b>: grouping small pieces of information into fewer, larger units. 
+<br> Example: A phone number is easier as 0412 998 341 than as ten separate digits, and "cat, dog, horse" can be stored as one idea (animals) instead of three. 
+<br>Your brain is still holding about four things, but each thing now carries much more inside it. Chunking works best when the groups mean something to you. 
+<br><b>Try the chunking technique</b>: the next list is already sorted into groups. Try to remember the groups, not the words. </p>
+
+            <div
+              class="word-task"
+              data-word-task
+              data-set="2"
+              data-duration="60"
+              data-reveal-target="memory-step-2-questions"
+            >
+              <button type="button" class="general-button" data-reveal-words>
+                <span class="bounce-symbol">&#9654;</span>
+                <span>Show the words</span>
+              </button>
+
+              <div class="word-stage" data-word-stage hidden>
+                <div class="word-timer" data-timer>
+                  <span class="word-timer-value" data-timer-value>1:00</span>
+                  <span class="word-timer-track"><span class="word-timer-fill" data-timer-fill></span></span>
+                </div>
+                <iframe class="word-frame" data-word-frame title="Word list"></iframe>
+              </div>
+
+              <p class="word-task-done" data-word-done hidden>Time's up — the words are hidden now.</p>
+            </div>
+
+            <div id="memory-step-2-questions" hidden>
+              <div class="question-block">
+                <p class="question-label">1. Type as many words from that list as you can remember.</p>
+                <div data-recall data-set="2">
+                  <textarea
+                    class="recall-textarea"
+                    data-recall-input
+                    aria-label="Words you remember"
+                    placeholder="One word per line"
+                  ></textarea>
+                  <div class="number-entry-row" style="margin-top: 12px;">
+                    <button type="button" class="general-button" data-recall-check>Check my words</button>
+                  </div>
+                  <div class="feedback-box" data-recall-feedback hidden></div>
+                </div>
+              </div>
+
+              <div class="question-block">
+                <p class="question-label">2. Tap the words that appeared in this set.</p>
+                <div
+                  data-word-choice
+                  data-set="2"
+                  data-choice-mode="in-list"
+                  data-real-count="6"
+                  data-lure-count="4"
+                >
+                  <div class="word-chips" data-chips></div>
+                  <button type="button" class="general-button" data-choice-check>Check my answer</button>
+                  <div class="feedback-box" data-choice-feedback hidden></div>
+                </div>
+              </div>
+
+              <button type="button" class="next-button general-button" onclick="revealPanelStep('memory-step-3')">
+                Next
+              </button>
+              <div class="after-questions-placeholder" hidden>
+                <p class="panel-body-text">Nice work — you've completed both questions. When you're ready, continue to the next activity.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============ STEP 3 — mind palace ============ -->
+          <div class="panel-step" id="memory-step-3" hidden>
+            <p class="panel-eyebrow">Step 3</p>
+            <h2 class="panel-heading">Now try a mind palace</h2>
+            <p class="panel-body-text">
+              A <b>mind palace</b>, also known as <b>method of loci</b>, uses your spatial awareness to carry things it finds hard, like lists. Your brain is good at remembering places.
+<br> <b>Build your own mind palace:</b>
+<br> 1. Pick a route you know without thinking: your walk from the front door to your bedroom, or your path between classes. <br>2. Then place each word somewhere along it and make the image strange. A glacier melting on the kitchen bench sticks; a glacier "in the kitchen" doesn't. To recall the list, walk the route in your head and collect what you left there. Ancient Greek orators used this to deliver hour-long speeches without notes. </p>
+
+            <div
+              class="word-task"
+              data-word-task
+              data-set="3"
+              data-duration="60"
+              data-reveal-target="memory-step-3-questions"
+            >
+              <button type="button" class="general-button" data-reveal-words>
+                <span class="bounce-symbol">&#9654;</span>
+                <span>Show the words</span>
+              </button>
+
+              <div class="word-stage" data-word-stage hidden>
+                <div class="word-timer" data-timer>
+                  <span class="word-timer-value" data-timer-value>1:00</span>
+                  <span class="word-timer-track"><span class="word-timer-fill" data-timer-fill></span></span>
+                </div>
+                <iframe class="word-frame" data-word-frame title="Word list"></iframe>
+              </div>
+
+              <p class="word-task-done" data-word-done hidden>Time's up — the words are hidden now.</p>
+            </div>
+
+            <div id="memory-step-3-questions" hidden>
+              <div class="question-block">
+                <p class="question-label">1. Type as many words from that list as you can remember.</p>
+                <div data-recall data-set="3">
+                  <textarea
+                    class="recall-textarea"
+                    data-recall-input
+                    aria-label="Words you remember"
+                    placeholder="One word per line"
+                  ></textarea>
+                  <div class="number-entry-row" style="margin-top: 12px;">
+                    <button type="button" class="general-button" data-recall-check>Check my words</button>
+                  </div>
+                  <div class="feedback-box" data-recall-feedback hidden></div>
+                </div>
+              </div>
+
+              <div class="question-block">
+                <p class="question-label">2. Tap the words that appeared in this set.</p>
+                <div
+                  data-word-choice
+                  data-set="3"
+                  data-choice-mode="in-list"
+                  data-real-count="6"
+                  data-lure-count="4"
+                >
+                  <div class="word-chips" data-chips></div>
+                  <button type="button" class="general-button" data-choice-check>Check my answer</button>
+                  <div class="feedback-box" data-choice-feedback hidden></div>
+                </div>
+              </div>
+
+              <div class="question-block">
+                <p class="question-label">3. Which technique helped you the most?</p>
+
+                <!-- Live class results via CounterAPI -->
+                <div class="poll-block" data-poll>
+                  <div class="poll-options">
+                    <button type="button" class="general-button poll-option" data-poll-option="memory_best_none">
+                      Just reading the list
+                    </button>
+                    <button type="button" class="general-button poll-option" data-poll-option="memory_best_chunking">
+                      Chunking
+                    </button>
+                    <button type="button" class="general-button poll-option" data-poll-option="memory_best_palace">
+                      Mind palace
+                    </button>
+                    <button type="button" class="general-button poll-option" data-poll-option="memory_best_none_worked">
+                      About the same
+                    </button>
+                  </div>
+
+                  <div class="poll-results" data-poll-results aria-live="polite" hidden></div>
+                </div>
+              </div>
+
+              <div class="after-questions-placeholder" hidden>
+                <p class="panel-body-text">Nice work — you've completed both questions. When you're ready, continue to the next activity.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
           <!-- ============================================
                PANEL 3 — ANXIETY
                ============================================ -->
@@ -824,7 +1231,7 @@ button {
     
     <script>
       const COUNTERAPI_WORKSPACE = "gene-technology-access-centres-team-5261";
-const COUNTERAPI_BASE = `https://api.counterapi.dev/v1/first-counter-5261`;
+const COUNTERAPI_BASE = `https://api.counterapi.dev/v2/gorilla`;
 
 /* ==================================================
    FOLDER TABS
@@ -1228,6 +1635,398 @@ function initialiseCounterBlocks() {
     refresh();
   });
 }
+
+
+      /* ----------------------------------------------------------
+         WORD SETS — this is the only part you need to edit.
+         words : shown to the student (aim for 20)
+         lures : never shown; used as the wrong options in the
+                 tap-the-words questions
+         chunks: optional. If present the words are displayed in
+                 these labelled groups (used for the chunking task)
+                 and `words` is built from them automatically.
+         ---------------------------------------------------------- */
+      const MEMORY_WORD_SETS = {
+        1: {
+          words: [
+            "Hill", "Valley", "Climb", "Summit", "Top",
+            "Molehill", "Peak", "Plain", "Glacier", "Goat",
+            "Bike", "Climber", "Range", "Steep", "Ski",
+            "Rope", "Ridge", "Trail", "Boots", "Altitude"
+          ],
+          // "Mountain" is the classic false-memory lure for this set:
+          // most people are sure they saw it.
+          lures: ["Mountain", "Snow", "Cliff", "Rock", "Helmet", "Slope"]
+        },
+
+        2: {
+          chunks: [
+            { label: "In the kitchen", words: ["Kettle", "Spoon", "Bowl", "Toaster", "Fridge"] },
+            { label: "At the beach", words: ["Sand", "Wave", "Shell", "Towel", "Tide"] },
+            { label: "Making music", words: ["Drum", "Chord", "Lyric", "Stage", "Choir"] },
+            { label: "Weather", words: ["Thunder", "Frost", "Breeze", "Drizzle", "Hail"] }
+          ],
+          lures: ["Ladle", "Seagull", "Trumpet", "Sunset", "Blizzard", "Saucepan"]
+        },
+
+        3: {
+          words: [
+            "Anchor", "Candle", "Ladder", "Penguin", "Compass",
+            "Marble", "Trophy", "Feather", "Lantern", "Puzzle",
+            "Cactus", "Whistle", "Ribbon", "Domino", "Kite",
+            "Saddle", "Pebble", "Mirror", "Acorn", "Barrel"
+          ],
+          lures: ["Umbrella", "Bucket", "Balloon", "Rocket", "Teapot", "Anvil"]
+        }
+      };
+
+      /* ---------------------------------------------------------- */
+
+      function memorySetWords(set) {
+        if (!set) return [];
+        if (set.words) return set.words;
+        return (set.chunks || []).reduce((all, chunk) => all.concat(chunk.words), []);
+      }
+
+      function shuffleArray(items) {
+        const copy = items.slice();
+        for (let i = copy.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+      }
+
+      function escapeHtml(text) {
+        return String(text).replace(/[&<>"']/g, (char) => ({
+          "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+        })[char]);
+      }
+
+      /* Builds the document shown inside the word iframe. */
+      function buildWordFrameDoc(set) {
+        const style = `
+          body{margin:0;padding:20px 22px;background:#fff;color:#26211c;
+               font-family:"Figtree",-apple-system,BlinkMacSystemFont,sans-serif;}
+          section{margin:0 0 18px;}
+          section:last-child{margin-bottom:0;}
+          h2{margin:0 0 8px;font-size:.8rem;font-weight:700;letter-spacing:.06em;
+             color:#4a2fe3;}
+          ul{list-style:none;margin:0;padding:0;display:grid;gap:10px 18px;
+             grid-template-columns:repeat(auto-fill,minmax(110px,1fr));}
+          li{font-size:1.05rem;font-weight:600;}
+          @media (max-width:520px){ul{grid-template-columns:repeat(auto-fill,minmax(92px,1fr));}}
+        `;
+
+        let body;
+        if (set.chunks) {
+          body = set.chunks.map((chunk) => `
+            <section>
+              <h2>${escapeHtml(chunk.label)}</h2>
+              <ul>${shuffleArray(chunk.words).map((w) => `<li>${escapeHtml(w)}</li>`).join("")}</ul>
+            </section>
+          `).join("");
+        } else {
+          body = `<ul>${shuffleArray(memorySetWords(set)).map((w) => `<li>${escapeHtml(w)}</li>`).join("")}</ul>`;
+        }
+
+        return `<!doctype html><html lang="en"><head><meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <style>${style}</style></head><body>${body}</body></html>`;
+      }
+
+      /* Countdown. Calls onFinish() when it reaches zero. */
+      function startCountdown(timerEl, valueEl, fillEl, seconds, onFinish) {
+        let remaining = seconds;
+
+        function paint() {
+          const mins = Math.floor(remaining / 60);
+          const secs = remaining % 60;
+          valueEl.textContent = `${mins}:${String(secs).padStart(2, "0")}`;
+          if (fillEl) fillEl.style.width = (remaining / seconds) * 100 + "%";
+          if (timerEl) timerEl.classList.toggle("is-low", remaining <= 10);
+        }
+
+        paint();
+        const tick = setInterval(() => {
+          remaining -= 1;
+          paint();
+          if (remaining <= 0) {
+            clearInterval(tick);
+            onFinish();
+          }
+        }, 1000);
+      }
+
+      /* ==================================================
+         WORD REVEAL TASKS
+         ================================================== */
+      function initialiseWordTasks() {
+        document.querySelectorAll("[data-word-task]").forEach((task) => {
+          const set = MEMORY_WORD_SETS[task.dataset.set];
+          const revealButton = task.querySelector("[data-reveal-words]");
+          const stage = task.querySelector("[data-word-stage]");
+          const frame = task.querySelector("[data-word-frame]");
+          const timerEl = task.querySelector("[data-timer]");
+          const valueEl = task.querySelector("[data-timer-value]");
+          const fillEl = task.querySelector("[data-timer-fill]");
+          const doneEl = task.querySelector("[data-word-done]");
+          const revealTarget = task.dataset.revealTarget;
+          const seconds = Number(task.dataset.duration) || 60;
+
+          if (!set || !revealButton || !stage || !frame) return;
+
+          revealButton.addEventListener("click", () => {
+            revealButton.disabled = true;
+            revealButton.style.display = "none";
+
+            frame.srcdoc = buildWordFrameDoc(set);
+            stage.hidden = false;
+
+            startCountdown(timerEl, valueEl, fillEl, seconds, () => {
+              frame.srcdoc = "";
+              stage.hidden = true;
+              if (doneEl) doneEl.hidden = false;
+              if (revealTarget) revealPanelStep(revealTarget);
+            });
+          });
+        });
+      }
+
+      /* ==================================================
+         FREE RECALL — type the words you remember
+         ================================================== */
+      function initialiseRecallBlocks() {
+        document.querySelectorAll("[data-recall]").forEach((block) => {
+          const set = MEMORY_WORD_SETS[block.dataset.set];
+          const input = block.querySelector("[data-recall-input]");
+          const checkButton = block.querySelector("[data-recall-check]");
+          const feedback = block.querySelector("[data-recall-feedback]");
+
+          if (!set || !input || !checkButton || !feedback) return;
+
+          checkButton.addEventListener("click", () => {
+            const words = memorySetWords(set);
+            const typed = Array.from(new Set(
+              input.value
+                .split(/[\n,;]+/)
+                .map((word) => word.trim().toLowerCase())
+                .filter(Boolean)
+            ));
+
+            const found = words.filter((word) => typed.includes(word.toLowerCase()));
+            const missed = words.filter((word) => !typed.includes(word.toLowerCase()));
+            const invented = typed.filter((word) => !words.some((w) => w.toLowerCase() === word));
+
+            let html = `<p class="feedback-score">You remembered ${found.length} of ${words.length} words.</p>`;
+            if (invented.length) {
+              html += `<p>These weren't on the list: ${escapeHtml(invented.join(", "))}.
+                       Feeling sure about a word you never saw is a false memory — your brain fills gaps
+                       with words that fit the topic.</p>`;
+            }
+            if (missed.length) {
+              html += `<p>Words you missed: ${escapeHtml(missed.join(", "))}.</p>`;
+            }
+
+            feedback.innerHTML = html;
+            feedback.hidden = false;
+            input.readOnly = true;
+            checkButton.disabled = true;
+
+            // mark this block answered and reveal any after-questions placeholder
+            block.dataset.answeredRecall = "true";
+            checkAndRevealAfterQuestions(block);
+          });
+        });
+      }
+
+      /* ==================================================
+         "HOW MANY DID YOU REMEMBER?" NUMBER ENTRY
+         (separate from the attention tab's number entry,
+         which prints a fixed answer)
+         ================================================== */
+      function initialiseCountEntries() {
+        document.querySelectorAll("[data-count-entry]").forEach((block) => {
+          const input = block.querySelector("[data-count-input]");
+          const submit = block.querySelector("[data-count-submit]");
+          const feedback = block.querySelector("[data-count-feedback]");
+          const total = block.dataset.total || "20";
+
+          if (!input || !submit || !feedback) return;
+
+          function record() {
+            const value = input.value.trim();
+            if (value === "") return;
+
+            feedback.innerHTML = `<p class="feedback-score">You recorded ${escapeHtml(value)} out of ${escapeHtml(total)}.</p>
+                                  <p>Keep this number — you'll compare it with your other two attempts.</p>`;
+            feedback.hidden = false;
+            input.readOnly = true;
+            submit.disabled = true;
+            // mark answered and reveal placeholder if paired question is done
+            block.dataset.answeredCount = "true";
+            checkAndRevealAfterQuestions(block);
+          }
+
+          submit.addEventListener("click", record);
+          input.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              record();
+            }
+          });
+        });
+      }
+
+      /* ==================================================
+         TAP-THE-WORDS QUESTIONS
+         data-choice-mode="in-list"     → tap words that WERE shown
+         data-choice-mode="not-in-list" → tap words that were NOT shown
+         ================================================== */
+      function initialiseWordChoiceBlocks() {
+        document.querySelectorAll("[data-word-choice]").forEach((block) => {
+          const set = MEMORY_WORD_SETS[block.dataset.set];
+          const chipWrap = block.querySelector("[data-chips]");
+          const checkButton = block.querySelector("[data-choice-check]");
+          const feedback = block.querySelector("[data-choice-feedback]");
+          const mode = block.dataset.choiceMode === "not-in-list" ? "not-in-list" : "in-list";
+          const realCount = Number(block.dataset.realCount) || 6;
+          const lureCount = Number(block.dataset.lureCount) || 4;
+
+          if (!set || !chipWrap || !checkButton || !feedback) return;
+
+          const options = shuffleArray([
+            ...shuffleArray(memorySetWords(set)).slice(0, realCount).map((word) => ({ word, inList: true })),
+            ...shuffleArray(set.lures || []).slice(0, lureCount).map((word) => ({ word, inList: false }))
+          ]);
+
+          const chips = options.map((option) => {
+            const chip = document.createElement("button");
+            chip.type = "button";
+            chip.className = "word-chip";
+            chip.textContent = option.word;
+            chip.setAttribute("aria-pressed", "false");
+            chip.addEventListener("click", () => {
+              const selected = chip.dataset.selected === "true";
+              chip.dataset.selected = String(!selected);
+              chip.setAttribute("aria-pressed", String(!selected));
+            });
+            chipWrap.appendChild(chip);
+            return { chip, option };
+          });
+
+          checkButton.addEventListener("click", () => {
+            let correct = 0;
+
+            chips.forEach(({ chip, option }) => {
+              const shouldSelect = mode === "in-list" ? option.inList : !option.inList;
+              const selected = chip.dataset.selected === "true";
+
+              chip.disabled = true;
+              if (selected && shouldSelect) {
+                chip.classList.add("is-correct");
+                correct += 1;
+              } else if (selected && !shouldSelect) {
+                chip.classList.add("is-wrong");
+              } else if (!selected && shouldSelect) {
+                chip.classList.add("is-missed");
+              } else {
+                correct += 1;
+              }
+            });
+
+            const targets = chips.filter(({ option }) => (mode === "in-list" ? option.inList : !option.inList)).length;
+
+            feedback.innerHTML =
+              `<p class="feedback-score">${correct} of ${chips.length} words sorted correctly.</p>` +
+              `<p>Green means you got it. Orange means you picked a word you shouldn't have. ` +
+              `A dashed green outline is one of the ${targets} you missed.</p>`;
+            feedback.hidden = false;
+            checkButton.disabled = true;
+            // mark this block answered and reveal any after-questions placeholder
+            block.dataset.answeredChoice = "true";
+            checkAndRevealAfterQuestions(block);
+          });
+        });
+      }
+
+      // Helper: find the containing questions wrapper and reveal the placeholder
+      function checkAndRevealAfterQuestions(el) {
+        let ancestor = el;
+        while (ancestor && ancestor !== document.body) {
+          if (ancestor.id && ancestor.id.endsWith("-questions")) break;
+          ancestor = ancestor.parentElement;
+        }
+        if (!ancestor || ancestor === document.body) return;
+
+        const hasCount = ancestor.querySelector("[data-count-entry]") !== null;
+        const hasRecall = ancestor.querySelector("[data-recall]") !== null;
+        const hasChoice = ancestor.querySelector("[data-word-choice]") !== null;
+
+        const q1Answered = (hasCount && ancestor.querySelector("[data-count-entry]").dataset.answeredCount === "true") ||
+                           (hasRecall && ancestor.querySelector("[data-recall]").dataset.answeredRecall === "true");
+
+        const q2Answered = hasChoice && ancestor.querySelector("[data-word-choice]").dataset.answeredChoice === "true";
+
+        if (q1Answered && q2Answered) {
+          const placeholder = ancestor.querySelector('.after-questions-placeholder');
+          if (placeholder) placeholder.hidden = false;
+        }
+      }
+
+      /* ==================================================
+         MULTIPLE-CHOICE POLL (CounterAPI)
+         ================================================== */
+      function initialisePollBlocks() {
+        document.querySelectorAll("[data-poll]").forEach((block) => {
+          const buttons = Array.from(block.querySelectorAll("[data-poll-option]"));
+          const results = block.querySelector("[data-poll-results]");
+
+          if (!buttons.length || !results) return;
+
+          async function renderResults() {
+            const counts = await Promise.all(buttons.map((button) => counterApiRead(button.dataset.pollOption)));
+            const total = counts.reduce((sum, count) => sum + (count || 0), 0) || 1;
+
+            results.innerHTML = buttons.map((button, index) => {
+              const count = counts[index] || 0;
+              const percent = Math.round((count / total) * 100);
+              return `
+                <div class="poll-row">
+                  <span class="poll-row-label">${escapeHtml(button.textContent.trim())}</span>
+                  <span class="poll-row-track"><span class="poll-row-fill" style="width:${percent}%"></span></span>
+                  <span class="poll-row-count">${percent}% (${count})</span>
+                </div>`;
+            }).join("");
+
+            results.hidden = false;
+          }
+
+          buttons.forEach((button) => {
+            button.addEventListener("click", async () => {
+              if (block.dataset.voted === "true") return;
+              block.dataset.voted = "true";
+
+              buttons.forEach((other) => other.setAttribute("data-selected", String(other === button)));
+              await counterApiHit(button.dataset.pollOption, "up");
+              renderResults();
+            });
+          });
+        });
+      }
+
+      /* ==================================================
+         INIT — add these five calls to your existing
+         DOMContentLoaded listener.
+         ================================================== */
+      document.addEventListener("DOMContentLoaded", () => {
+        initialiseWordTasks();
+        initialiseRecallBlocks();
+        initialiseCountEntries();
+        initialiseWordChoiceBlocks();
+        initialisePollBlocks();
+      });
+
 
 /* ==================================================
    ANXIETY — WHICH MOUSE CHOICE
