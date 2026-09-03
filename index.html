@@ -1,581 +1,572 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <style>:root {
-  --color-bg: #fbf6e8;
-  --color-ink: #26211c;
-  --color-ink-soft: #57503f;
-  --color-purple: #4a2fe3;
-  --color-orange: #f0653c;
-
-  --color-manila: #e7cf98;
-  --color-manila-dark: #cdad6c;
-  --color-manila-tab: #ecdcac;
-  --color-manila-tab-inactive: #ded0a2;
-  --color-manila-body: #fbf3dd;
-
-  --color-card-border: #e4dcc6;
-  --color-green: #3fb27f;
-
-  --font-display: "Figtree", -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-body: "Figtree", -apple-system, BlinkMacSystemFont, sans-serif;
-
-  --radius-md: 14px;
-  --radius-lg: 20px;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background: var(--color-bg);
-  color: var(--color-ink);
-  font-family: var(--font-body);
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-}
-
-button {
-  font-family: inherit;
-}
-
-/* ==================================================
-   HEADER
-   ================================================== */
-.site-header {
-  display: flex;
-  align-items: center;
-  padding: 28px 40px 0;
-}
-
-.logo-placeholder {
-  display: flex;
-  align-items: left;
-  gap: 10px;
-}
-
-.logo-mark {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: conic-gradient(
-    var(--color-purple) 0deg 90deg,
-    var(--color-orange) 90deg 180deg,
-    #f4c94b 180deg 270deg,
-    #3fb27f 270deg 360deg
-  );
-}
-
-.logo-word {
-  font-weight: 800;
-  font-size: 1.35rem;
-  color: var(--color-ink);
-}
-
-/* ==================================================
-   PAGE LAYOUT
-   ================================================== */
-.page {
-  max-width: 920px;
-  margin: 0 auto;
-  padding: 32px 24px 80px;
-}
-
-.page-intro-block {
-  margin-bottom: 40px;
-}
-
-.page-title {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(2.1rem, 4vw, 3rem);
-  color: var(--color-purple);
-  margin: 0 0 14px;
-  letter-spacing: -0.01em;
-}
-
-.page-summary {
-  max-width: 640px;
-  color: var(--color-ink-soft);
-  font-size: 1.05rem;
-  margin: 0 0 0;
-  padding-top: 16px;
-  border-top: 4px solid var(--color-orange);
-}
-
-/* ==================================================
-   MANILA FOLDER TABS
-   Three overlapping trapezoid tabs sitting on top of a
-   folder-coloured body, like a physical manila folder.
-   ================================================== */
-.folder-wrap {
-  margin-top: 8px;
-}
-
-.folder-tabs {
-  display: flex;
-  align-items: flex-end;
-  padding-left: 24px;
-}
-
-.folder-tab {
-  appearance: none;
-  border: none;
-  cursor: pointer;
-  position: relative;
-  background: var(--color-manila-tab-inactive);
-  color: var(--color-ink-soft);
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.05rem;
-  padding: 14px 28px;
-  border-radius: 12px 12px 6px 6px;
-  margin-left: -18px;
-  transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.12s ease;
-  z-index: 1;
-}
-
-.folder-tab:first-child {
-  margin-left: 0;
-}
-
-.folder-tab:hover {
-  background: var(--color-manila);
-  color: var(--color-ink);
-  box-shadow: 0 8px 20px -18px rgba(38,33,28,0.45);
-}
-
-.folder-tab:focus-visible {
-  outline: 3px solid var(--color-purple);
-  outline-offset: 2px;
-}
-
-.folder-tab.tab-memory {
-  z-index: 2;
-}
-
-.folder-tab.tab-anxiety {
-  z-index: 3;
-}
-
-.folder-tab.is-active {
-  background: var(--color-manila-body);
-  color: var(--color-purple);
-  z-index: 4;
-  transform: translateY(2px);
-  box-shadow: 0 12px 30px -22px rgba(74,47,227,0.18);
-}
-
-/* small rounded flap to emphasize the manila-tab look */
-.folder-tab::after {
-  content: "";
-  position: absolute;
-  right: -8px;
-  bottom: 6px;
-  width: 18px;
-  height: 10px;
-  background: linear-gradient(180deg, rgba(0,0,0,0.04), rgba(0,0,0,0.02));
-  border-radius: 4px;
-  transform: rotate(-6deg);
-  opacity: 0.7;
-}
-
-.folder-body {
-  background: var(--color-manila-body);
-  border: 1px solid var(--color-card-border);
-  border-radius: 0 var(--radius-lg) var(--radius-lg) var(--radius-lg);
-  box-shadow: 0 18px 40px -24px rgba(38, 33, 28, 0.35);
-  padding: 36px 32px 40px;
-  position: relative;
-}
-
-@media (max-width: 640px) {
-  .folder-tabs {
-    padding-left: 0;
-  }
-
-  .folder-tab {
-    padding: 14px 16px 12px;
-    font-size: 0.92rem;
-  }
-
-  .folder-body {
-    padding: 26px 18px 30px;
-  }
-}
-
-/* ==================================================
-   PANEL CONTENT
-   ================================================== */
-.tab-panel[hidden] {
-  display: none;
-}
-
-.panel-step + .panel-step {
-  margin-top: 30px;
-  padding-top: 26px;
-  border-top: 1px dashed var(--color-manila-dark);
-}
-
-.panel-eyebrow {
-  font-family: var(--font-display);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-size: 0.78rem;
-  color: var(--color-orange);
-  margin: 0 0 6px;
-}
-
-.panel-heading {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.4rem;
-  color: var(--color-ink);
-  margin: 0 0 16px;
-}
-
-.panel-body-text {
-  color: var(--color-ink-soft);
-  max-width: 60ch;
-}
-
-/* Side-by-side body + image for explanatory panels */
-.panel-body-row{
-  display:flex;
-  gap:20px;
-  align-items:flex-start;
-}
-.panel-image{flex:0 0 280px}
-.panel-image img{display:block;width:100%;height:auto;border-radius:12px;border:1px solid var(--color-manila-dark)}
-@media(max-width:640px){
-  .panel-body-row{flex-direction:column}
-  .panel-image{flex:0 0 auto}
-}
-
-/* Buttons -------------------------------------------------- */
-.general-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border: none;
-  cursor: pointer;
-  background: var(--color-purple);
-  color: #fff;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 0.95rem;
-  padding: 12px 22px;
-  border-radius: 999px;
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
-}
-
-.general-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 18px -8px rgba(74, 47, 227, 0.55);
-}
-
-.general-button:focus-visible {
-  outline: 3px solid var(--color-orange);
-  outline-offset: 2px;
-}
-
-.watch-video-button {
-  background: var(--color-ink);
-}
-
-.next-button {
-  background: var(--color-orange);
-  margin-top: 22px;
-}
-
-.bounce-symbol {
-  display: inline-block;
-}
-
-/* Question / number entry ----------------------------------- */
-.question-block {
-  margin-top: 26px;
-}
-
-.question-label {
-  font-weight: 600;
-  margin: 0 0 10px;
-}
-
-.number-entry-row {
-  display: flex;
-  gap: 10px;
-}
-
-.table-number-input {
-  font-family: var(--font-body);
-  font-size: 1rem;
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid var(--color-manila-dark);
-  background: #fff;
-  width: 180px;
-  max-width: 100%;
-}
-
-.table-number-input:focus-visible {
-  outline: 3px solid var(--color-purple);
-  outline-offset: 1px;
-}
-
-.table-number-input[readonly] {
-  background: #f7f4ea;
-  border-color: var(--color-manila-dark);
-  color: var(--color-ink-soft);
-}
-
-.entry-hint {
-  margin: 8px 0 0;
-  font-size: 0.85rem;
-  color: var(--color-ink-soft);
-}
-
-.entry-answer {
-  margin-top: 10px;
-  display: none;
-  align-items: center;
-  gap: 10px;
-  background: #fff;
-  border: 1px solid var(--color-manila-dark);
-  border-radius: 10px;
-  padding: 8px 14px;
-  font-weight: 600;
-  width: fit-content;
-}
-
-.entry-answer.visible {
-  display: inline-flex;
-}
-
-.entry-answer .clear-answer {
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-size: 1.1rem;
-  line-height: 1;
-  color: var(--color-ink-soft);
-}
-
-/* Live yes/no tally ------------------------------------------ */
-.tally-block {
-  margin: 18px 0 4px;
-}
-
-.tally-buttons {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-
-.tally-button[data-selected="true"] {
-  background: var(--color-orange);
-}
-
-.tally-bar {
-  display: flex;
-  height: 14px;
-  border-radius: 999px;
-  overflow: hidden;
-  background: var(--color-manila-dark);
-  max-width: 420px;
-}
-
-.tally-bar-yes {
-  background: var(--color-purple);
-}
-
-.tally-bar-no {
-  background: var(--color-orange);
-}
-
-.tally-counts {
-  margin: 10px 0 0;
-  font-size: 0.9rem;
-  color: var(--color-ink-soft);
-}
-
-/* Memory image ------------------------------------------------ */
-.memory-image-frame {
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  border: 1px solid var(--color-manila-dark);
-  max-width: 480px;
-  margin-bottom: 8px;
-}
-
-.memory-image-frame img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-/* Simple counter ------------------------------------------------ */
-.counter-block {
-  margin-top: 30px;
-  padding-top: 24px;
-  border-top: 1px dashed var(--color-manila-dark);
-}
-
-.counter-label {
-  font-weight: 600;
-  margin: 0 0 12px;
-}
-
-.counter-display {
-  display: inline-flex;
-  align-items: center;
-  gap: 18px;
-  background: #fff;
-  border: 1px solid var(--color-manila-dark);
-  border-radius: 999px;
-  padding: 6px 10px;
-}
-
-.counter-button {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-  background: var(--color-purple);
-  color: #fff;
-  font-size: 1.2rem;
-  line-height: 1;
-}
-
-.counter-value {
-  min-width: 2ch;
-  text-align: center;
-  font-weight: 800;
-  font-size: 1.2rem;
-}
-
-/* Mouse choice -------------------------------------------------- */
-.mouse-choice-buttons {
-  display: flex;
-  gap: 14px;
-  margin: 16px 0;
-}
-
-.mouse-choice-button[data-selected="true"] {
-  background: var(--color-orange);
-}
-
-.mouse-choice-answer {
-  margin-top: 14px;
-  background: #fff;
-  border: 1px solid var(--color-manila-dark);
-  border-radius: var(--radius-md);
-  padding: 16px 18px;
-  max-width: 60ch;
-}
-
-/* ==================================================
-   VIDEO MODAL
-   ================================================== */
-.modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(38, 33, 28, 0.6);
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  z-index: 50;
-}
-
-.modal.is-open {
-  display: flex;
-}
-
-.modal-content {
-  background: var(--color-manila-body);
-  border-radius: var(--radius-lg);
-  padding: 22px;
-  width: min(720px, 100%);
-}
-
-.modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 14px;
-}
-
-.modal-header h2 {
-  font-family: var(--font-display);
-  margin: 0;
-  font-size: 1.1rem;
-  color: var(--color-purple);
-}
-
-.close-button {
-  border: none;
-  background: none;
-  font-size: 1.4rem;
-  cursor: pointer;
-  color: var(--color-ink);
-  line-height: 1;
-}
-
-.video-modal-player {
-  width: 100%;
-  border-radius: var(--radius-md);
-  background: #000;
-  max-height: 70vh;
-}
-
-/* iPad / touch improvements */
-button, .folder-tab, .general-button, .table-number-input {
-  -webkit-tap-highlight-color: rgba(0,0,0,0.08);
-  touch-action: manipulation;
-}
-
-.general-button {
-  min-height: 44px; /* comfortable touch target */
-}
-
-#youtubePlayer, .video-modal-player {
-  aspect-ratio: 16/9;
-  height: auto;
-  max-height: 70vh;
-}
-
-.modal-content {
-  max-height: 94vh;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* Make folder tabs easier to tap on tablets */
-@media (max-width: 900px) {
-  .folder-tabs { padding-left: 12px; }
-  .folder-tab { margin-left: -8px; padding: 16px 20px; }
-}
-
-@media (max-width: 640px) {
-  .folder-tabs { padding-left: 8px; }
-  .folder-tab { margin-left: -6px; padding: 14px 14px; }
-  .general-button { padding: 14px 18px; }
-  .table-number-input { padding: 12px 14px; font-size: 1.05rem; }
-}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>How do we study the mind?</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --color-bg: #fbf6e8;
+        --color-ink: #26211c;
+        --color-ink-soft: #57503f;
+        --color-purple: #4a2fe3;
+        --color-orange: #f0653c;
+
+        --color-manila: #e7cf98;
+        --color-manila-dark: #cdad6c;
+        --color-manila-tab: #ecdcac;
+        --color-manila-tab-inactive: #ded0a2;
+        --color-manila-body: #fbf3dd;
+
+        --color-card-border: #e4dcc6;
+        --color-green: #3fb27f;
+
+        --font-display: "Figtree", -apple-system, BlinkMacSystemFont, sans-serif;
+        --font-body: "Figtree", -apple-system, BlinkMacSystemFont, sans-serif;
+
+        --radius-md: 14px;
+        --radius-lg: 20px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: var(--color-bg);
+        color: var(--color-ink);
+        font-family: var(--font-body);
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      button {
+        font-family: inherit;
+      }
+
+      /* ==================================================
+         HEADER
+         ================================================== */
+      .site-header {
+        display: flex;
+        align-items: center;
+        padding: 28px 40px 0;
+      }
+
+      .logo-placeholder {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      /* ==================================================
+         PAGE LAYOUT
+         ================================================== */
+      .page {
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 32px 24px 80px;
+      }
+
+      .page-intro-block {
+        margin-bottom: 40px;
+      }
+
+      .page-title {
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: clamp(2.1rem, 4vw, 3rem);
+        color: var(--color-purple);
+        margin: 0 0 14px;
+        letter-spacing: -0.01em;
+      }
+
+      /* FIX: this was a <p> containing <h3>/<h4>, which browsers close
+         early — the orange rule ended up above empty content. Now a div. */
+      .page-summary {
+        max-width: 640px;
+        color: var(--color-ink-soft);
+        font-size: 1.05rem;
+        margin: 0;
+        padding-top: 16px;
+        border-top: 4px solid var(--color-orange);
+      }
+
+      .page-summary h2 {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        color: var(--color-ink);
+        margin: 0 0 10px;
+      }
+
+      .page-summary p {
+        margin: 0 0 12px;
+      }
+
+      .page-summary p:last-child {
+        margin-bottom: 0;
+      }
+
+      /* ==================================================
+         MANILA FOLDER TABS
+         ================================================== */
+      .folder-wrap {
+        margin-top: 8px;
+      }
+
+      .folder-tabs {
+        display: flex;
+        align-items: flex-end;
+        padding-left: 24px;
+      }
+
+      .folder-tab {
+        appearance: none;
+        border: none;
+        cursor: pointer;
+        position: relative;
+        background: var(--color-manila-tab-inactive);
+        color: var(--color-ink-soft);
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1.05rem;
+        padding: 14px 28px;
+        border-radius: 12px 12px 6px 6px;
+        margin-left: -18px;
+        transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease,
+          box-shadow 0.12s ease;
+        z-index: 1;
+      }
+
+      .folder-tab:first-child {
+        margin-left: 0;
+      }
+
+      .folder-tab:hover {
+        background: var(--color-manila);
+        color: var(--color-ink);
+        box-shadow: 0 8px 20px -18px rgba(38, 33, 28, 0.45);
+      }
+
+      .folder-tab:focus-visible {
+        outline: 3px solid var(--color-purple);
+        outline-offset: 2px;
+      }
+
+      .folder-tab.tab-memory {
+        z-index: 2;
+      }
+
+      .folder-tab.tab-anxiety {
+        z-index: 3;
+      }
+
+      .folder-tab.is-active {
+        background: var(--color-manila-body);
+        color: var(--color-purple);
+        z-index: 4;
+        transform: translateY(2px);
+        box-shadow: 0 12px 30px -22px rgba(74, 47, 227, 0.18);
+      }
+
+      .folder-tab::after {
+        content: "";
+        position: absolute;
+        right: -8px;
+        bottom: 6px;
+        width: 18px;
+        height: 10px;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.02));
+        border-radius: 4px;
+        transform: rotate(-6deg);
+        opacity: 0.7;
+      }
+
+      .folder-body {
+        background: var(--color-manila-body);
+        border: 1px solid var(--color-card-border);
+        border-radius: 0 var(--radius-lg) var(--radius-lg) var(--radius-lg);
+        box-shadow: 0 18px 40px -24px rgba(38, 33, 28, 0.35);
+        padding: 36px 32px 40px;
+        position: relative;
+      }
+
+      @media (max-width: 640px) {
+        .folder-tabs {
+          padding-left: 0;
+        }
+
+        .folder-tab {
+          padding: 14px 16px 12px;
+          font-size: 0.92rem;
+        }
+
+        .folder-body {
+          padding: 26px 18px 30px;
+        }
+      }
+
+      /* ==================================================
+         PANEL CONTENT
+         ================================================== */
+      .tab-panel[hidden] {
+        display: none;
+      }
+
+      .tab-panel:focus {
+        outline: none;
+      }
+
+      .panel-step + .panel-step {
+        margin-top: 30px;
+        padding-top: 26px;
+        border-top: 1px dashed var(--color-manila-dark);
+      }
+
+      .panel-eyebrow {
+        font-family: var(--font-display);
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        font-size: 0.8rem;
+        color: var(--color-orange);
+        margin: 0 0 6px;
+      }
+
+      .panel-heading {
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: 1.4rem;
+        color: var(--color-ink);
+        margin: 0 0 16px;
+      }
+
+      .panel-body-text {
+        color: var(--color-ink-soft);
+        max-width: 60ch;
+      }
+
+      .panel-body-row {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+      }
+
+      .panel-image {
+        flex: 0 0 280px;
+      }
+
+      .panel-image img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 12px;
+        border: 1px solid var(--color-manila-dark);
+      }
+
+      @media (max-width: 640px) {
+        .panel-body-row {
+          flex-direction: column;
+        }
+        .panel-image {
+          flex: 0 0 auto;
+        }
+      }
+
+      /* Buttons -------------------------------------------------- */
+      .general-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: none;
+        cursor: pointer;
+        background: var(--color-purple);
+        color: #fff;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 0.95rem;
+        padding: 12px 22px;
+        border-radius: 999px;
+        transition: transform 0.12s ease, box-shadow 0.12s ease;
+        min-height: 44px;
+      }
+
+      .general-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 18px -8px rgba(74, 47, 227, 0.55);
+      }
+
+      .general-button:focus-visible {
+        outline: 3px solid var(--color-orange);
+        outline-offset: 2px;
+      }
+
+      .general-button[disabled] {
+        opacity: 0.55;
+        cursor: default;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .watch-video-button {
+        background: var(--color-ink);
+      }
+
+      .next-button {
+        background: var(--color-orange);
+        margin-top: 22px;
+      }
+
+      .bounce-symbol {
+        display: inline-block;
+      }
+
+      /* Question / number entry ----------------------------------- */
+      .question-block {
+        margin-top: 26px;
+      }
+
+      .question-label {
+        font-weight: 600;
+        margin: 0 0 10px;
+      }
+
+      .number-entry-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .table-number-input {
+        font-family: var(--font-body);
+        font-size: 1rem;
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1px solid var(--color-manila-dark);
+        background: #fff;
+        width: 180px;
+        max-width: 100%;
+      }
+
+      .table-number-input:focus-visible {
+        outline: 3px solid var(--color-purple);
+        outline-offset: 1px;
+      }
+
+      .table-number-input[readonly] {
+        background: #f7f4ea;
+        border-color: var(--color-manila-dark);
+        color: var(--color-ink-soft);
+      }
+
+      .entry-hint {
+        margin: 8px 0 0;
+        font-size: 0.85rem;
+        color: var(--color-ink-soft);
+      }
+
+      .entry-answer {
+        margin-top: 10px;
+        display: none;
+        align-items: center;
+        gap: 10px;
+        background: #fff;
+        border: 1px solid var(--color-manila-dark);
+        border-radius: 10px;
+        padding: 8px 14px;
+        font-weight: 600;
+        width: fit-content;
+      }
+
+      .entry-answer.visible {
+        display: inline-flex;
+      }
+
+      /* Live yes/no tally ------------------------------------------ */
+      .tally-block {
+        margin: 18px 0 4px;
+      }
+
+      .tally-buttons {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+
+      .tally-button[data-selected="true"] {
+        background: var(--color-orange);
+      }
+
+      .tally-bar {
+        display: flex;
+        height: 14px;
+        border-radius: 999px;
+        overflow: hidden;
+        background: var(--color-manila-dark);
+        max-width: 420px;
+      }
+
+      .tally-bar-yes {
+        background: var(--color-purple);
+      }
+
+      .tally-bar-no {
+        background: var(--color-orange);
+      }
+
+      .tally-counts {
+        margin: 10px 0 0;
+        font-size: 0.9rem;
+        color: var(--color-ink-soft);
+      }
+
+      .counter-error {
+        margin: 10px 0 0;
+        font-size: 0.85rem;
+        color: var(--color-orange);
+      }
+
+      .counter-error[hidden] {
+        display: none;
+      }
+
+      /* Image frame ------------------------------------------------ */
+      .memory-image-frame {
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        border: 1px solid var(--color-manila-dark);
+        max-width: 480px;
+        margin-bottom: 8px;
+      }
+
+      .memory-image-frame img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      /* ==================================================
+         VIDEO MODAL
+         ================================================== */
+      .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(38, 33, 28, 0.6);
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        z-index: 50;
+      }
+
+      .modal.is-open {
+        display: flex;
+      }
+
+      .modal-content {
+        background: var(--color-manila-body);
+        border-radius: var(--radius-lg);
+        padding: 22px;
+        width: min(720px, 100%);
+        max-height: 94vh;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+      }
+
+      .modal-header h2 {
+        font-family: var(--font-display);
+        margin: 0;
+        font-size: 1.1rem;
+        color: var(--color-purple);
+      }
+
+      .close-button {
+        border: none;
+        background: none;
+        font-size: 1.4rem;
+        cursor: pointer;
+        color: var(--color-ink);
+        line-height: 1;
+        min-width: 44px;
+        min-height: 44px;
+      }
+
+      .video-modal-player {
+        width: 100%;
+        border-radius: var(--radius-md);
+        background: #000;
+      }
+
+      #youtubePlayer,
+      .video-modal-player {
+        aspect-ratio: 16/9;
+        height: auto;
+        max-height: 70vh;
+      }
+
+      button,
+      .folder-tab,
+      .general-button,
+      .table-number-input {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0.08);
+        touch-action: manipulation;
+      }
+
+      @media (max-width: 900px) {
+        .folder-tabs {
+          padding-left: 12px;
+        }
+        .folder-tab {
+          margin-left: -8px;
+          padding: 16px 20px;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .folder-tabs {
+          padding-left: 8px;
+        }
+        .folder-tab {
+          margin-left: -6px;
+          padding: 14px 14px;
+        }
+        .general-button {
+          padding: 14px 18px;
+        }
+        .table-number-input {
+          padding: 12px 14px;
+          font-size: 1.05rem;
+        }
+      }
+
       /* --- word reveal + countdown --- */
-      .word-task { margin-top: 20px; }
+      .word-task {
+        margin-top: 20px;
+      }
 
-      .word-stage[hidden] { display: none; }
+      .word-stage[hidden] {
+        display: none;
+      }
 
       .word-timer {
         display: flex;
@@ -610,8 +601,13 @@ button, .folder-tab, .general-button, .table-number-input {
         transition: width 1s linear;
       }
 
-      .word-timer.is-low .word-timer-value { color: var(--color-orange); }
-      .word-timer.is-low .word-timer-fill { background: var(--color-orange); }
+      .word-timer.is-low .word-timer-value {
+        color: var(--color-orange);
+      }
+
+      .word-timer.is-low .word-timer-fill {
+        background: var(--color-orange);
+      }
 
       .word-frame {
         display: block;
@@ -628,7 +624,7 @@ button, .folder-tab, .general-button, .table-number-input {
         color: var(--color-ink-soft);
       }
 
-      /* --- free recall (type the words) --- */
+      /* --- free recall --- */
       .recall-textarea {
         font-family: var(--font-body);
         font-size: 1rem;
@@ -642,7 +638,10 @@ button, .folder-tab, .general-button, .table-number-input {
         resize: vertical;
       }
 
-      .recall-textarea:focus-visible { outline: 3px solid var(--color-purple); outline-offset: 1px; }
+      .recall-textarea:focus-visible {
+        outline: 3px solid var(--color-purple);
+        outline-offset: 1px;
+      }
 
       .feedback-box {
         margin-top: 14px;
@@ -653,10 +652,23 @@ button, .folder-tab, .general-button, .table-number-input {
         max-width: 60ch;
       }
 
-      .feedback-box[hidden] { display: none; }
-      .feedback-box p { margin: 0 0 8px; }
-      .feedback-box p:last-child { margin-bottom: 0; }
-      .feedback-score { font-weight: 800; font-size: 1.05rem; color: var(--color-purple); }
+      .feedback-box[hidden] {
+        display: none;
+      }
+
+      .feedback-box p {
+        margin: 0 0 8px;
+      }
+
+      .feedback-box p:last-child {
+        margin-bottom: 0;
+      }
+
+      .feedback-score {
+        font-weight: 800;
+        font-size: 1.05rem;
+        color: var(--color-purple);
+      }
 
       /* --- clickable word chips --- */
       .word-chips {
@@ -679,17 +691,53 @@ button, .folder-tab, .general-button, .table-number-input {
         min-height: 44px;
       }
 
-      .word-chip:focus-visible { outline: 3px solid var(--color-purple); outline-offset: 2px; }
-      .word-chip[data-selected="true"] { background: var(--color-purple); border-color: var(--color-purple); color: #fff; }
-      .word-chip.is-correct { background: var(--color-green); border-color: var(--color-green); color: #fff; }
-      .word-chip.is-wrong { background: var(--color-orange); border-color: var(--color-orange); color: #fff; }
-      .word-chip.is-missed { border: 2px dashed var(--color-green); color: var(--color-green); }
-      .word-chip[disabled] { cursor: default; }
+      .word-chip:focus-visible {
+        outline: 3px solid var(--color-purple);
+        outline-offset: 2px;
+      }
 
-      /* --- multiple-choice poll (CounterAPI) --- */
-      .poll-options { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; }
-      .poll-option[data-selected="true"] { background: var(--color-orange); }
-      .poll-results[hidden] { display: none; }
+      .word-chip[data-selected="true"] {
+        background: var(--color-purple);
+        border-color: var(--color-purple);
+        color: #fff;
+      }
+
+      .word-chip.is-correct {
+        background: var(--color-green);
+        border-color: var(--color-green);
+        color: #fff;
+      }
+
+      .word-chip.is-wrong {
+        background: var(--color-orange);
+        border-color: var(--color-orange);
+        color: #fff;
+      }
+
+      .word-chip.is-missed {
+        border: 2px dashed var(--color-green);
+        color: var(--color-green);
+      }
+
+      .word-chip[disabled] {
+        cursor: default;
+      }
+
+      /* --- multiple-choice poll --- */
+      .poll-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+
+      .poll-option[data-selected="true"] {
+        background: var(--color-orange);
+      }
+
+      .poll-results[hidden] {
+        display: none;
+      }
 
       .poll-row {
         display: grid;
@@ -708,16 +756,27 @@ button, .folder-tab, .general-button, .table-number-input {
         overflow: hidden;
       }
 
-      .poll-row-fill { display: block; height: 100%; background: var(--color-purple); transition: width 0.3s ease; }
+      .poll-row-fill {
+        display: block;
+        height: 100%;
+        background: var(--color-purple);
+        transition: width 0.3s ease;
+      }
 
       @media (max-width: 640px) {
-        .word-frame { height: 340px; }
-        .poll-row { grid-template-columns: 1fr; gap: 4px; }
-        .word-timer-track { max-width: none; }
+        .word-frame {
+          height: 340px;
+        }
+        .poll-row {
+          grid-template-columns: 1fr;
+          gap: 4px;
+        }
+        .word-timer-track {
+          max-width: none;
+        }
       }
-      /* --- fullscreen video (title stays above the player) --- */
-      /* :fullscreen and :-webkit-full-screen must be separate rules —
-         one unknown selector would kill the whole block. */
+
+      /* --- fullscreen video --- */
       .modal-content:fullscreen {
         width: 100vw;
         height: 100vh;
@@ -730,9 +789,18 @@ button, .folder-tab, .general-button, .table-number-input {
         justify-content: center;
         padding: 24px 32px;
       }
-      .modal-content:fullscreen .modal-header h2 { font-size: clamp(1.1rem, 2.4vw, 1.8rem); color: #fff; }
-      .modal-content:fullscreen .close-button { color: #fff; font-size: 2rem; }
-      .modal-content:fullscreen .video-modal-player { max-height: 82vh; border-radius: 8px; }
+      .modal-content:fullscreen .modal-header h2 {
+        font-size: clamp(1.1rem, 2.4vw, 1.8rem);
+        color: #fff;
+      }
+      .modal-content:fullscreen .close-button {
+        color: #fff;
+        font-size: 2rem;
+      }
+      .modal-content:fullscreen .video-modal-player {
+        max-height: 82vh;
+        border-radius: 8px;
+      }
 
       .modal-content:-webkit-full-screen {
         width: 100vw;
@@ -746,20 +814,50 @@ button, .folder-tab, .general-button, .table-number-input {
         justify-content: center;
         padding: 24px 32px;
       }
-      .modal-content:-webkit-full-screen .modal-header h2 { font-size: clamp(1.1rem, 2.4vw, 1.8rem); color: #fff; }
-      .modal-content:-webkit-full-screen .close-button { color: #fff; font-size: 2rem; }
-      .modal-content:-webkit-full-screen .video-modal-player { max-height: 82vh; border-radius: 8px; }
+      .modal-content:-webkit-full-screen .modal-header h2 {
+        font-size: clamp(1.1rem, 2.4vw, 1.8rem);
+        color: #fff;
+      }
+      .modal-content:-webkit-full-screen .close-button {
+        color: #fff;
+        font-size: 2rem;
+      }
+      .modal-content:-webkit-full-screen .video-modal-player {
+        max-height: 82vh;
+        border-radius: 8px;
+      }
 
       /* --- Rat A / Rat B choice --- */
-      .choice-buttons { display: flex; flex-wrap: wrap; gap: 14px; margin: 16px 0 0; }
-      .choice-button[data-selected="true"] { background: var(--color-orange); }
-      .choice-button.is-correct { background: var(--color-green); }
-      .choice-button.is-wrong { background: var(--color-orange); }
-      .choice-button[disabled] { opacity: 1; }
+      .choice-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin: 16px 0 0;
+      }
+      .choice-button[data-selected="true"] {
+        background: var(--color-orange);
+      }
+      .choice-button.is-correct {
+        background: var(--color-green);
+      }
+      .choice-button.is-wrong {
+        background: var(--color-orange);
+      }
+      .choice-button[disabled] {
+        opacity: 1;
+      }
 
       /* --- fill in the blanks --- */
-      .blank-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-      .blank-row label { font-weight: 700; min-width: 4.5rem; }
+      .blank-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+      .blank-row label {
+        font-weight: 700;
+        min-width: 4.5rem;
+      }
 
       .blank-input {
         font-family: var(--font-body);
@@ -771,10 +869,22 @@ button, .folder-tab, .general-button, .table-number-input {
         width: 170px;
         max-width: 100%;
       }
-      .blank-input:focus-visible { outline: 3px solid var(--color-purple); outline-offset: 1px; }
-      .blank-input.is-correct { border: 2px solid var(--color-green); background: #f2fbf7; }
-      .blank-input.is-wrong { border: 2px solid var(--color-orange); background: #fef4f1; }
-      .blank-input[readonly] { background: #f7f4ea; color: var(--color-ink-soft); }
+      .blank-input:focus-visible {
+        outline: 3px solid var(--color-purple);
+        outline-offset: 1px;
+      }
+      .blank-input.is-correct {
+        border: 2px solid var(--color-green);
+        background: #f2fbf7;
+      }
+      .blank-input.is-wrong {
+        border: 2px solid var(--color-orange);
+        background: #fef4f1;
+      }
+      .blank-input[readonly] {
+        background: #f7f4ea;
+        color: var(--color-ink-soft);
+      }
 
       .gut-brain-box {
         margin-top: 26px;
@@ -785,51 +895,63 @@ button, .folder-tab, .general-button, .table-number-input {
         border-radius: var(--radius-md);
         max-width: 62ch;
       }
-      .gut-brain-box[hidden] { display: none; }
-      .gut-brain-box p { margin: 0; color: var(--color-ink-soft); }
-
-      @media (max-width: 640px) {
-        .blank-row { flex-wrap: wrap; gap: 8px; }
+      .gut-brain-box[hidden] {
+        display: none;
+      }
+      .gut-brain-box p {
+        margin: 0;
+        color: var(--color-ink-soft);
       }
 
+      .method-note {
+        margin-top: 20px;
+        font-size: 0.92rem;
+        color: var(--color-ink-soft);
+        max-width: 60ch;
+        border-left: 3px solid var(--color-manila-dark);
+        padding-left: 14px;
+      }
+
+      @media (max-width: 640px) {
+        .blank-row {
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition-duration: 0.01ms !important;
+          animation-duration: 0.01ms !important;
+        }
+      }
     </style>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>How do we study the mind?</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-
   </head>
 
   <body>
- 
     <header class="site-header">
-      <div class="logo-placeholder" aria-hidden="true">
-      <img src="gtac_primary_onyx.png" alt="GTAC logo" width="180" height="80">
+      <div class="logo-placeholder">
+        <img src="gtac_primary_onyx.png" alt="GTAC" width="180" height="80" />
       </div>
     </header>
 
     <main class="page">
-      <!-- ==================================================
-           PAGE TITLE
-           Placeholder title/intro copy — replace with the real
-           wording for this lesson.
-           ================================================== -->
       <section class="page-intro-block">
         <h1 class="page-title">How can we study the mind?</h1>
-        <p class="page-summary">
-          <h3>Psychology is the study of the human mind and behaviour.</h3>
-          <h4>The mind itself is hard to study directly, because it doesn't always produce results we can measure. That's why behavioural neuroscientists and psychologists look at both the biology of the brain and the behaviours we can observe, to build a clearer picture of how the mind works.</h4>
-          This resource will walk you through three short psychology investigations. 
-          <br> Choose one of the human behaviours to get started. 
-          <br> Record your own results, and see how your answers compare with everyone else's.
-        </p>
+
+        <div class="page-summary">
+          <h2>Psychology is the study of the human mind and behaviour.</h2>
+          <p>
+            The mind itself is hard to study directly, because it doesn't always produce results we can
+            measure. That's why behavioural neuroscientists and psychologists look at both the biology of
+            the brain and the behaviours we can observe, to build a clearer picture of how the mind works.
+          </p>
+          <p>
+            This resource will walk you through three short psychology investigations. Choose one of the
+            human behaviours to get started. Record your own results, and see how your answers compare with
+            everyone else's.
+          </p>
+        </div>
       </section>
 
       <!-- ==================================================
@@ -880,9 +1002,19 @@ button, .folder-tab, .general-button, .table-number-input {
           <!-- ============================================
                PANEL 1 — ATTENTION
                ============================================ -->
-          <div class="tab-panel" id="panel-attention" role="tabpanel" aria-labelledby="tab-attention">
+          <div
+            class="tab-panel"
+            id="panel-attention"
+            role="tabpanel"
+            aria-labelledby="tab-attention"
+            tabindex="0"
+          >
             <div class="panel-step" id="attention-step-1">
-              <p><b>Attention</b> describes the process when a person concentrates on some features of the environment. It is the first step in committing something to memory, and therefore the first step for the brain to learn. </p>
+              <p>
+                <b>Attention</b> describes the process when a person concentrates on some features of the
+                environment. It is the first step in committing something to memory, and therefore the first
+                step for the brain to learn.
+              </p>
               <p class="panel-eyebrow">Step 1</p>
               <h2 class="panel-heading">Click to test your attention</h2>
 
@@ -892,7 +1024,7 @@ button, .folder-tab, .general-button, .table-number-input {
                 data-youtube-id="vJG698U2Mvo"
                 data-youtube-start="5"
                 data-youtube-end="39"
-                onclick="openYouTubeModal('vJG698U2Mvo', 5, 39, 'Test your attention')"
+                data-youtube-title="Test your attention"
               >
                 <span class="bounce-symbol">&#9654;</span>
                 <span>Watch video</span>
@@ -908,11 +1040,14 @@ button, .folder-tab, .general-button, .table-number-input {
                       inputmode="numeric"
                       step="1"
                       class="table-number-input"
-                      aria-label="Number of times the mouse crossed the centre line"
+                      aria-label="Number of passes made by the players in white"
                       placeholder="Enter a number"
                     />
+                    <!-- FIX: iPad numeric keypads have no Return key, so Enter
+                         alone left students stranded here. -->
+                    <button type="button" class="general-button" data-number-submit>Submit</button>
                   </div>
-                  <p class="entry-hint">Press Enter to submit.</p>
+                  <p class="entry-hint">Type your count, then press Submit.</p>
                   <div class="entry-answer" aria-live="polite"></div>
                 </div>
               </div>
@@ -924,19 +1059,12 @@ button, .folder-tab, .general-button, .table-number-input {
 
               <p class="question-label">Answer Yes or No</p>
 
-              <!-- ============================================
-                <div class="memory-image-frame">
-                  <img src="images/attention-step3.jpg" alt="Attention task results" />
-                </div>
-                   LIVE YES/NO TALLY — powered by CounterAPI
-                   Replace WORKSPACE below with your own
-                   counterapi.dev workspace slug.
-                   ============================================ -->
               <div
                 class="tally-block"
                 data-tally
-                data-tally-yes="attention_noticed_yes"
-                data-tally-no="attention_noticed_no"
+                data-tally-key="attentionGorilla"
+                data-tally-yes="gorilla:attentionNoticedYes"
+                data-tally-no="gorilla:attentionNoticedNo"
               >
                 <div class="tally-buttons">
                   <button type="button" class="general-button tally-button" data-tally-vote="yes">Yes</button>
@@ -945,14 +1073,18 @@ button, .folder-tab, .general-button, .table-number-input {
 
                 <div class="tally-results" aria-live="polite">
                   <div class="tally-bar">
-                    <div class="tally-bar-fill tally-bar-yes" style="width: 50%"></div>
-                    <div class="tally-bar-fill tally-bar-no" style="width: 50%"></div>
+                    <div class="tally-bar-fill tally-bar-yes" style="width: 0%"></div>
+                    <div class="tally-bar-fill tally-bar-no" style="width: 0%"></div>
                   </div>
                   <p class="tally-counts">
                     <span data-tally-yes-count>0</span> said yes &middot;
                     <span data-tally-no-count>0</span> said no
                   </p>
                 </div>
+
+                <p class="counter-error" data-counter-error hidden>
+                  Class results are unavailable right now. Your answer still counts in the room.
+                </p>
               </div>
 
               <button
@@ -966,413 +1098,508 @@ button, .folder-tab, .general-button, .table-number-input {
 
             <div class="panel-step" id="attention-step-3" hidden>
               <p class="panel-eyebrow">Step 3</p>
-              <h2 class="panel-heading">What this tells us</h2>
+              <h2 class="panel-heading">What this tells us: Multi-tasking is a myth</h2>
               <div class="panel-body-row">
-                <div class="panel-body-text"> 
-                  This happens because of something called <b>selective attention</b>. When your brain concentrates hard on one task, like counting passes, it filters out other information to avoid getting overloaded. <b> Attention is limited.</b> If you're trying to listen to your teacher while checking messages, thinking about something else, or switching between lots of tasks, your brain has to divide its attention. You might feel like you're following the lesson, but you can actually miss important information.
-                  <br>It also explains why <b>“multi-tasking” is misleading.</b> Your brain doesn't really do several demanding tasks at the same time very well, it rapidly switches between them. Each switch can mean that you miss or forget information.
-                  <br><b>You don't always notice what you're not paying attention to.</b>
-                  <br>This is why giving your brain a chance to <b>focus on one thing at a time </b>can make learning easier. When you're studying, listening to instructions or learning something new, reducing distractions gives your attention more of a chance to do its job.
+                <div class="panel-body-text">
+                  <p>
+                    The distraction from the gorilla is an example of something called <b>selective attention</b>. When your brain
+                    concentrates hard on one task, like counting passes, it filters out other information to
+                    avoid getting overloaded. <b>Attention is limited.</b> If you're trying to listen to your
+                    teacher while checking messages, thinking about something else, or switching between lots
+                    of tasks, your brain has to divide its attention. You might feel like you're following the
+                    lesson, but you can actually miss important information.
+                  </p>
+                  <p>
+                    It also explains why <b>"multi-tasking" is misleading.</b> Your brain doesn't really do
+                    several demanding tasks at the same time very well, it rapidly switches between them. Each
+                    switch can mean that you miss or forget information.
+                  </p>
+                  <p><b>You don't always notice what you're not paying attention to.</b></p>
+                  <p>
+                    This is why giving your brain a chance to <b>focus on one thing at a time</b> can make
+                    learning easier. When you're studying, listening to instructions or learning something new,
+                    reducing distractions gives your attention more of a chance to do its job.
+                  </p>
                 </div>
                 <div class="panel-image">
                   <img src="multitasking.png" alt="Illustration of multitasking" />
                 </div>
               </div>
-              <div style="margin-top:18px">
-                <button type="button" class="general-button next-activity-button" onclick="gotoTab('memory')">Next activity: Memory</button>
+              <div style="margin-top: 18px">
+                <button type="button" class="general-button" onclick="gotoTab('memory')">
+                  Next activity: Memory
+                </button>
               </div>
             </div>
           </div>
 
           <!-- ============================================
                PANEL 2 — MEMORY
+               FIX: hidden on load so all three panels don't
+               flash before the JS runs.
                ============================================ -->
-           <div class="tab-panel" id="panel-memory" role="tabpanel" aria-labelledby="tab-memory">
-
-          <!-- ============ STEP 1 — plain rehearsal ============ -->
-          <div class="panel-step" id="memory-step-1">
-            <p class="panel-eyebrow">Step 1</p>
-            <h2 class="panel-heading">How good is your memory?</h2>
-            <p class="panel-body-text">
-              Your <b>working memory</b> is the part of your mind that holds information while you're actually using it e.g. the phone number you repeat to yourself until you type it in, or the start of a sentence while your teacher finishes it. It's fast, but it's small. 
-<br> <b>You will be presented with 20 words for 1 minute and then you will need to recall as many of those words as possible</b>
- </p>
-
-            <div
-              class="word-task"
-              data-word-task
-              data-set="1"
-              data-duration="60"
-              data-reveal-target="memory-step-1-questions"
-            >
-              <button type="button" class="general-button" data-reveal-words>
-                <span class="bounce-symbol">&#9654;</span>
-                <span>Show the words</span>
-              </button>
-
-              <div class="word-stage" data-word-stage hidden>
-                <div class="word-timer" data-timer>
-                  <span class="word-timer-value" data-timer-value aria-live="off">1:00</span>
-                  <span class="word-timer-track"><span class="word-timer-fill" data-timer-fill></span></span>
-                </div>
-                <iframe class="word-frame" data-word-frame title="Word list"></iframe>
-              </div>
-
-              <p class="word-task-done" data-word-done hidden>Time's up — the words are hidden now.</p>
-            </div>
-
-            <div id="memory-step-1-questions" hidden>
-              <div class="question-block">
-                <p class="question-label">1. Type as many words from that list as you can remember.</p>
-                <div data-recall data-set="1">
-                  <textarea
-                    class="recall-textarea"
-                    data-recall-input
-                    aria-label="Words you remember"
-                    placeholder="One word per line"
-                  ></textarea>
-                  <div class="number-entry-row" style="margin-top: 12px;">
-                    <button type="button" class="general-button" data-recall-check>Check my words</button>
-                  </div>
-                  <div class="feedback-box" data-recall-feedback hidden></div>
-                </div>
-              </div>
-
-              <div class="question-block">
-                <p class="question-label">2. Which of these words were <b>not</b> in the list? Tap all that apply.</p>
-                <div
-                  data-word-choice
-                  data-set="1"
-                  data-choice-mode="not-in-list"
-                  data-real-count="6"
-                  data-lure-count="4"
+          <div
+            class="tab-panel"
+            id="panel-memory"
+            role="tabpanel"
+            aria-labelledby="tab-memory"
+            tabindex="0"
+            hidden
+          >
+            <!-- ============ STEP 1 — plain rehearsal ============ -->
+            <div class="panel-step" id="memory-step-1">
+              <p class="panel-eyebrow">Step 1</p>
+              <h2 class="panel-heading">How good is your memory?</h2>
+              <p class="panel-body-text">
+                Your <b>working memory</b> is the part of your mind that holds information while you're
+                actually using it — the phone number you repeat to yourself until you type it in, or the start
+                of a sentence while your teacher finishes it. It's fast, but it's small.
+              </p>
+              <p class="panel-body-text">
+                <b
+                  >You will be presented with 20 words for 1 minute, and then you will need to recall as many
+                  of those words as possible.</b
                 >
-                  <div class="word-chips" data-chips></div>
-                  <button type="button" class="general-button" data-choice-check>Check my answer</button>
-                  <div class="feedback-box" data-choice-feedback hidden></div>
-                </div>
-              </div>
-
-              <button type="button" class="next-button general-button" onclick="revealPanelStep('memory-step-2')">
-                Next
-              </button>
-              <div class="after-questions-placeholder" hidden>
-                <p class="panel-body-text">Nice work — you've completed both questions. When you're ready, continue to the next activity.</p>
-              </div>
-              <div style="margin-top:18px">
-                <button type="button" class="general-button next-activity-button" onclick="gotoTab('anxiety')">Next activity: Anxiety</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- ============ STEP 2 — chunking ============ -->
-          <div class="panel-step" id="memory-step-2" hidden>
-            <p class="panel-eyebrow">Step 2</p>
-            <h2 class="panel-heading">Now try chunking</h2>
-            <p class="panel-body-text">
-              Working memory can only hold a handful of items, so the trick is to make each item bigger. 
-<br>That's called <b>chunking</b>: grouping small pieces of information into fewer, larger units. 
-<br> Example: A phone number is easier as 0412 998 341 than as ten separate digits, and "cat, dog, horse" can be stored as one idea (animals) instead of three. 
-<br>Your brain is still holding about four things, but each thing now carries much more inside it. Chunking works best when the groups mean something to you. 
-<br><b>Try the chunking technique</b>: the next list is already sorted into groups. Try to remember the groups, not the words. </p>
-
-            <div
-              class="word-task"
-              data-word-task
-              data-set="2"
-              data-duration="60"
-              data-reveal-target="memory-step-2-questions"
-            >
-              <button type="button" class="general-button" data-reveal-words>
-                <span class="bounce-symbol">&#9654;</span>
-                <span>Show the words</span>
-              </button>
-
-              <div class="word-stage" data-word-stage hidden>
-                <div class="word-timer" data-timer>
-                  <span class="word-timer-value" data-timer-value>1:00</span>
-                  <span class="word-timer-track"><span class="word-timer-fill" data-timer-fill></span></span>
-                </div>
-                <iframe class="word-frame" data-word-frame title="Word list"></iframe>
-              </div>
-
-              <p class="word-task-done" data-word-done hidden>Time's up — the words are hidden now.</p>
-            </div>
-
-            <div id="memory-step-2-questions" hidden>
-              <div class="question-block">
-                <p class="question-label">1. Type as many words from that list as you can remember.</p>
-                <div data-recall data-set="2">
-                  <textarea
-                    class="recall-textarea"
-                    data-recall-input
-                    aria-label="Words you remember"
-                    placeholder="One word per line"
-                  ></textarea>
-                  <div class="number-entry-row" style="margin-top: 12px;">
-                    <button type="button" class="general-button" data-recall-check>Check my words</button>
-                  </div>
-                  <div class="feedback-box" data-recall-feedback hidden></div>
-                </div>
-              </div>
-
-              <div class="question-block">
-                <p class="question-label">2. Tap the words that appeared in this set.</p>
-                <div
-                  data-word-choice
-                  data-set="2"
-                  data-choice-mode="in-list"
-                  data-real-count="6"
-                  data-lure-count="4"
-                >
-                  <div class="word-chips" data-chips></div>
-                  <button type="button" class="general-button" data-choice-check>Check my answer</button>
-                  <div class="feedback-box" data-choice-feedback hidden></div>
-                </div>
-              </div>
-
-              <button type="button" class="next-button general-button" onclick="revealPanelStep('memory-step-3')">
-                Next
-              </button>
-              <div class="after-questions-placeholder" hidden>
-                <p class="panel-body-text">Nice work — you've completed both questions. When you're ready, continue to the next activity.</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- ============ STEP 3 — mind palace ============ -->
-          <div class="panel-step" id="memory-step-3" hidden>
-            <p class="panel-eyebrow">Step 3</p>
-            <h2 class="panel-heading">Now try a mind palace</h2>
-            <p class="panel-body-text">
-              A <b>mind palace</b>, also known as <b>method of loci</b>, uses your spatial awareness to carry things it finds hard, like lists. Your brain is good at remembering places.
-<br> <b>Build your own mind palace:</b>
-<br> 1. Pick a route you know without thinking: your walk from the front door to your bedroom, or your path between classes. <br>2. Then place each word somewhere along it and make the image strange. A glacier melting on the kitchen bench sticks; a glacier "in the kitchen" doesn't. To recall the list, walk the route in your head and collect what you left there. Ancient Greek orators used this to deliver hour-long speeches without notes. </p>
-
-            <div
-              class="word-task"
-              data-word-task
-              data-set="3"
-              data-duration="60"
-              data-reveal-target="memory-step-3-questions"
-            >
-              <button type="button" class="general-button" data-reveal-words>
-                <span class="bounce-symbol">&#9654;</span>
-                <span>Show the words</span>
-              </button>
-
-              <div class="word-stage" data-word-stage hidden>
-                <div class="word-timer" data-timer>
-                  <span class="word-timer-value" data-timer-value>1:00</span>
-                  <span class="word-timer-track"><span class="word-timer-fill" data-timer-fill></span></span>
-                </div>
-                <iframe class="word-frame" data-word-frame title="Word list"></iframe>
-              </div>
-
-              <p class="word-task-done" data-word-done hidden>Time's up — the words are hidden now.</p>
-            </div>
-
-            <div id="memory-step-3-questions" hidden>
-              <div class="question-block">
-                <p class="question-label">1. Type as many words from that list as you can remember.</p>
-                <div data-recall data-set="3">
-                  <textarea
-                    class="recall-textarea"
-                    data-recall-input
-                    aria-label="Words you remember"
-                    placeholder="One word per line"
-                  ></textarea>
-                  <div class="number-entry-row" style="margin-top: 12px;">
-                    <button type="button" class="general-button" data-recall-check>Check my words</button>
-                  </div>
-                  <div class="feedback-box" data-recall-feedback hidden></div>
-                </div>
-              </div>
-
-              <div class="question-block">
-                <p class="question-label">2. Tap the words that appeared in this set.</p>
-                <div
-                  data-word-choice
-                  data-set="3"
-                  data-choice-mode="in-list"
-                  data-real-count="6"
-                  data-lure-count="4"
-                >
-                  <div class="word-chips" data-chips></div>
-                  <button type="button" class="general-button" data-choice-check>Check my answer</button>
-                  <div class="feedback-box" data-choice-feedback hidden></div>
-                </div>
-              </div>
-
-              <div class="question-block">
-                <p class="question-label">3. Which technique helped you the most?</p>
-
-                <!-- Live class results via CounterAPI -->
-                <div class="poll-block" data-poll>
-                  <div class="poll-options">
-                    <button type="button" class="general-button poll-option" data-poll-option="memory_best_none">
-                      Just reading the list
-                    </button>
-                    <button type="button" class="general-button poll-option" data-poll-option="memory_best_chunking">
-                      Chunking
-                    </button>
-                    <button type="button" class="general-button poll-option" data-poll-option="memory_best_palace">
-                      Mind palace
-                    </button>
-                    <button type="button" class="general-button poll-option" data-poll-option="memory_best_none_worked">
-                      About the same
-                    </button>
-                  </div>
-
-                  <div class="poll-results" data-poll-results aria-live="polite" hidden></div>
-                </div>
-              </div>
-
-              <div class="after-questions-placeholder" hidden>
-                <p class="panel-body-text">Nice work — you've completed both questions. When you're ready, continue to the next activity.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-          <!-- ============================================
-               PANEL 3 — ANXIETY
-               ============================================ -->
-          <div class="tab-panel" id="panel-anxiety" role="tabpanel" aria-labelledby="tab-anxiety">
-
-          <!-- ============ STEP 1 — Rat A ============ -->
-          <div class="panel-step" id="anxiety-step-1">
-            <p class="panel-eyebrow">Step 1</p>
-            <h2 class="panel-heading">Watch Rat A</h2>
-            <p class="panel-body-text">
-              [INFO PLACEHOLDER — replace with your background on the open field test: a rat is placed in
-              an open arena and filmed from above, and where it chooses to spend its time tells us
-              something about how anxious it is.]
-            </p>
-
-            <button
-              type="button"
-              class="general-button watch-video-button"
-              onclick="openVideoFullscreen('videos/Group A rats.mp4', 'Use the clear whiteboard to follow Rat A&#39;s movements'); revealPanelStep('anxiety-step-1-next')"
-            >
-              <span class="bounce-symbol">&#9654;</span>
-              <span>Watch Rat A</span>
-            </button>
-
-            <div id="anxiety-step-1-next" hidden>
-              <button type="button" class="next-button general-button" onclick="revealPanelStep('anxiety-step-2')">
-                Next
-              </button>
-            </div>
-          </div>
-
-          <!-- ============ STEP 2 — Rat B + question ============ -->
-          <div class="panel-step" id="anxiety-step-2" hidden>
-            <p class="panel-eyebrow">Step 2</p>
-            <h2 class="panel-heading">Watch Rat B</h2>
-
-            <button
-              type="button"
-              class="general-button watch-video-button"
-              onclick="openVideoFullscreen('videos/Group B rats.mp4', 'Use another clear whiteboard to follow Rat B&#39;s movements'); revealPanelStep('anxiety-step-2-questions')"
-            >
-              <span class="bounce-symbol">&#9654;</span>
-              <span>Watch Rat B</span>
-            </button>
-
-            <div id="anxiety-step-2-questions" hidden>
-              <p class="panel-body-text" style="margin-top: 22px;">
-                <b>THINK:</b> What do you notice when you compare the movements of Rat A to Rat B?
               </p>
 
               <div
-                class="question-block"
-                data-rat-choice
-                data-correct="a"
-                data-reveal-target="anxiety-step-2-next"
+                class="word-task"
+                data-word-task
+                data-set="1"
+                data-duration="60"
+                data-reveal-target="memory-step-1-questions"
               >
-                <p class="question-label">Which of the rats do you think is the anxious rat?</p>
+                <button type="button" class="general-button" data-reveal-words>
+                  <span class="bounce-symbol">&#9654;</span>
+                  <span>Show the words</span>
+                </button>
 
-                <div class="choice-buttons">
-                  <button type="button" class="general-button choice-button" data-choice-value="a">Rat A</button>
-                  <button type="button" class="general-button choice-button" data-choice-value="b">Rat B</button>
+                <div class="word-stage" data-word-stage hidden>
+                  <div class="word-timer" data-timer>
+                    <span class="word-timer-value" data-timer-value aria-live="off">1:00</span>
+                    <span class="word-timer-track"><span class="word-timer-fill" data-timer-fill></span></span>
+                  </div>
+                  <iframe class="word-frame" data-word-frame title="Word list"></iframe>
                 </div>
 
-                <div class="feedback-box" data-rat-answer hidden>
-                  <p>
-                    <b>Rat A is the anxious rat.</b> It stuck to the edges to try and find a way to escape and
-                    does not explore curiously.
-                  </p>
-                </div>
+                <p class="word-task-done" data-word-done hidden>Time's up — the words are hidden now.</p>
               </div>
 
-              <div id="anxiety-step-2-next" hidden>
-                <button type="button" class="next-button general-button" onclick="revealPanelStep('anxiety-step-3')">
+              <div id="memory-step-1-questions" hidden>
+                <div class="question-block">
+                  <p class="question-label">1. Type as many words from that list as you can remember.</p>
+                  <div data-recall data-set="1">
+                    <textarea
+                      class="recall-textarea"
+                      data-recall-input
+                      aria-label="Words you remember"
+                      placeholder="One word per line"
+                    ></textarea>
+                    <div class="number-entry-row" style="margin-top: 12px">
+                      <button type="button" class="general-button" data-recall-check>Check my words</button>
+                    </div>
+                    <div class="feedback-box" data-recall-feedback hidden></div>
+                  </div>
+                </div>
+
+                <div class="question-block">
+                  <p class="question-label">2. Tap the words that appeared in this set.</p>
+                  <div
+                    data-word-choice
+                    data-set="1"
+                    data-choice-mode="in-list"
+                    data-real-count="6"
+                    data-lure-count="4"
+                  >
+                    <div class="word-chips" data-chips></div>
+                    <button type="button" class="general-button" data-choice-check>Check my answer</button>
+                    <div class="feedback-box" data-choice-feedback hidden></div>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  class="next-button general-button"
+                  onclick="revealPanelStep('memory-step-2')"
+                >
                   Next
                 </button>
               </div>
             </div>
-          </div>
 
-          <!-- ============ STEP 3 — read the data ============ -->
-          <div class="panel-step" id="anxiety-step-3" hidden>
-            <p class="panel-eyebrow">Step 3</p>
-            <h2 class="panel-heading">Become a behavioural scientist</h2>
-            <p class="panel-body-text">This is the data from the two rats over 10 minutes of activity.</p>
-
-            <div class="memory-image-frame" style="max-width: 560px; margin-top: 16px;">
-              <img src="Mouse_experiment.png" alt="Movement traces of two rats recorded over ten minutes" />
-            </div>
-
-            <div class="question-block" data-blank-quiz data-reveal-target="anxiety-gut-brain">
-              <p class="question-label">Which rat is which? Type <b>red</b> or <b>blue</b>.</p>
-
-              <div class="blank-row">
-                <label for="ratABlank">Rat A =</label>
-                <input
-                  type="text"
-                  id="ratABlank"
-                  class="blank-input"
-                  data-blank="a"
-                  autocomplete="off"
-                  autocapitalize="none"
-                  placeholder="red or blue"
-                />
-              </div>
-
-              <div class="blank-row">
-                <label for="ratBBlank">Rat B =</label>
-                <input
-                  type="text"
-                  id="ratBBlank"
-                  class="blank-input"
-                  data-blank="b"
-                  autocomplete="off"
-                  autocapitalize="none"
-                  placeholder="red or blue"
-                />
-              </div>
-
-              <button type="button" class="general-button" data-blank-check>Check my answers</button>
-              <div class="feedback-box" data-blank-feedback hidden></div>
-            </div>
-
-            <div class="gut-brain-box" id="anxiety-gut-brain" hidden>
-              <p>
-                Using these animal models, the scientists found out that a faecal transplant was able to reduce
-                the anxiety of the anxious rats. This suggested that the gut might play a vital role in the
-                brain's activity relating to these emotions. This is called the <b>gut-brain axis</b>.
+            <!-- ============ STEP 2 — chunking ============ -->
+            <div class="panel-step" id="memory-step-2" hidden>
+              <p class="panel-eyebrow">Step 2</p>
+              <h2 class="panel-heading">Now try chunking</h2>
+              <p class="panel-body-text">
+                Working memory can only hold a handful of items, so the trick is to make each item bigger.
+                That's called <b>chunking</b>: grouping small pieces of information into fewer, larger units.
               </p>
+              <p class="panel-body-text">
+                A phone number is easier as 0412 998 341 than as ten separate digits, and "cat, dog, horse" can
+                be stored as one idea (animals) instead of three. Your brain is still holding about four
+                things, but each thing now carries much more inside it. Chunking works best when the groups
+                mean something to you.
+              </p>
+              <p class="panel-body-text">
+                <b>Try the chunking technique:</b> the next list is already sorted into groups. Try to remember
+                the groups, not the words.
+              </p>
+
+              <div
+                class="word-task"
+                data-word-task
+                data-set="2"
+                data-duration="60"
+                data-reveal-target="memory-step-2-questions"
+              >
+                <button type="button" class="general-button" data-reveal-words>
+                  <span class="bounce-symbol">&#9654;</span>
+                  <span>Show the words</span>
+                </button>
+
+                <div class="word-stage" data-word-stage hidden>
+                  <div class="word-timer" data-timer>
+                    <span class="word-timer-value" data-timer-value>1:00</span>
+                    <span class="word-timer-track"><span class="word-timer-fill" data-timer-fill></span></span>
+                  </div>
+                  <iframe class="word-frame" data-word-frame title="Word list"></iframe>
+                </div>
+
+                <p class="word-task-done" data-word-done hidden>Time's up — the words are hidden now.</p>
+              </div>
+
+              <div id="memory-step-2-questions" hidden>
+                <div class="question-block">
+                  <p class="question-label">1. Type as many words from that list as you can remember.</p>
+                  <div data-recall data-set="2">
+                    <textarea
+                      class="recall-textarea"
+                      data-recall-input
+                      aria-label="Words you remember"
+                      placeholder="One word per line"
+                    ></textarea>
+                    <div class="number-entry-row" style="margin-top: 12px">
+                      <button type="button" class="general-button" data-recall-check>Check my words</button>
+                    </div>
+                    <div class="feedback-box" data-recall-feedback hidden></div>
+                  </div>
+                </div>
+
+                <div class="question-block">
+                  <p class="question-label">2. Tap the words that appeared in this set.</p>
+                  <div
+                    data-word-choice
+                    data-set="2"
+                    data-choice-mode="in-list"
+                    data-real-count="6"
+                    data-lure-count="4"
+                  >
+                    <div class="word-chips" data-chips></div>
+                    <button type="button" class="general-button" data-choice-check>Check my answer</button>
+                    <div class="feedback-box" data-choice-feedback hidden></div>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  class="next-button general-button"
+                  onclick="revealPanelStep('memory-step-3')"
+                >
+                  Next
+                </button>
+              </div>
             </div>
 
-            <div style="margin-top: 18px">
-              <button type="button" class="general-button next-activity-button" onclick="gotoTab('attention')">
-                Next activity: Attention
-              </button>
+            <!-- ============ STEP 3 — mind palace ============ -->
+            <div class="panel-step" id="memory-step-3" hidden>
+              <p class="panel-eyebrow">Step 3</p>
+              <h2 class="panel-heading">Now try a mind palace</h2>
+              <p class="panel-body-text">
+                A <b>mind palace</b>, also known as the <b>method of loci</b>, uses your spatial awareness to
+                carry things your memory finds hard, like lists. Your brain is good at remembering places.
+              </p>
+              <p class="panel-body-text">
+                <b>Build your own mind palace:</b> pick a route you know without thinking — your walk from the
+                front door to your bedroom, or your path between classes. Then place each word somewhere along
+                it and make the image strange. A glacier melting on the kitchen bench sticks; a glacier "in the
+                kitchen" doesn't. To recall the list, walk the route in your head and collect what you left
+                there. Ancient Greek orators used this to deliver hour-long speeches without notes.
+              </p>
+
+              <div
+                class="word-task"
+                data-word-task
+                data-set="3"
+                data-duration="60"
+                data-reveal-target="memory-step-3-questions"
+              >
+                <button type="button" class="general-button" data-reveal-words>
+                  <span class="bounce-symbol">&#9654;</span>
+                  <span>Show the words</span>
+                </button>
+
+                <div class="word-stage" data-word-stage hidden>
+                  <div class="word-timer" data-timer>
+                    <span class="word-timer-value" data-timer-value>1:00</span>
+                    <span class="word-timer-track"><span class="word-timer-fill" data-timer-fill></span></span>
+                  </div>
+                  <iframe class="word-frame" data-word-frame title="Word list"></iframe>
+                </div>
+
+                <p class="word-task-done" data-word-done hidden>Time's up — the words are hidden now.</p>
+              </div>
+
+              <div id="memory-step-3-questions" hidden>
+                <div class="question-block">
+                  <p class="question-label">1. Type as many words from that list as you can remember.</p>
+                  <div data-recall data-set="3">
+                    <textarea
+                      class="recall-textarea"
+                      data-recall-input
+                      aria-label="Words you remember"
+                      placeholder="One word per line"
+                    ></textarea>
+                    <div class="number-entry-row" style="margin-top: 12px">
+                      <button type="button" class="general-button" data-recall-check>Check my words</button>
+                    </div>
+                    <div class="feedback-box" data-recall-feedback hidden></div>
+                  </div>
+                </div>
+
+                <div class="question-block">
+                  <p class="question-label">2. Tap the words that appeared in this set.</p>
+                  <div
+                    data-word-choice
+                    data-set="3"
+                    data-choice-mode="in-list"
+                    data-real-count="6"
+                    data-lure-count="4"
+                  >
+                    <div class="word-chips" data-chips></div>
+                    <button type="button" class="general-button" data-choice-check>Check my answer</button>
+                    <div class="feedback-box" data-choice-feedback hidden></div>
+                  </div>
+                </div>
+
+                <div class="question-block">
+                  <p class="question-label">3. Which technique helped you the most?</p>
+
+                  <div class="poll-block" data-poll data-poll-key="memoryTechnique">
+                    <div class="poll-options">
+                      <button
+                        type="button"
+                        class="general-button poll-option"
+                        data-poll-option="memory:memoryBestReading"
+                      >
+                        Just reading the list
+                      </button>
+                      <button
+                        type="button"
+                        class="general-button poll-option"
+                        data-poll-option="memory:memoryBestChunking"
+                      >
+                        Chunking
+                      </button>
+                      <button
+                        type="button"
+                        class="general-button poll-option"
+                        data-poll-option="memory:memoryBestPalace"
+                      >
+                        Mind palace
+                      </button>
+                      <button
+                        type="button"
+                        class="general-button poll-option"
+                        data-poll-option="memory:memoryBestSame"
+                      >
+                        About the same
+                      </button>
+                    </div>
+
+                    <div class="poll-results" data-poll-results aria-live="polite" hidden></div>
+
+                    <p class="counter-error" data-counter-error hidden>
+                      Class results are unavailable right now.
+                    </p>
+                  </div>
+                </div>
+
+                <p class="method-note">
+                  <b>Think like a scientist:</b> the three lists weren't matched for difficulty, and you did
+                  them in the same order as everyone else. So a difference in your scores might come from the
+                  technique — or from the list, or from simply getting better at the task. What would you
+                  change to test the techniques properly?
+                </p>
+
+                <div style="margin-top: 18px">
+                  <button type="button" class="general-button" onclick="gotoTab('anxiety')">
+                    Next activity: Anxiety
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
+          <!-- ============================================
+               PANEL 3 — ANXIETY
+               ============================================ -->
+          <div
+            class="tab-panel"
+            id="panel-anxiety"
+            role="tabpanel"
+            aria-labelledby="tab-anxiety"
+            tabindex="0"
+            hidden
+          >
+            <!-- ============ STEP 1 — Rat A ============ -->
+            <div class="panel-step" id="anxiety-step-1">
+              <p class="panel-eyebrow">Step 1</p>
+              <h2 class="panel-heading">Watch Rat A</h2>
+              <p class="panel-body-text">
+                <b>Anxiety</b> is the feeling of fear or worry your body produces in response to something it treats as a threat e.g. a racing heart, tense muscles, the urge to get out. It's normal and useful in short bursts, but when it fires constantly it stops being helpful.
+<br><br>Deep in your brain sits a small almond-shaped structure called the <b>amygdala</b>. It scans everything happening around you and decides what counts as dangerous, then triggers the body's alarm response. Rats and mice have an amygdala too, and it does the same job, which is why scientists can study anxiety using rodents. But, they can't ask a rat how it feels, so they measure behaviour instead. 
+<br><br>In an <b>open field test</b>, a rat is placed in a brightly lit arena and filmed from above to observe their behaviour. 
+<br><br><b>NOTE: You will be watching a video of a rat's movement from an animal study about the gut-brain axis. </b>The gut-brain axis is a developing area of science that investigates the influence of the gut on the brain e.g. the butterflies you feel in your tummy when you’re nervous.
+<br><br>Animal research like this is tightly regulated. Every study is reviewed by an ethics committee that must be convinced the work is justified, the animal numbers are the minimum needed, and the animals' welfare is protected throughout. 
+
+              </p>
+
+              <button
+                type="button"
+                class="general-button watch-video-button"
+                onclick="openVideoFullscreen('videos/Group A rats.mp4', 'Use the clear whiteboard to follow Rat A&#39;s movements'); revealPanelStep('anxiety-step-1-next')"
+              >
+                <span class="bounce-symbol">&#9654;</span>
+                <span>Watch Rat A</span>
+              </button>
+
+              <div id="anxiety-step-1-next" hidden>
+                <button
+                  type="button"
+                  class="next-button general-button"
+                  onclick="revealPanelStep('anxiety-step-2')"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+
+            <!-- ============ STEP 2 — Rat B + question ============ -->
+            <div class="panel-step" id="anxiety-step-2" hidden>
+              <p class="panel-eyebrow">Step 2</p>
+              <h2 class="panel-heading">Watch Rat B</h2>
+
+              <button
+                type="button"
+                class="general-button watch-video-button"
+                onclick="openVideoFullscreen('videos/Group B rats.mp4', 'Use another clear whiteboard to follow Rat B&#39;s movements'); revealPanelStep('anxiety-step-2-questions')"
+              >
+                <span class="bounce-symbol">&#9654;</span>
+                <span>Watch Rat B</span>
+              </button>
+
+              <div id="anxiety-step-2-questions" hidden>
+                <p class="panel-body-text" style="margin-top: 22px">
+                  <b>THINK:</b> What do you notice when you compare the movements of Rat A to Rat B?
+                </p>
+
+                <div
+                  class="question-block"
+                  data-rat-choice
+                  data-correct="a"
+                  data-reveal-target="anxiety-step-2-next"
+                >
+                  <p class="question-label">Which of the rats do you think is the anxious rat?</p>
+
+                  <div class="choice-buttons">
+                    <button type="button" class="general-button choice-button" data-choice-value="a">
+                      Rat A
+                    </button>
+                    <button type="button" class="general-button choice-button" data-choice-value="b">
+                      Rat B
+                    </button>
+                  </div>
+
+                  <div class="feedback-box" data-rat-answer hidden>
+                    <p>
+                      <b>Rat A is the anxious rat.</b> It stuck to the edges to try and find a way to escape and
+                      does not explore curiously.
+                    </p>
+                  </div>
+                </div>
+
+                <div id="anxiety-step-2-next" hidden>
+                  <button
+                    type="button"
+                    class="next-button general-button"
+                    onclick="revealPanelStep('anxiety-step-3')"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- ============ STEP 3 — read the data ============ -->
+            <div class="panel-step" id="anxiety-step-3" hidden>
+              <p class="panel-eyebrow">Step 3</p>
+              <h2 class="panel-heading">Become a behavioural scientist</h2>
+              <p class="panel-body-text">This is the data from the two rats over 10 minutes of activity.</p>
+
+              <div class="memory-image-frame" style="max-width: 560px; margin-top: 16px">
+                <img src="Mouse_experiment.png" alt="Movement traces of two rats recorded over ten minutes" />
+              </div>
+
+              <div class="question-block" data-blank-quiz data-reveal-target="anxiety-gut-brain">
+                <p class="question-label">Which rat is which? Type <b>red</b> or <b>blue</b>.</p>
+
+                <div class="blank-row">
+                  <label for="ratABlank">Rat A =</label>
+                  <input
+                    type="text"
+                    id="ratABlank"
+                    class="blank-input"
+                    data-blank="a"
+                    autocomplete="off"
+                    autocapitalize="none"
+                    placeholder="red or blue"
+                  />
+                </div>
+
+                <div class="blank-row">
+                  <label for="ratBBlank">Rat B =</label>
+                  <input
+                    type="text"
+                    id="ratBBlank"
+                    class="blank-input"
+                    data-blank="b"
+                    autocomplete="off"
+                    autocapitalize="none"
+                    placeholder="red or blue"
+                  />
+                </div>
+
+                <button type="button" class="general-button" data-blank-check>Check my answers</button>
+                <div class="feedback-box" data-blank-feedback hidden></div>
+              </div>
+
+              <div class="gut-brain-box" id="anxiety-gut-brain" hidden>
+                <p>
+                  Using these animal models, the scientists found out that a faecal transplant was able to
+                  reduce the anxiety of the anxious rats. This suggested that the gut might play a vital role
+                  in the brain's activity relating to these emotions. This is called the
+                  <b>gut-brain axis</b>.
+                </p>
+              </div>
+
+              <div style="margin-top: 18px">
+                <button type="button" class="general-button" onclick="gotoTab('attention')">
+                  Back to the start: Attention
+                </button>
+              </div>
+            </div>
+          </div>
         </section>
       </div>
     </main>
@@ -1380,493 +1607,63 @@ button, .folder-tab, .general-button, .table-number-input {
     <!-- ==================================================
          SHARED VIDEO MODAL
          ================================================== -->
-    <div class="modal video-modal" id="videoModal" role="dialog" aria-modal="true" aria-labelledby="videoModalTitle">
+    <div
+      class="modal video-modal"
+      id="videoModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="videoModalTitle"
+    >
       <div class="modal-content video-modal-content">
         <div class="modal-header">
           <h2 id="videoModalTitle">Video</h2>
-          <button type="button" class="close-button" onclick="closeVideoModal()" aria-label="Close video">&times;</button>
+          <button type="button" class="close-button" onclick="closeVideoModal()" aria-label="Close video">
+            &times;
+          </button>
         </div>
 
-        <!-- HTML5 video player (for local mp4s) -->
-        <video id="videoModalPlayer" class="video-modal-player" controls preload="metadata">
+        <!-- HTML5 player for local mp4s -->
+        <video id="videoModalPlayer" class="video-modal-player" controls preload="metadata" playsinline>
           Your browser does not support video playback.
         </video>
 
-        <!-- YouTube player container (used by the IFrame API) -->
-        <div id="youtubePlayer" style="display:none; width:100%; height:360px;"></div>
+        <!-- YouTube player container (replaced by an iframe at runtime) -->
+        <div id="youtubePlayer" style="display: none; width: 100%"></div>
       </div>
     </div>
-    
+
     <script>
-      const COUNTERAPI_WORKSPACE = "gene-technology-access-centres-team-5261";
-const COUNTERAPI_BASE = `https://api.counterapi.dev/v2/gorilla`;
-
-/* ==================================================
-   FOLDER TABS
-   ================================================== */
-function initialiseFolderTabs() {
-  const tabs = Array.from(document.querySelectorAll(".folder-tab"));
-  const panels = document.querySelectorAll(".tab-panel");
-
-  function activateTab(tab) {
-    const targetId = "panel-" + tab.dataset.tab;
-
-    tabs.forEach((otherTab) => {
-      const isActive = otherTab === tab;
-      otherTab.classList.toggle("is-active", isActive);
-      otherTab.setAttribute("aria-selected", String(isActive));
-      otherTab.tabIndex = isActive ? 0 : -1;
-      if (isActive) otherTab.focus({ preventScroll: true });
-    });
-
-    panels.forEach((panel) => {
-      panel.hidden = panel.id !== targetId;
-    });
-  }
-
-  tabs.forEach((tab, idx) => {
-    tab.addEventListener("click", () => activateTab(tab));
-
-    tab.addEventListener("keydown", (e) => {
-      // support arrow navigation and home/end
-      if (e.key === "ArrowRight") {
-        e.preventDefault();
-        const next = tabs[(idx + 1) % tabs.length];
-        activateTab(next);
-      } else if (e.key === "ArrowLeft") {
-        e.preventDefault();
-        const prev = tabs[(idx - 1 + tabs.length) % tabs.length];
-        activateTab(prev);
-      } else if (e.key === "Home") {
-        e.preventDefault();
-        activateTab(tabs[0]);
-      } else if (e.key === "End") {
-        e.preventDefault();
-        activateTab(tabs[tabs.length - 1]);
-      } else if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        activateTab(tab);
-      }
-    });
-  });
-
-  // ensure one tab is active on init
-  const initiallyActive = tabs.find((t) => t.classList.contains("is-active")) || tabs[0];
-  if (initiallyActive) activateTab(initiallyActive);
-}
-
-/* ==================================================
-   SHARED VIDEO MODAL
-   ================================================== */
-function openVideoModal(videoSource, videoTitle) {
-  const modal = document.getElementById("videoModal");
-  const player = document.getElementById("videoModalPlayer");
-  const title = document.getElementById("videoModalTitle");
-
-  if (!modal || !player) return;
-
-  title.textContent = videoTitle || "Video";
-  player.pause();
-  // ensure youtube container is hidden when using HTML5 video
-  const ytContainer = document.getElementById("youtubePlayer");
-  if (ytContainer) ytContainer.style.display = "none";
-
-  player.style.display = "block";
-  player.src = videoSource;
-  player.load();
-
-  modal.classList.add("is-open");
-}
-
-function closeVideoModal() {
-  const modal = document.getElementById("videoModal");
-  const player = document.getElementById("videoModalPlayer");
-
-  if (!modal || !player) return;
-
-  player.pause();
-  player.removeAttribute("src");
-  player.load();
-
-  // destroy youtube player if present
-  if (window.ytPlayer) {
-    try {
-      window.ytPlayer.stopVideo();
-      window.ytPlayer.destroy();
-    } catch (e) {
-      // ignore
-    }
-    window.ytPlayer = null;
-  }
-
-  // hide youtube container
-  const ytContainer = document.getElementById("youtubePlayer");
-  if (ytContainer) ytContainer.style.display = "none";
-
-  modal.classList.remove("is-open");
-}
-
-/* ==================================================
-   YouTube IFrame API helpers
-   Usage: openYouTubeModal('VIDEO_ID', startInSeconds, endInSeconds, 'Optional title')
-   ================================================== */
-window.ytApiReady = false;
-window.ytPlayer = null;
-window._pendingYouTube = null;
-
-function _loadYouTubeApi() {
-  if (window.ytApiReady) return;
-  if (document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) return;
-  const tag = document.createElement('script');
-  tag.src = 'https://www.youtube.com/iframe_api';
-  document.body.appendChild(tag);
-}
-
-function onYouTubeIframeAPIReady() {
-  window.ytApiReady = true;
-  if (window._pendingYouTube) {
-    const cfg = window._pendingYouTube;
-    window._pendingYouTube = null;
-    _createYouTubePlayer(cfg.videoId, cfg.start, cfg.end, cfg.title);
-  }
-}
-
-function _createYouTubePlayer(videoId, start, end, title) {
-  const modal = document.getElementById('videoModal');
-  const titleEl = document.getElementById('videoModalTitle');
-  const html5 = document.getElementById('videoModalPlayer');
-  const ytContainer = document.getElementById('youtubePlayer');
-
-  if (!ytContainer) return;
-
-  // hide html5 player
-  if (html5) html5.style.display = 'none';
-  ytContainer.style.display = 'block';
-
-  // destroy previous player if exists
-  if (window.ytPlayer) {
-    try { window.ytPlayer.destroy(); } catch (e) {}
-    window.ytPlayer = null;
-  }
-
-  titleEl.textContent = title || 'Video';
-
-  window.ytPlayer = new YT.Player('youtubePlayer', {
-    height: '360',
-    width: '100%',
-    videoId: videoId,
-    playerVars: { start: start || 0, rel: 0 },
-    events: {
-      onReady: function(e) {
-        try { e.target.playVideo(); } catch (err) {}
-      },
-      onStateChange: function(e) {
-        if (e.data === YT.PlayerState.PLAYING && typeof end === 'number') {
-          const checker = setInterval(() => {
-            try {
-              if (window.ytPlayer && window.ytPlayer.getCurrentTime() >= end) {
-                window.ytPlayer.pauseVideo();
-                clearInterval(checker);
-              }
-            } catch (err) {
-              clearInterval(checker);
-            }
-          }, 200);
-        }
-      }
-    }
-  });
-
-  if (modal) modal.classList.add('is-open');
-}
-
-function openYouTubeModal(videoId, start, end, title) {
-  // ensure API is loaded and then create player
-  if (window.ytApiReady && window.YT && window.YT.Player) {
-    _createYouTubePlayer(videoId, start, end, title);
-  } else {
-    window._pendingYouTube = { videoId, start, end, title };
-    _loadYouTubeApi();
-    // if API loads quickly it will call onYouTubeIframeAPIReady
-  }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  const modal = document.getElementById("videoModal");
-
-  modal.addEventListener("click", (event) => {
-    if (event.target === modal) closeVideoModal();
-  });
-});
-
-// Ensure watch-video buttons always work even if inline onclick was removed.
-function initialiseWatchButtons() {
-  document.querySelectorAll('.watch-video-button').forEach(btn => {
-    // if button already has an explicit onclick, assume it's fine
-    if (btn.getAttribute('onclick')) return;
-
-    btn.addEventListener('click', (e) => {
-      // prefer YouTube dataset
-      const yid = btn.dataset.youtubeId;
-      const ystart = Number(btn.dataset.youtubeStart) || 0;
-      const yend = btn.dataset.youtubeEnd ? Number(btn.dataset.youtubeEnd) : undefined;
-      const title = btn.dataset.youtubeTitle || btn.dataset.videoTitle || btn.textContent.trim();
-
-      if (yid) {
-        openYouTubeModal(yid, ystart, yend, title);
-        return;
-      }
-
-      // fallback to local video source stored in data-video-src
-      const src = btn.dataset.videoSrc || btn.dataset.src;
-      if (src) {
-        openVideoModal(src, title);
-        return;
-      }
-
-      // last resort: try to find a nearby data attribute on the same panel
-      const panel = btn.closest('.tab-panel');
-      if (panel) {
-        const watch = panel.querySelector('.watch-video-button[onclick]');
-        if (watch) {
-          // invoke the other button's onclick if present
-          try { watch.click(); } catch (err) { /* ignore */ }
-        }
-      }
-    });
-  });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  initialiseWatchButtons();
-});
-
-/* ==================================================
-   GENERIC "REVEAL NEXT STEP" HELPER
-   Used by Next buttons and by inline onclick calls.
-   ================================================== */
-function revealPanelStep(stepId) {
-  const step = document.getElementById(stepId);
-  if (!step) return;
-
-  step.hidden = false;
-  step.scrollIntoView({ behavior: "smooth", block: "nearest" });
-}
-
-/* ==================================================
-   GOTO TAB helper — switch to a named tab (data-tab)
-   Usage: gotoTab('memory')
-   ================================================== */
-function gotoTab(tabName) {
-  const tab = document.querySelector(`.folder-tab[data-tab="${tabName}"]`);
-  if (tab) {
-    tab.click();
-    try { tab.focus({preventScroll:true}); } catch (e) {}
-  }
-}
-
-/* ==================================================
-   NUMBER ENTRY — press Enter to submit an answer.
-   Add data-reveal-target="stepId" to a .number-entry
-   block to automatically reveal the next step once the
-   student submits a value.
-   ================================================== */
-function initialiseNumberEntries() {
-  document.querySelectorAll("[data-number-entry]").forEach((block) => {
-    const input = block.querySelector(".table-number-input");
-    const answerBox = block.querySelector(".entry-answer");
-    const revealTarget = block.dataset.revealTarget;
-
-    if (!input || !answerBox) return;
-
-    function submitAnswer() {
-      const value = input.value.trim();
-      if (value === "") return;
-
-      // lock the input so it cannot be edited further
-      input.readOnly = true;
-      input.setAttribute('aria-readonly', 'true');
-
-      // show a fixed answer message (do not display the user's entered value)
-      answerBox.innerHTML = "";
-      const text = document.createElement("span");
-      text.textContent = "Answer: 15 passes";
-      answerBox.appendChild(text);
-      answerBox.classList.add("visible");
-
-      // hide the panel's watch-video button (if present) and attach youtube info to the tally block
-      const panel = block.closest('.tab-panel');
-      if (panel) {
-        const watchBtn = panel.querySelector('.watch-video-button');
-        if (watchBtn) {
-          // hide original watch button
-          watchBtn.style.display = 'none';
-
-          // find tally block in the same panel and copy youtube metadata so we can recreate the button later
-          const tally = panel.querySelector('[data-tally]');
-          if (tally) {
-            if (watchBtn.dataset.youtubeId) tally.dataset.youtubeId = watchBtn.dataset.youtubeId;
-            if (watchBtn.dataset.youtubeStart) tally.dataset.youtubeStart = watchBtn.dataset.youtubeStart;
-            if (watchBtn.dataset.youtubeEnd) tally.dataset.youtubeEnd = watchBtn.dataset.youtubeEnd;
-            tally.dataset.videoHidden = 'true';
-          }
-        }
-      }
-
-      if (revealTarget) revealPanelStep(revealTarget);
-    }
-
-    input.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        submitAnswer();
-      }
-    });
-  });
-}
-
-/* ==================================================
-   COUNTERAPI HELPERS
-   ================================================== */
-async function counterApiHit(counterName, direction) {
-  try {
-    const response = await fetch(`${COUNTERAPI_BASE}/${counterName}/${direction}`);
-    const data = await response.json();
-    return data.count;
-  } catch (error) {
-    console.error("CounterAPI request failed:", error);
-    return null;
-  }
-}
-
-async function counterApiRead(counterName) {
-  try {
-    const response = await fetch(`${COUNTERAPI_BASE}/${counterName}`);
-    const data = await response.json();
-    return data.count;
-  } catch (error) {
-    console.error("CounterAPI request failed:", error);
-    return null;
-  }
-}
-
-/* ==================================================
-   LIVE YES/NO TALLY
-   ================================================== */
-function initialiseTallyBlocks() {
-  document.querySelectorAll("[data-tally]").forEach((block) => {
-    const yesCounter = block.dataset.tallyYes;
-    const noCounter = block.dataset.tallyNo;
-
-    const yesButton = block.querySelector('[data-tally-vote="yes"]');
-    const noButton = block.querySelector('[data-tally-vote="no"]');
-
-    const yesCountEl = block.querySelector("[data-tally-yes-count]");
-    const noCountEl = block.querySelector("[data-tally-no-count]");
-    const yesBar = block.querySelector(".tally-bar-yes");
-    const noBar = block.querySelector(".tally-bar-no");
-
-    function renderCounts(yesCount, noCount) {
-      const total = yesCount + noCount || 1;
-
-      yesCountEl.textContent = yesCount;
-      noCountEl.textContent = noCount;
-      yesBar.style.width = (yesCount / total) * 100 + "%";
-      noBar.style.width = (noCount / total) * 100 + "%";
-    }
-
-    async function loadCurrentCounts() {
-      const [yesCount, noCount] = await Promise.all([
-        counterApiRead(yesCounter),
-        counterApiRead(noCounter),
-      ]);
-
-      renderCounts(yesCount || 0, noCount || 0);
-    }
-
-    async function castVote(vote) {
-      if (block.dataset.voted === "true") return;
-      block.dataset.voted = "true";
-
-      yesButton.setAttribute("data-selected", String(vote === "yes"));
-      noButton.setAttribute("data-selected", String(vote === "no"));
-
-      const counterName = vote === "yes" ? yesCounter : noCounter;
-      await counterApiHit(counterName, "up");
-      await loadCurrentCounts();
-
-      // if the original watch button was hidden after submitting an answer,
-      // recreate a "Watch the video again" button under the tally after the user votes
-      try {
-        if (block.dataset.videoHidden === 'true' && block.dataset.youtubeId) {
-          if (!block.querySelector('.watch-again-button')) {
-            const againBtn = document.createElement('button');
-            againBtn.type = 'button';
-            againBtn.className = 'general-button watch-again-button';
-            againBtn.textContent = 'Watch the video again';
-            againBtn.style.marginTop = '12px';
-            againBtn.addEventListener('click', () => {
-              const id = block.dataset.youtubeId;
-              const start = block.dataset.youtubeStart ? Number(block.dataset.youtubeStart) : 0;
-              const end = block.dataset.youtubeEnd ? Number(block.dataset.youtubeEnd) : undefined;
-              openYouTubeModal(id, start, end, 'Watch again');
-            });
-
-            const results = block.querySelector('.tally-results');
-            if (results && results.parentNode) results.parentNode.insertBefore(againBtn, results.nextSibling);
-            else block.appendChild(againBtn);
-          }
-        }
-      } catch (err) {
-        // ignore
-      }
-    }
-
-    yesButton.addEventListener("click", () => castVote("yes"));
-    noButton.addEventListener("click", () => castVote("no"));
-
-    loadCurrentCounts();
-  });
-}
-
-/* ==================================================
-   SIMPLE COUNTER (Memory tab)
-   ================================================== */
-function initialiseCounterBlocks() {
-  document.querySelectorAll("[data-counter]").forEach((block) => {
-    const counterName = block.dataset.counterName;
-    const valueEl = block.querySelector("[data-counter-value]");
-    const incrementButton = block.querySelector("[data-counter-increment]");
-    const decrementButton = block.querySelector("[data-counter-decrement]");
-
-    async function refresh() {
-      const count = await counterApiRead(counterName);
-      valueEl.textContent = count === null ? "0" : count;
-    }
-
-    incrementButton.addEventListener("click", async () => {
-      await counterApiHit(counterName, "up");
-      refresh();
-    });
-
-    decrementButton.addEventListener("click", async () => {
-      await counterApiHit(counterName, "down");
-      refresh();
-    });
-
-    refresh();
-  });
-}
-
+      /* ==================================================
+         SETTINGS YOU MIGHT CHANGE
+         ================================================== */
+
+      /* CounterAPI v2 workspaces. Counter references elsewhere in this file
+         are written as "workspaceKey:counterName".
+         Counter names must be alphanumeric only (no hyphens, dots or spaces)
+         and 100 characters or fewer. */
+      const COUNTER_WORKSPACES = {
+        gorilla: "https://api.counterapi.dev/v2/gorilla",
+        memory: "https://api.counterapi.dev/v2/memory-technique"
+      };
+
+      /* Leave empty for public counters. A token here is visible to anyone
+         who views the page source, so only use one if you have to. */
+      const COUNTERAPI_TOKEN = "";
+
+      /* Answer key for the open field traces. Check this against
+         Mouse_experiment.png and swap the colours if they're reversed. */
+      const RAT_TRACE_COLOURS = { a: "red", b: "blue" };
+
+      /* The attention video's published answer. */
+      const ATTENTION_ANSWER_TEXT = "Answer: 15 passes";
 
       /* ----------------------------------------------------------
-         WORD SETS — this is the only part you need to edit.
-         words : shown to the student (aim for 20)
-         lures : never shown; used as the wrong options in the
-                 tap-the-words questions
-         chunks: optional. If present the words are displayed in
-                 these labelled groups (used for the chunking task)
-                 and `words` is built from them automatically.
+         WORD SETS — the main thing you might want to edit.
+         words  : shown to the student (aim for 20)
+         lures  : never shown; used as wrong options in the tap-the-words task
+         pin    : lures that must always appear as options (false-memory traps)
+         chunks : optional. If present the words are shown in these labelled
+                  groups and `words` is built from them automatically.
          ---------------------------------------------------------- */
       const MEMORY_WORD_SETS = {
         1: {
@@ -1876,9 +1673,10 @@ function initialiseCounterBlocks() {
             "Bike", "Climber", "Range", "Steep", "Ski",
             "Rope", "Ridge", "Trail", "Boots", "Altitude"
           ],
-          // "Mountain" is the classic false-memory lure for this set:
-          // most people are sure they saw it.
-          lures: ["Mountain", "Snow", "Cliff", "Rock", "Helmet", "Slope"]
+          lures: ["Mountain", "Snow", "Cliff", "Rock", "Helmet", "Slope"],
+          /* "Mountain" is the classic false-memory lure for this set, so it
+             must always be on offer rather than turning up at random. */
+          pin: ["Mountain"]
         },
 
         2: {
@@ -1902,14 +1700,9 @@ function initialiseCounterBlocks() {
         }
       };
 
-      /* ---------------------------------------------------------- */
-
-      function memorySetWords(set) {
-        if (!set) return [];
-        if (set.words) return set.words;
-        return (set.chunks || []).reduce((all, chunk) => all.concat(chunk.words), []);
-      }
-
+      /* ==================================================
+         SMALL HELPERS
+         ================================================== */
       function shuffleArray(items) {
         const copy = items.slice();
         for (let i = copy.length - 1; i > 0; i--) {
@@ -1920,57 +1713,698 @@ function initialiseCounterBlocks() {
       }
 
       function escapeHtml(text) {
-        return String(text).replace(/[&<>"']/g, (char) => ({
-          "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-        })[char]);
+        return String(text).replace(
+          /[&<>"']/g,
+          (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char])
+        );
       }
 
-      /* Builds the document shown inside the word iframe. */
+      /* One vote per device, remembered across refreshes. */
+      function hasVoted(key) {
+        try {
+          return window.localStorage.getItem("gtacMind:" + key) === "1";
+        } catch (error) {
+          return false;
+        }
+      }
+
+      function markVoted(key) {
+        try {
+          window.localStorage.setItem("gtacMind:" + key, "1");
+        } catch (error) {
+          /* private browsing — the in-memory guard still applies */
+        }
+      }
+
+      function showCounterError(block) {
+        const notice = block.querySelector("[data-counter-error]");
+        if (notice) notice.hidden = false;
+      }
+
+      /* ==================================================
+         COUNTERAPI v2
+         Responses look like { code, data: { value, up_count, ... } },
+         which is why reading `data.count` returned nothing.
+         ================================================== */
+      function counterUrl(reference, suffix) {
+        const parts = String(reference).split(":");
+        const base = COUNTER_WORKSPACES[parts[0]];
+        if (!base || !parts[1]) {
+          console.error("Unknown counter reference:", reference);
+          return null;
+        }
+        return base + "/" + parts[1] + (suffix || "");
+      }
+
+      function counterHeaders() {
+        return COUNTERAPI_TOKEN ? { Authorization: "Bearer " + COUNTERAPI_TOKEN } : {};
+      }
+
+      function readCount(payload) {
+        const data = (payload && payload.data) || payload || {};
+        const value = data.value !== undefined ? data.value : data.up_count;
+        return typeof value === "number" ? value : null;
+      }
+
+      async function counterApiCall(reference, suffix) {
+        const url = counterUrl(reference, suffix);
+        if (!url) return null;
+
+        try {
+          const response = await fetch(url, { headers: counterHeaders() });
+          if (!response.ok) throw new Error("HTTP " + response.status);
+          return readCount(await response.json());
+        } catch (error) {
+          console.error("CounterAPI failed:", reference, suffix, error);
+          return null;
+        }
+      }
+
+      function counterApiHit(reference, direction) {
+        return counterApiCall(reference, "/" + direction);
+      }
+
+      function counterApiRead(reference) {
+        return counterApiCall(reference, "");
+      }
+
+      /* ==================================================
+         FOLDER TABS
+         ================================================== */
+      function initialiseFolderTabs() {
+        const tabs = Array.from(document.querySelectorAll(".folder-tab"));
+        const panels = Array.from(document.querySelectorAll(".tab-panel"));
+
+        function activateTab(tab, moveFocus) {
+          const targetId = "panel-" + tab.dataset.tab;
+
+          tabs.forEach((otherTab) => {
+            const isActive = otherTab === tab;
+            otherTab.classList.toggle("is-active", isActive);
+            otherTab.setAttribute("aria-selected", String(isActive));
+            otherTab.tabIndex = isActive ? 0 : -1;
+            /* Only steal focus when the student actually chose a tab —
+               otherwise the page load lands focus on the tab strip. */
+            if (isActive && moveFocus) otherTab.focus({ preventScroll: true });
+          });
+
+          panels.forEach((panel) => {
+            panel.hidden = panel.id !== targetId;
+          });
+        }
+
+        tabs.forEach((tab, index) => {
+          tab.addEventListener("click", () => activateTab(tab, true));
+
+          tab.addEventListener("keydown", (event) => {
+            if (event.key === "ArrowRight") {
+              event.preventDefault();
+              activateTab(tabs[(index + 1) % tabs.length], true);
+            } else if (event.key === "ArrowLeft") {
+              event.preventDefault();
+              activateTab(tabs[(index - 1 + tabs.length) % tabs.length], true);
+            } else if (event.key === "Home") {
+              event.preventDefault();
+              activateTab(tabs[0], true);
+            } else if (event.key === "End") {
+              event.preventDefault();
+              activateTab(tabs[tabs.length - 1], true);
+            }
+          });
+        });
+
+        const initiallyActive = tabs.find((tab) => tab.classList.contains("is-active")) || tabs[0];
+        if (initiallyActive) activateTab(initiallyActive, false);
+      }
+
+      function gotoTab(tabName) {
+        const tab = document.querySelector('.folder-tab[data-tab="' + tabName + '"]');
+        if (!tab) return;
+        tab.click();
+        document.querySelector(".folder-wrap").scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      function revealPanelStep(stepId) {
+        const step = document.getElementById(stepId);
+        if (!step) return;
+        step.hidden = false;
+        step.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+
+      /* ==================================================
+         VIDEO MODAL
+         ================================================== */
+      function exitFullscreenIfNeeded() {
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) return;
+        const exit = document.exitFullscreen || document.webkitExitFullscreen;
+        if (exit) {
+          try {
+            const result = exit.call(document);
+            if (result && result.catch) result.catch(() => {});
+          } catch (error) {
+            /* ignore */
+          }
+        }
+      }
+
+      /* YT.Player.destroy() removes the container from the DOM, so it has to be
+         rebuilt or the second video never opens. */
+      function resetYouTubeContainer() {
+        if (window.ytPlayer) {
+          try {
+            window.ytPlayer.stopVideo();
+            window.ytPlayer.destroy();
+          } catch (error) {
+            /* ignore */
+          }
+          window.ytPlayer = null;
+        }
+
+        if (window.ytEndChecker) {
+          clearInterval(window.ytEndChecker);
+          window.ytEndChecker = null;
+        }
+
+        if (!document.getElementById("youtubePlayer")) {
+          const container = document.createElement("div");
+          container.id = "youtubePlayer";
+          container.style.cssText = "display:none; width:100%;";
+          document.querySelector(".video-modal-content").appendChild(container);
+        }
+      }
+
+      function openVideoModal(videoSource, videoTitle) {
+        const modal = document.getElementById("videoModal");
+        const player = document.getElementById("videoModalPlayer");
+        const title = document.getElementById("videoModalTitle");
+        if (!modal || !player) return;
+
+        resetYouTubeContainer();
+        const ytContainer = document.getElementById("youtubePlayer");
+        if (ytContainer) ytContainer.style.display = "none";
+
+        title.textContent = videoTitle || "Video";
+        player.pause();
+        player.style.display = "block";
+        player.src = encodeURI(videoSource);
+        player.load();
+
+        modal.classList.add("is-open");
+      }
+
+      function closeVideoModal() {
+        const modal = document.getElementById("videoModal");
+        const player = document.getElementById("videoModalPlayer");
+        if (!modal || !player) return;
+
+        exitFullscreenIfNeeded();
+        modal.dataset.fullscreenVideo = "false";
+
+        player.pause();
+        player.removeAttribute("src");
+        player.load();
+
+        resetYouTubeContainer();
+        const ytContainer = document.getElementById("youtubePlayer");
+        if (ytContainer) ytContainer.style.display = "none";
+
+        modal.classList.remove("is-open");
+      }
+
+      /* ==================================================
+         YOUTUBE IFRAME API
+         ================================================== */
+      window.ytApiReady = false;
+      window.ytPlayer = null;
+      window.ytEndChecker = null;
+      window.pendingYouTube = null;
+
+      function loadYouTubeApi() {
+        if (window.ytApiReady) return;
+        if (document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) return;
+        const tag = document.createElement("script");
+        tag.src = "https://www.youtube.com/iframe_api";
+        document.body.appendChild(tag);
+      }
+
+      function onYouTubeIframeAPIReady() {
+        window.ytApiReady = true;
+        if (window.pendingYouTube) {
+          const config = window.pendingYouTube;
+          window.pendingYouTube = null;
+          createYouTubePlayer(config.videoId, config.start, config.end, config.title);
+        }
+      }
+
+      function createYouTubePlayer(videoId, start, end, title) {
+        const modal = document.getElementById("videoModal");
+        const titleEl = document.getElementById("videoModalTitle");
+        const html5 = document.getElementById("videoModalPlayer");
+
+        resetYouTubeContainer();
+        const ytContainer = document.getElementById("youtubePlayer");
+        if (!ytContainer) return;
+
+        if (html5) {
+          html5.pause();
+          html5.style.display = "none";
+        }
+        ytContainer.style.display = "block";
+        titleEl.textContent = title || "Video";
+
+        window.ytPlayer = new YT.Player("youtubePlayer", {
+          width: "100%",
+          videoId: videoId,
+          playerVars: { start: start || 0, rel: 0, playsinline: 1 },
+          events: {
+            onReady: function (event) {
+              try {
+                event.target.playVideo();
+              } catch (error) {
+                /* autoplay blocked — the student can press play */
+              }
+            },
+            onStateChange: function (event) {
+              if (event.data !== YT.PlayerState.PLAYING || typeof end !== "number") return;
+              /* One checker only — the old code stacked a new interval on
+                 every play/pause. */
+              if (window.ytEndChecker) clearInterval(window.ytEndChecker);
+              window.ytEndChecker = setInterval(() => {
+                try {
+                  if (window.ytPlayer && window.ytPlayer.getCurrentTime() >= end) {
+                    window.ytPlayer.pauseVideo();
+                    clearInterval(window.ytEndChecker);
+                    window.ytEndChecker = null;
+                  }
+                } catch (error) {
+                  clearInterval(window.ytEndChecker);
+                  window.ytEndChecker = null;
+                }
+              }, 200);
+            }
+          }
+        });
+
+        if (modal) modal.classList.add("is-open");
+      }
+
+      function openYouTubeModal(videoId, start, end, title) {
+        if (window.ytApiReady && window.YT && window.YT.Player) {
+          createYouTubePlayer(videoId, start, end, title);
+        } else {
+          window.pendingYouTube = { videoId: videoId, start: start, end: end, title: title };
+          loadYouTubeApi();
+        }
+      }
+
+      /* ==================================================
+         FULLSCREEN VIDEO (local mp4s)
+         ================================================== */
+      function openVideoFullscreen(videoSource, videoTitle) {
+        const modal = document.getElementById("videoModal");
+        const content = modal ? modal.querySelector(".modal-content") : null;
+        const player = document.getElementById("videoModalPlayer");
+        const titleEl = document.getElementById("videoModalTitle");
+        if (!modal || !player || !content) return;
+
+        resetYouTubeContainer();
+        const ytContainer = document.getElementById("youtubePlayer");
+        if (ytContainer) ytContainer.style.display = "none";
+
+        titleEl.textContent = videoTitle || "Video";
+
+        player.pause();
+        player.style.display = "block";
+        /* encodeURI keeps the spaces in "Group A rats.mp4" valid. */
+        player.src = encodeURI(videoSource);
+        player.load();
+
+        modal.classList.add("is-open");
+        modal.dataset.fullscreenVideo = "true";
+
+        const requestFullscreen =
+          content.requestFullscreen || content.webkitRequestFullscreen || content.msRequestFullscreen;
+
+        if (requestFullscreen) {
+          try {
+            const result = requestFullscreen.call(content);
+            if (result && result.catch) result.catch(() => {});
+          } catch (error) {
+            /* stays in the normal modal */
+          }
+        } else if (player.webkitEnterFullscreen) {
+          player.addEventListener(
+            "loadedmetadata",
+            () => {
+              try {
+                player.webkitEnterFullscreen();
+              } catch (error) {
+                /* ignore */
+              }
+            },
+            { once: true }
+          );
+        }
+
+        const playAttempt = player.play();
+        if (playAttempt && playAttempt.catch) playAttempt.catch(() => {});
+      }
+
+      function handleFullscreenExit() {
+        const modal = document.getElementById("videoModal");
+        if (!modal || modal.dataset.fullscreenVideo !== "true") return;
+        if (document.fullscreenElement || document.webkitFullscreenElement) return;
+        closeVideoModal();
+      }
+
+      /* ==================================================
+         WATCH BUTTONS
+         ================================================== */
+      function initialiseWatchButtons() {
+        document.querySelectorAll(".watch-video-button").forEach((button) => {
+          if (button.getAttribute("onclick")) return;
+
+          button.addEventListener("click", () => {
+            const youtubeId = button.dataset.youtubeId;
+            const title = button.dataset.youtubeTitle || button.dataset.videoTitle || "Video";
+
+            if (youtubeId) {
+              openYouTubeModal(
+                youtubeId,
+                Number(button.dataset.youtubeStart) || 0,
+                button.dataset.youtubeEnd ? Number(button.dataset.youtubeEnd) : undefined,
+                title
+              );
+              return;
+            }
+
+            const source = button.dataset.videoSrc;
+            if (source) openVideoModal(source, title);
+          });
+        });
+      }
+
+      /* ==================================================
+         ATTENTION — NUMBER ENTRY
+         ================================================== */
+      function initialiseNumberEntries() {
+        document.querySelectorAll("[data-number-entry]").forEach((block) => {
+          const input = block.querySelector(".table-number-input");
+          const submitButton = block.querySelector("[data-number-submit]");
+          const answerBox = block.querySelector(".entry-answer");
+          const revealTarget = block.dataset.revealTarget;
+          if (!input || !answerBox) return;
+
+          function submitAnswer() {
+            if (input.value.trim() === "") {
+              input.focus();
+              return;
+            }
+
+            input.readOnly = true;
+            input.setAttribute("aria-readonly", "true");
+            if (submitButton) submitButton.disabled = true;
+
+            answerBox.textContent = ATTENTION_ANSWER_TEXT;
+            answerBox.classList.add("visible");
+
+            /* Hide the watch button so nobody re-watches before answering,
+               and hand its video details to the tally block, which offers a
+               "watch again" button once the student has voted. */
+            const panel = block.closest(".tab-panel");
+            if (panel) {
+              const watchButton = panel.querySelector(".watch-video-button");
+              const tally = panel.querySelector("[data-tally]");
+              if (watchButton && tally) {
+                watchButton.style.display = "none";
+                tally.dataset.youtubeId = watchButton.dataset.youtubeId || "";
+                tally.dataset.youtubeStart = watchButton.dataset.youtubeStart || "0";
+                tally.dataset.youtubeEnd = watchButton.dataset.youtubeEnd || "";
+                tally.dataset.videoHidden = "true";
+              }
+            }
+
+            if (revealTarget) revealPanelStep(revealTarget);
+          }
+
+          if (submitButton) submitButton.addEventListener("click", submitAnswer);
+          input.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              submitAnswer();
+            }
+          });
+        });
+      }
+
+      /* ==================================================
+         LIVE YES/NO TALLY
+         ================================================== */
+      function initialiseTallyBlocks() {
+        document.querySelectorAll("[data-tally]").forEach((block) => {
+          const yesCounter = block.dataset.tallyYes;
+          const noCounter = block.dataset.tallyNo;
+          const storageKey = block.dataset.tallyKey || yesCounter;
+
+          const yesButton = block.querySelector('[data-tally-vote="yes"]');
+          const noButton = block.querySelector('[data-tally-vote="no"]');
+          const yesCountEl = block.querySelector("[data-tally-yes-count]");
+          const noCountEl = block.querySelector("[data-tally-no-count]");
+          const yesBar = block.querySelector(".tally-bar-yes");
+          const noBar = block.querySelector(".tally-bar-no");
+          if (!yesButton || !noButton) return;
+
+          function renderCounts(yesCount, noCount) {
+            const total = yesCount + noCount || 1;
+            yesCountEl.textContent = yesCount;
+            noCountEl.textContent = noCount;
+            yesBar.style.width = (yesCount / total) * 100 + "%";
+            noBar.style.width = (noCount / total) * 100 + "%";
+          }
+
+          async function loadCurrentCounts() {
+            const results = await Promise.all([counterApiRead(yesCounter), counterApiRead(noCounter)]);
+            if (results[0] === null && results[1] === null) {
+              showCounterError(block);
+              return;
+            }
+            renderCounts(results[0] || 0, results[1] || 0);
+          }
+
+          function lockButtons(vote) {
+            yesButton.disabled = true;
+            noButton.disabled = true;
+            yesButton.setAttribute("data-selected", String(vote === "yes"));
+            noButton.setAttribute("data-selected", String(vote === "no"));
+          }
+
+          function addWatchAgainButton() {
+            if (block.dataset.videoHidden !== "true" || !block.dataset.youtubeId) return;
+            if (block.querySelector(".watch-again-button")) return;
+
+            const againButton = document.createElement("button");
+            againButton.type = "button";
+            againButton.className = "general-button watch-again-button";
+            againButton.textContent = "Watch the video again";
+            againButton.style.marginTop = "12px";
+            againButton.addEventListener("click", () => {
+              openYouTubeModal(
+                block.dataset.youtubeId,
+                Number(block.dataset.youtubeStart) || 0,
+                block.dataset.youtubeEnd ? Number(block.dataset.youtubeEnd) : undefined,
+                "Watch again"
+              );
+            });
+
+            const results = block.querySelector(".tally-results");
+            if (results && results.parentNode) results.parentNode.insertBefore(againButton, results.nextSibling);
+            else block.appendChild(againButton);
+          }
+
+          async function castVote(vote) {
+            if (block.dataset.voted === "true") return;
+            block.dataset.voted = "true";
+            markVoted(storageKey);
+            lockButtons(vote);
+
+            const votedCounter = vote === "yes" ? yesCounter : noCounter;
+            const otherCounter = vote === "yes" ? noCounter : yesCounter;
+
+            /* v2 buffers writes, so a plain re-read can miss the student's own
+               vote. The /up response carries the fresh number for their side. */
+            const votedCount = await counterApiHit(votedCounter, "up");
+            const otherCount = await counterApiRead(otherCounter);
+
+            if (votedCount === null && otherCount === null) {
+              showCounterError(block);
+            } else {
+              renderCounts(
+                vote === "yes" ? votedCount || 0 : otherCount || 0,
+                vote === "yes" ? otherCount || 0 : votedCount || 0
+              );
+            }
+
+            addWatchAgainButton();
+          }
+
+          yesButton.addEventListener("click", () => castVote("yes"));
+          noButton.addEventListener("click", () => castVote("no"));
+
+          if (hasVoted(storageKey)) {
+            block.dataset.voted = "true";
+            yesButton.disabled = true;
+            noButton.disabled = true;
+          }
+
+          loadCurrentCounts();
+        });
+      }
+
+      /* ==================================================
+         MULTIPLE-CHOICE POLL
+         ================================================== */
+      function initialisePollBlocks() {
+        document.querySelectorAll("[data-poll]").forEach((block) => {
+          const buttons = Array.from(block.querySelectorAll("[data-poll-option]"));
+          const results = block.querySelector("[data-poll-results]");
+          const storageKey = block.dataset.pollKey || "poll";
+          if (!buttons.length || !results) return;
+
+          async function renderResults() {
+            const counts = await Promise.all(
+              buttons.map((button) => counterApiRead(button.dataset.pollOption))
+            );
+
+            if (counts.every((count) => count === null)) {
+              showCounterError(block);
+              return;
+            }
+
+            const total = counts.reduce((sum, count) => sum + (count || 0), 0) || 1;
+
+            results.innerHTML = buttons
+              .map((button, index) => {
+                const count = counts[index] || 0;
+                const percent = Math.round((count / total) * 100);
+                return (
+                  '<div class="poll-row">' +
+                  '<span class="poll-row-label">' +
+                  escapeHtml(button.textContent.trim()) +
+                  "</span>" +
+                  '<span class="poll-row-track"><span class="poll-row-fill" style="width:' +
+                  percent +
+                  '%"></span></span>' +
+                  '<span class="poll-row-count">' +
+                  percent +
+                  "% (" +
+                  count +
+                  ")</span>" +
+                  "</div>"
+                );
+              })
+              .join("");
+
+            results.hidden = false;
+          }
+
+          buttons.forEach((button) => {
+            button.addEventListener("click", async () => {
+              if (block.dataset.voted === "true") return;
+              block.dataset.voted = "true";
+              markVoted(storageKey);
+
+              buttons.forEach((other) => {
+                other.disabled = true;
+                other.setAttribute("data-selected", String(other === button));
+              });
+
+              await counterApiHit(button.dataset.pollOption, "up");
+              renderResults();
+            });
+          });
+
+          if (hasVoted(storageKey)) {
+            block.dataset.voted = "true";
+            buttons.forEach((button) => {
+              button.disabled = true;
+            });
+            renderResults();
+          }
+        });
+      }
+
+      /* ==================================================
+         WORD LIST DISPLAY
+         ================================================== */
+      function memorySetWords(set) {
+        if (!set) return [];
+        if (set.words) return set.words;
+        return (set.chunks || []).reduce((all, chunk) => all.concat(chunk.words), []);
+      }
+
       function buildWordFrameDoc(set) {
-        const style = `
-          body{margin:0;padding:20px 22px;background:#fff;color:#26211c;
-               font-family:"Figtree",-apple-system,BlinkMacSystemFont,sans-serif;}
-          section{margin:0 0 18px;}
-          section:last-child{margin-bottom:0;}
-          h2{margin:0 0 8px;font-size:.8rem;font-weight:700;letter-spacing:.06em;
-             color:#4a2fe3;}
-          ul{list-style:none;margin:0;padding:0;display:grid;gap:10px 18px;
-             grid-template-columns:repeat(auto-fill,minmax(110px,1fr));}
-          li{font-size:1.05rem;font-weight:600;}
-          @media (max-width:520px){ul{grid-template-columns:repeat(auto-fill,minmax(92px,1fr));}}
-        `;
+        const style =
+          'body{margin:0;padding:20px 22px;background:#fff;color:#26211c;' +
+          'font-family:"Figtree",-apple-system,BlinkMacSystemFont,sans-serif;}' +
+          "section{margin:0 0 18px;}section:last-child{margin-bottom:0;}" +
+          "h2{margin:0 0 8px;font-size:.8rem;font-weight:700;letter-spacing:.06em;color:#4a2fe3;}" +
+          "ul{list-style:none;margin:0;padding:0;display:grid;gap:10px 18px;" +
+          "grid-template-columns:repeat(auto-fill,minmax(110px,1fr));}" +
+          "li{font-size:1.05rem;font-weight:600;}" +
+          "@media (max-width:520px){ul{grid-template-columns:repeat(auto-fill,minmax(92px,1fr));}}";
 
         let body;
         if (set.chunks) {
-          body = set.chunks.map((chunk) => `
-            <section>
-              <h2>${escapeHtml(chunk.label)}</h2>
-              <ul>${shuffleArray(chunk.words).map((w) => `<li>${escapeHtml(w)}</li>`).join("")}</ul>
-            </section>
-          `).join("");
+          body = set.chunks
+            .map(
+              (chunk) =>
+                "<section><h2>" +
+                escapeHtml(chunk.label) +
+                "</h2><ul>" +
+                shuffleArray(chunk.words)
+                  .map((word) => "<li>" + escapeHtml(word) + "</li>")
+                  .join("") +
+                "</ul></section>"
+            )
+            .join("");
         } else {
-          body = `<ul>${shuffleArray(memorySetWords(set)).map((w) => `<li>${escapeHtml(w)}</li>`).join("")}</ul>`;
+          body =
+            "<ul>" +
+            shuffleArray(memorySetWords(set))
+              .map((word) => "<li>" + escapeHtml(word) + "</li>")
+              .join("") +
+            "</ul>";
         }
 
-        return `<!doctype html><html lang="en"><head><meta charset="utf-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-          <style>${style}</style></head><body>${body}</body></html>`;
+        return (
+          '<!doctype html><html lang="en"><head><meta charset="utf-8">' +
+          '<meta name="viewport" content="width=device-width, initial-scale=1">' +
+          "<style>" +
+          style +
+          "</style></head><body>" +
+          body +
+          "</body></html>"
+        );
       }
 
-      /* Countdown. Calls onFinish() when it reaches zero. */
-      function startCountdown(timerEl, valueEl, fillEl, seconds, onFinish) {
+      function startCountdown(task, timerEl, valueEl, fillEl, seconds, onFinish) {
         let remaining = seconds;
+        const panel = task.closest(".tab-panel");
 
         function paint() {
-          const mins = Math.floor(remaining / 60);
+          const minutes = Math.floor(remaining / 60);
           const secs = remaining % 60;
-          valueEl.textContent = `${mins}:${String(secs).padStart(2, "0")}`;
+          valueEl.textContent = minutes + ":" + String(secs).padStart(2, "0");
           if (fillEl) fillEl.style.width = (remaining / seconds) * 100 + "%";
           if (timerEl) timerEl.classList.toggle("is-low", remaining <= 10);
         }
 
         paint();
         const tick = setInterval(() => {
+          /* Pause while the student is on another tab or another folder —
+             otherwise the words vanish behind their back. */
+          if (document.hidden || (panel && panel.hidden)) return;
+
           remaining -= 1;
           paint();
           if (remaining <= 0) {
@@ -1980,9 +2414,6 @@ function initialiseCounterBlocks() {
         }, 1000);
       }
 
-      /* ==================================================
-         WORD REVEAL TASKS
-         ================================================== */
       function initialiseWordTasks() {
         document.querySelectorAll("[data-word-task]").forEach((task) => {
           const set = MEMORY_WORD_SETS[task.dataset.set];
@@ -2005,7 +2436,7 @@ function initialiseCounterBlocks() {
             frame.srcdoc = buildWordFrameDoc(set);
             stage.hidden = false;
 
-            startCountdown(timerEl, valueEl, fillEl, seconds, () => {
+            startCountdown(task, timerEl, valueEl, fillEl, seconds, () => {
               frame.srcdoc = "";
               stage.hidden = true;
               if (doneEl) doneEl.hidden = false;
@@ -2016,7 +2447,7 @@ function initialiseCounterBlocks() {
       }
 
       /* ==================================================
-         FREE RECALL — type the words you remember
+         FREE RECALL
          ================================================== */
       function initialiseRecallBlocks() {
         document.querySelectorAll("[data-recall]").forEach((block) => {
@@ -2024,87 +2455,68 @@ function initialiseCounterBlocks() {
           const input = block.querySelector("[data-recall-input]");
           const checkButton = block.querySelector("[data-recall-check]");
           const feedback = block.querySelector("[data-recall-feedback]");
-
           if (!set || !input || !checkButton || !feedback) return;
 
           checkButton.addEventListener("click", () => {
             const words = memorySetWords(set);
-            const typed = Array.from(new Set(
-              input.value
-                .split(/[\n,;]+/)
-                .map((word) => word.trim().toLowerCase())
-                .filter(Boolean)
-            ));
+
+            /* Splits on spaces too — students type "hill valley climb"
+               as often as one word per line. */
+            const typed = Array.from(
+              new Set(
+                input.value
+                  .split(/[\s,;]+/)
+                  .map((word) => word.trim().toLowerCase())
+                  .filter(Boolean)
+              )
+            );
 
             const found = words.filter((word) => typed.includes(word.toLowerCase()));
             const missed = words.filter((word) => !typed.includes(word.toLowerCase()));
-            const invented = typed.filter((word) => !words.some((w) => w.toLowerCase() === word));
+            const invented = typed.filter((word) => !words.some((listWord) => listWord.toLowerCase() === word));
 
-            let html = `<p class="feedback-score">You remembered ${found.length} of ${words.length} words.</p>`;
+            let html =
+              '<p class="feedback-score">You remembered ' + found.length + " of " + words.length + " words.</p>";
+
             if (invented.length) {
-              html += `<p>These weren't on the list: ${escapeHtml(invented.join(", "))}.
-                       Feeling sure about a word you never saw is a false memory — your brain fills gaps
-                       with words that fit the topic.</p>`;
+              html +=
+                "<p>These weren't on the list: " +
+                escapeHtml(invented.join(", ")) +
+                ". Feeling sure about a word you never saw is a false memory — your brain fills gaps with " +
+                "words that fit the topic.</p>";
             }
+
             if (missed.length) {
-              html += `<p>Words you missed: ${escapeHtml(missed.join(", "))}.</p>`;
+              html += "<p>Words you missed: " + escapeHtml(missed.join(", ")) + ".</p>";
             }
 
             feedback.innerHTML = html;
             feedback.hidden = false;
             input.readOnly = true;
             checkButton.disabled = true;
-
-            // mark this block answered and reveal any after-questions placeholder
-            block.dataset.answeredRecall = "true";
-            checkAndRevealAfterQuestions(block);
           });
         });
       }
 
       /* ==================================================
-         "HOW MANY DID YOU REMEMBER?" NUMBER ENTRY
-         (separate from the attention tab's number entry,
-         which prints a fixed answer)
+         TAP-THE-WORDS
          ================================================== */
-      function initialiseCountEntries() {
-        document.querySelectorAll("[data-count-entry]").forEach((block) => {
-          const input = block.querySelector("[data-count-input]");
-          const submit = block.querySelector("[data-count-submit]");
-          const feedback = block.querySelector("[data-count-feedback]");
-          const total = block.dataset.total || "20";
+      function buildChoiceOptions(set, realCount, lureCount) {
+        const lures = set.lures || [];
+        const pinned = (set.pin || []).filter((word) => lures.includes(word)).slice(0, lureCount);
+        const otherLures = shuffleArray(lures.filter((word) => !pinned.includes(word))).slice(
+          0,
+          Math.max(0, lureCount - pinned.length)
+        );
 
-          if (!input || !submit || !feedback) return;
-
-          function record() {
-            const value = input.value.trim();
-            if (value === "") return;
-
-            feedback.innerHTML = `<p class="feedback-score">You recorded ${escapeHtml(value)} out of ${escapeHtml(total)}.</p>
-                                  <p>Keep this number — you'll compare it with your other two attempts.</p>`;
-            feedback.hidden = false;
-            input.readOnly = true;
-            submit.disabled = true;
-            // mark answered and reveal placeholder if paired question is done
-            block.dataset.answeredCount = "true";
-            checkAndRevealAfterQuestions(block);
-          }
-
-          submit.addEventListener("click", record);
-          input.addEventListener("keydown", (event) => {
-            if (event.key === "Enter") {
-              event.preventDefault();
-              record();
-            }
-          });
-        });
+        return shuffleArray([
+          ...shuffleArray(memorySetWords(set))
+            .slice(0, realCount)
+            .map((word) => ({ word: word, inList: true })),
+          ...pinned.concat(otherLures).map((word) => ({ word: word, inList: false }))
+        ]);
       }
 
-      /* ==================================================
-         TAP-THE-WORDS QUESTIONS
-         data-choice-mode="in-list"     → tap words that WERE shown
-         data-choice-mode="not-in-list" → tap words that were NOT shown
-         ================================================== */
       function initialiseWordChoiceBlocks() {
         document.querySelectorAll("[data-word-choice]").forEach((block) => {
           const set = MEMORY_WORD_SETS[block.dataset.set];
@@ -2114,15 +2526,9 @@ function initialiseCounterBlocks() {
           const mode = block.dataset.choiceMode === "not-in-list" ? "not-in-list" : "in-list";
           const realCount = Number(block.dataset.realCount) || 6;
           const lureCount = Number(block.dataset.lureCount) || 4;
-
           if (!set || !chipWrap || !checkButton || !feedback) return;
 
-          const options = shuffleArray([
-            ...shuffleArray(memorySetWords(set)).slice(0, realCount).map((word) => ({ word, inList: true })),
-            ...shuffleArray(set.lures || []).slice(0, lureCount).map((word) => ({ word, inList: false }))
-          ]);
-
-          const chips = options.map((option) => {
+          const chips = buildChoiceOptions(set, realCount, lureCount).map((option) => {
             const chip = document.createElement("button");
             chip.type = "button";
             chip.className = "word-chip";
@@ -2134,209 +2540,68 @@ function initialiseCounterBlocks() {
               chip.setAttribute("aria-pressed", String(!selected));
             });
             chipWrap.appendChild(chip);
-            return { chip, option };
+            return { chip: chip, option: option };
           });
 
           checkButton.addEventListener("click", () => {
-            let correct = 0;
+            let hits = 0;
+            let falseAlarms = 0;
+            let misses = 0;
+            let luredWord = null;
 
-            chips.forEach(({ chip, option }) => {
-              const shouldSelect = mode === "in-list" ? option.inList : !option.inList;
-              const selected = chip.dataset.selected === "true";
+            chips.forEach((entry) => {
+              const shouldSelect = mode === "in-list" ? entry.option.inList : !entry.option.inList;
+              const selected = entry.chip.dataset.selected === "true";
+              entry.chip.disabled = true;
 
-              chip.disabled = true;
               if (selected && shouldSelect) {
-                chip.classList.add("is-correct");
-                correct += 1;
+                entry.chip.classList.add("is-correct");
+                hits += 1;
               } else if (selected && !shouldSelect) {
-                chip.classList.add("is-wrong");
+                entry.chip.classList.add("is-wrong");
+                falseAlarms += 1;
+                if ((set.pin || []).includes(entry.option.word)) luredWord = entry.option.word;
               } else if (!selected && shouldSelect) {
-                chip.classList.add("is-missed");
-              } else {
-                correct += 1;
+                entry.chip.classList.add("is-missed");
+                misses += 1;
               }
             });
 
-            const targets = chips.filter(({ option }) => (mode === "in-list" ? option.inList : !option.inList)).length;
+            /* Scored against the words that actually needed picking — the old
+               version counted correct non-selections, so tapping nothing
+               still looked like a decent score. */
+            const targets = hits + misses;
+            let html = '<p class="feedback-score">You found ' + hits + " of " + targets + ".</p>";
 
-            feedback.innerHTML =
-              `<p class="feedback-score">${correct} of ${chips.length} words sorted correctly.</p>` +
-              `<p>Green means you got it. Orange means you picked a word you shouldn't have. ` +
-              `A dashed green outline is one of the ${targets} you missed.</p>`;
+            if (falseAlarms) {
+              html +=
+                "<p>You also picked " +
+                falseAlarms +
+                (falseAlarms === 1 ? " word" : " words") +
+                " that weren't there (shown in orange).</p>";
+            }
+
+            if (luredWord) {
+              html +=
+                "<p><b>" +
+                escapeHtml(luredWord) +
+                "</b> was never on the list. Every other word pointed at it, so your brain filed it away as " +
+                "though you had seen it. That's a false memory.</p>";
+            }
+
+            if (misses) {
+              html += "<p>The dashed green outlines are the ones you missed.</p>";
+            }
+
+            feedback.innerHTML = html;
             feedback.hidden = false;
             checkButton.disabled = true;
-            // mark this block answered and reveal any after-questions placeholder
-            block.dataset.answeredChoice = "true";
-            checkAndRevealAfterQuestions(block);
-          });
-        });
-      }
-
-      // Helper: find the containing questions wrapper and reveal the placeholder
-      function checkAndRevealAfterQuestions(el) {
-        let ancestor = el;
-        while (ancestor && ancestor !== document.body) {
-          if (ancestor.id && ancestor.id.endsWith("-questions")) break;
-          ancestor = ancestor.parentElement;
-        }
-        if (!ancestor || ancestor === document.body) return;
-
-        const hasCount = ancestor.querySelector("[data-count-entry]") !== null;
-        const hasRecall = ancestor.querySelector("[data-recall]") !== null;
-        const hasChoice = ancestor.querySelector("[data-word-choice]") !== null;
-
-        const q1Answered = (hasCount && ancestor.querySelector("[data-count-entry]").dataset.answeredCount === "true") ||
-                           (hasRecall && ancestor.querySelector("[data-recall]").dataset.answeredRecall === "true");
-
-        const q2Answered = hasChoice && ancestor.querySelector("[data-word-choice]").dataset.answeredChoice === "true";
-
-        if (q1Answered && q2Answered) {
-          const placeholder = ancestor.querySelector('.after-questions-placeholder');
-          if (placeholder) placeholder.hidden = false;
-        }
-      }
-
-      /* ==================================================
-         MULTIPLE-CHOICE POLL (CounterAPI)
-         ================================================== */
-      function initialisePollBlocks() {
-        document.querySelectorAll("[data-poll]").forEach((block) => {
-          const buttons = Array.from(block.querySelectorAll("[data-poll-option]"));
-          const results = block.querySelector("[data-poll-results]");
-
-          if (!buttons.length || !results) return;
-
-          async function renderResults() {
-            const counts = await Promise.all(buttons.map((button) => counterApiRead(button.dataset.pollOption)));
-            const total = counts.reduce((sum, count) => sum + (count || 0), 0) || 1;
-
-            results.innerHTML = buttons.map((button, index) => {
-              const count = counts[index] || 0;
-              const percent = Math.round((count / total) * 100);
-              return `
-                <div class="poll-row">
-                  <span class="poll-row-label">${escapeHtml(button.textContent.trim())}</span>
-                  <span class="poll-row-track"><span class="poll-row-fill" style="width:${percent}%"></span></span>
-                  <span class="poll-row-count">${percent}% (${count})</span>
-                </div>`;
-            }).join("");
-
-            results.hidden = false;
-          }
-
-          buttons.forEach((button) => {
-            button.addEventListener("click", async () => {
-              if (block.dataset.voted === "true") return;
-              block.dataset.voted = "true";
-
-              buttons.forEach((other) => other.setAttribute("data-selected", String(other === button)));
-              await counterApiHit(button.dataset.pollOption, "up");
-              renderResults();
-            });
           });
         });
       }
 
       /* ==================================================
-         INIT — add these five calls to your existing
-         DOMContentLoaded listener.
-         ================================================== */
-      document.addEventListener("DOMContentLoaded", () => {
-        initialiseWordTasks();
-        initialiseRecallBlocks();
-        initialiseCountEntries();
-        initialiseWordChoiceBlocks();
-        initialisePollBlocks();
-      });
-
-
-/* ==================================================
-   ANXIETY — WHICH MOUSE CHOICE
-   ================================================== */
-function initialiseMouseChoice() {
-  const buttons = document.querySelectorAll(".mouse-choice-button");
-  const answer = document.getElementById("mouseChoiceAnswer");
-
-  buttons.forEach((button) => {
-    button.addEventListener("click", () => {
-      buttons.forEach((otherButton) => otherButton.removeAttribute("data-selected"));
-      button.setAttribute("data-selected", "true");
-
-      if (answer) answer.hidden = false;
-    });
-  });
-}
-
-      /* ----------------------------------------------------------
-         ANSWER KEY — check this against Mouse_experiment.png and
-         change the colours if they're the other way around.
-         ---------------------------------------------------------- */
-      const RAT_TRACE_COLOURS = { a: "red", b: "blue" };
-
-      /* ==================================================
-         FULLSCREEN VIDEO
-         Opens the shared modal, then puts the modal content
-         into fullscreen so the title stays above the player.
-         Usage: openVideoFullscreen('videos/Group A rats.mp4', 'Title')
-         ================================================== */
-      function openVideoFullscreen(videoSource, videoTitle) {
-        const modal = document.getElementById("videoModal");
-        const content = modal ? modal.querySelector(".modal-content") : null;
-        const player = document.getElementById("videoModalPlayer");
-        const titleEl = document.getElementById("videoModalTitle");
-        const ytContainer = document.getElementById("youtubePlayer");
-
-        if (!modal || !player || !content) return;
-
-        if (ytContainer) ytContainer.style.display = "none";
-        titleEl.textContent = videoTitle || "Video";
-
-        player.pause();
-        player.style.display = "block";
-        // encodeURI keeps the spaces in the filename valid in a src attribute
-        player.src = encodeURI(videoSource);
-        player.load();
-
-        modal.classList.add("is-open");
-        modal.dataset.fullscreenVideo = "true";
-
-        const requestFullscreen =
-          content.requestFullscreen ||
-          content.webkitRequestFullscreen ||
-          content.msRequestFullscreen;
-
-        if (requestFullscreen) {
-          try {
-            const result = requestFullscreen.call(content);
-            if (result && result.catch) result.catch(() => {});
-          } catch (error) {
-            /* stays in the normal modal */
-          }
-        } else if (player.webkitEnterFullscreen) {
-          // iPhone: only the <video> element itself can go fullscreen
-          player.addEventListener("loadedmetadata", () => {
-            try { player.webkitEnterFullscreen(); } catch (e) {}
-          }, { once: true });
-        }
-
-        const playAttempt = player.play();
-        if (playAttempt && playAttempt.catch) playAttempt.catch(() => {});
-      }
-
-      /* Closing fullscreen (Esc or the system control) closes the modal too. */
-      function handleFullscreenExit() {
-        const modal = document.getElementById("videoModal");
-        if (!modal || modal.dataset.fullscreenVideo !== "true") return;
-        if (document.fullscreenElement || document.webkitFullscreenElement) return;
-        closeVideoModal();
-      }
-
-      document.addEventListener("fullscreenchange", handleFullscreenExit);
-      document.addEventListener("webkitfullscreenchange", handleFullscreenExit);
-
-      /* ==================================================
-         RAT A / RAT B QUESTION
-         data-correct="a" marks which answer is right.
+         ANXIETY — RAT A / RAT B
          ================================================== */
       function initialiseRatChoice() {
         document.querySelectorAll("[data-rat-choice]").forEach((block) => {
@@ -2368,8 +2633,7 @@ function initialiseMouseChoice() {
       }
 
       /* ==================================================
-         FILL IN THE BLANKS — Rat A = ___ / Rat B = ___
-         Three attempts, then the explanation appears anyway.
+         ANXIETY — FILL IN THE BLANKS
          ================================================== */
       function initialiseBlankQuiz() {
         document.querySelectorAll("[data-blank-quiz]").forEach((block) => {
@@ -2383,7 +2647,7 @@ function initialiseMouseChoice() {
 
           function check() {
             const answers = inputs.map((input) => ({
-              input,
+              input: input,
               typed: input.value.trim().toLowerCase(),
               expected: RAT_TRACE_COLOURS[input.dataset.blank]
             }));
@@ -2403,29 +2667,37 @@ function initialiseMouseChoice() {
             attempts += 1;
             let allCorrect = true;
 
-            answers.forEach(({ input, typed, expected }) => {
-              input.classList.remove("is-correct", "is-wrong");
-              if (typed === expected) {
-                input.classList.add("is-correct");
+            answers.forEach((entry) => {
+              entry.input.classList.remove("is-correct", "is-wrong");
+              if (entry.typed === entry.expected) {
+                entry.input.classList.add("is-correct");
               } else {
-                input.classList.add("is-wrong");
+                entry.input.classList.add("is-wrong");
                 allCorrect = false;
               }
             });
 
             if (allCorrect) {
               feedback.innerHTML =
-                `<p class="feedback-score">Both correct.</p>
-                 <p>The anxious rat's trace hugs the walls of the arena. The calm rat crosses the open middle,
-                 because exploring it doesn't feel risky.</p>`;
-              inputs.forEach((input) => { input.readOnly = true; });
+                '<p class="feedback-score">Both correct.</p>' +
+                "<p>The anxious rat's trace hugs the walls of the arena. The calm rat crosses the open " +
+                "middle, because exploring it doesn't feel risky.</p>";
+              inputs.forEach((input) => {
+                input.readOnly = true;
+              });
               checkButton.disabled = true;
             } else if (attempts >= 3) {
               feedback.innerHTML =
-                `<p>The answers are Rat A = <b>${RAT_TRACE_COLOURS.a}</b> and Rat B = <b>${RAT_TRACE_COLOURS.b}</b>.</p>
-                 <p>The anxious rat's trace hugs the walls of the arena. The calm rat crosses the open middle,
-                 because exploring it doesn't feel risky.</p>`;
-              inputs.forEach((input) => { input.readOnly = true; });
+                "<p>The answers are Rat A = <b>" +
+                RAT_TRACE_COLOURS.a +
+                "</b> and Rat B = <b>" +
+                RAT_TRACE_COLOURS.b +
+                "</b>.</p>" +
+                "<p>The anxious rat's trace hugs the walls of the arena. The calm rat crosses the open " +
+                "middle, because exploring it doesn't feel risky.</p>";
+              inputs.forEach((input) => {
+                input.readOnly = true;
+              });
               checkButton.disabled = true;
             } else {
               feedback.innerHTML =
@@ -2434,9 +2706,7 @@ function initialiseMouseChoice() {
             }
 
             feedback.hidden = false;
-            if (allCorrect || attempts >= 3) {
-              if (revealTarget) revealPanelStep(revealTarget);
-            }
+            if ((allCorrect || attempts >= 3) && revealTarget) revealPanelStep(revealTarget);
           }
 
           checkButton.addEventListener("click", check);
@@ -2452,26 +2722,34 @@ function initialiseMouseChoice() {
       }
 
       /* ==================================================
-         INIT — add these two calls to your existing
-         DOMContentLoaded listener.
+         INIT — one listener for everything
          ================================================== */
       document.addEventListener("DOMContentLoaded", () => {
+        initialiseFolderTabs();
+        initialiseWatchButtons();
+        initialiseNumberEntries();
+        initialiseTallyBlocks();
+        initialiseWordTasks();
+        initialiseRecallBlocks();
+        initialiseWordChoiceBlocks();
+        initialisePollBlocks();
         initialiseRatChoice();
         initialiseBlankQuiz();
+
+        const modal = document.getElementById("videoModal");
+        if (modal) {
+          modal.addEventListener("click", (event) => {
+            if (event.target === modal) closeVideoModal();
+          });
+        }
+
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape" && modal && modal.classList.contains("is-open")) closeVideoModal();
+        });
       });
 
-
-/* ==================================================
-   INIT
-   ================================================== */
-document.addEventListener("DOMContentLoaded", () => {
-  initialiseFolderTabs();
-  initialiseNumberEntries();
-  initialiseTallyBlocks();
-  initialiseCounterBlocks();
-  initialiseMouseChoice();
-});
-
+      document.addEventListener("fullscreenchange", handleFullscreenExit);
+      document.addEventListener("webkitfullscreenchange", handleFullscreenExit);
     </script>
   </body>
 </html>
