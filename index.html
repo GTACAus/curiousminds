@@ -1466,13 +1466,15 @@
               </p>
 
               <button
-                type="button"
-                class="general-button watch-video-button"
-                onclick="openVideoFullscreen('videos/Group A rats.mp4', 'Use the clear whiteboard to follow Rat A&#39;s movements'); revealPanelStep('anxiety-step-1-next')"
-              >
-                <span class="bounce-symbol">&#9654;</span>
-                <span>Watch Rat A</span>
-              </button>
+              type="button"
+              class="general-button watch-video-button"
+              data-video-src="videos/Group A rats.mp4"
+              data-video-title="Rat A — follow its movements on the clear whiteboard"
+              data-video-fullscreen="true"
+              data-reveal-target="anxiety-step-1-next">
+              <span class="bounce-symbol">&#9654;</span>
+              <span>Watch Rat A</span>
+            </button>
 
               <div id="anxiety-step-1-next" hidden>
                 <button
@@ -1493,8 +1495,10 @@
               <button
                 type="button"
                 class="general-button watch-video-button"
-                onclick="openVideoFullscreen('videos/Group B rats.mp4', 'Use another clear whiteboard to follow Rat B&#39;s movements'); revealPanelStep('anxiety-step-2-questions')"
-              >
+                data-video-src="videos/Group B rats.mp4"
+                data-video-title="Rat B — follow its movements on another clear whiteboard"
+                data-video-fullscreen="true"
+                data-reveal-target="anxiety-step-2-questions">
                 <span class="bounce-symbol">&#9654;</span>
                 <span>Watch Rat B</span>
               </button>
@@ -2081,29 +2085,32 @@
          WATCH BUTTONS
          ================================================== */
       function initialiseWatchButtons() {
-        document.querySelectorAll(".watch-video-button").forEach((button) => {
-          if (button.getAttribute("onclick")) return;
+    document.querySelectorAll(".watch-video-button").forEach((button) => {
+      if (button.getAttribute("onclick")) return;
 
-          button.addEventListener("click", () => {
-            const youtubeId = button.dataset.youtubeId;
-            const title = button.dataset.youtubeTitle || button.dataset.videoTitle || "Video";
+      button.addEventListener("click", () => {
+        const youtubeId = button.dataset.youtubeId;
+        const title = button.dataset.youtubeTitle || button.dataset.videoTitle || "Video";
 
-            if (youtubeId) {
-              openYouTubeModal(
-                youtubeId,
-                Number(button.dataset.youtubeStart) || 0,
-                button.dataset.youtubeEnd ? Number(button.dataset.youtubeEnd) : undefined,
-                title
-              );
-              return;
-            }
+        if (youtubeId) {
+          openYouTubeModal(
+            youtubeId,
+            Number(button.dataset.youtubeStart) || 0,
+            button.dataset.youtubeEnd ? Number(button.dataset.youtubeEnd) : undefined,
+            title
+          );
+        } else if (button.dataset.videoSrc) {
+          if (button.dataset.videoFullscreen === "true") {
+            openVideoFullscreen(button.dataset.videoSrc, title);
+          } else {
+            openVideoModal(button.dataset.videoSrc, title);
+          }
+        }
 
-            const source = button.dataset.videoSrc;
-            if (source) openVideoModal(source, title);
-          });
-        });
-      }
-
+        if (button.dataset.revealTarget) revealPanelStep(button.dataset.revealTarget);
+      });
+    });
+  }
       /* ==================================================
          ATTENTION — NUMBER ENTRY
          ================================================== */
