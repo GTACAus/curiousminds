@@ -635,6 +635,13 @@
         color: var(--color-orange);
       }
 
+      .counter-error-reason {
+        display: block;
+        margin-top: 4px;
+        font-size: 0.78rem;
+        color: var(--color-ink-soft);
+      }
+
       .counter-error[hidden] {
         display: none;
       }
@@ -1510,8 +1517,7 @@
                 class="tally-block"
                 data-tally
                 data-tally-key="attentionGorilla"
-                data-tally-yes="gorilla:attentionNoticedYes"
-                data-tally-no="gorilla:attentionNoticedNo"
+                data-tally-counter="gorilla"
               >
                 <div class="tally-buttons">
                   <button type="button" class="general-button tally-button" data-tally-vote="yes">Yes</button>
@@ -1852,28 +1858,28 @@
                       <button
                         type="button"
                         class="general-button poll-option"
-                        data-poll-option="memory:memoryBestReading"
+                        data-poll-option="memory-reading"
                       >
                         Just reading the list
                       </button>
                       <button
                         type="button"
                         class="general-button poll-option"
-                        data-poll-option="memory:memoryBestChunking"
+                        data-poll-option="memory-chunking"
                       >
                         Chunking
                       </button>
                       <button
                         type="button"
                         class="general-button poll-option"
-                        data-poll-option="memory:memoryBestPalace"
+                        data-poll-option="memory-palace"
                       >
                         Mind palace
                       </button>
                       <button
                         type="button"
                         class="general-button poll-option"
-                        data-poll-option="memory:memoryBestSame"
+                        data-poll-option="memory-same"
                       >
                         About the same
                       </button>
@@ -2279,10 +2285,12 @@
       /* CounterAPI v2 workspaces. Counter references elsewhere in this file
          are written as "workspaceKey:counterName".
          Counter names must be alphanumeric only and 100 characters or fewer. */
-      const COUNTER_WORKSPACES = {
-        gorilla: "https://api.counterapi.dev/v2/gorilla",
-        memory: "https://api.counterapi.dev/v2/memory-technique"
-      };
+      /* Your CounterAPI workspace. Every counter below lives inside it.
+         Confirmed working: a GET on
+         https://api.counterapi.dev/v2/gene-technology-access-centres-team-5261/gorilla
+         returns the "Gorilla Yes or No" counter. */
+      const COUNTERAPI_BASE =
+        "https://api.counterapi.dev/v2/gene-technology-access-centres-team-5261";
 
       /* Leave empty for public counters. A token here is visible to anyone
          who views the page source, so only use one if you have to. */
@@ -2466,7 +2474,17 @@
 
       function showCounterError(block) {
         const notice = block.querySelector("[data-counter-error]");
-        if (notice) notice.hidden = false;
+        if (!notice) return;
+        notice.hidden = false;
+
+        if (!window.lastCounterError) return;
+        let reason = notice.querySelector(".counter-error-reason");
+        if (!reason) {
+          reason = document.createElement("span");
+          reason.className = "counter-error-reason";
+          notice.appendChild(reason);
+        }
+        reason.textContent = " (" + window.lastCounterError + ")";
       }
 
       /* ==================================================
@@ -2582,46 +2600,83 @@
          COUNTERAPI v2
          Responses look like { code, data: { value, up_count, ... } }.
          ================================================== */
-      function counterUrl(reference, suffix) {
-        const parts = String(reference).split(":");
-        const base = COUNTER_WORKSPACES[parts[0]];
-        if (!base || !parts[1]) {
-          console.error("Unknown counter reference:", reference);
-          return null;
-        }
-        return base + "/" + parts[1] + (suffix || "");
+      function counterUrl(name, suffix) {
+        if (!name) return null;
+        return COUNTERAPI_BASE + "/" + name + (suffix || "");
       }
 
       function counterHeaders() {
         return COUNTERAPI_TOKEN ? { Authorization: "Bearer " + COUNTERAPI_TOKEN } : {};
       }
 
-      function readCount(payload) {
-        const data = (payload && payload.data) || payload || {};
-        const value = data.value !== undefined ? data.value : data.up_count;
-        return typeof value === "number" ? value : null;
+      /* A v2 counter carries an up count AND a down count, so one counter can
+         hold a whole yes/no question: up = yes, down = no. */
+      function readCounts(payload) {
+        const data = (payload && payload.data) || {};
+        let up = null;
+        if (typeof data.up_count === "number") up = data.up_count;
+        else if (typeof data.value === "number") up = data.value;
+        if (up === null) return null;
+        return { up: up, down: typeof data.down_count === "number" ? data.down_count : 0 };
       }
 
-      async function counterApiCall(reference, suffix) {
-        const url = counterUrl(reference, suffix);
-        if (!url) return null;
+      /* The reason for the most recent failure, shown on screen so a problem
+         can be diagnosed on an iPad with no developer console. */
+      window.lastCounterError = "";
+
+      async function counterApiCall(name, suffix) {
+        const url = counterUrl(name, suffix);
+        if (!url) {
+          window.lastCounterError = "No counter name given.";
+          return null;
+        }
 
         try {
           const response = await fetch(url, { headers: counterHeaders() });
-          if (!response.ok) throw new Error("HTTP " + response.status);
-          return readCount(await response.json());
+
+          /* A counter nobody has voted on yet may not exist server-side.
+             For a read that genuinely means zero, not a broken connection. */
+          if (response.status === 404 && !suffix) return { up: 0, down: 0 };
+
+          if (!response.ok) {
+            let reason = "HTTP " + response.status;
+            if (response.status === 401 || response.status === 403) {
+              reason += " — this counter is private, so COUNTERAPI_TOKEN must be filled in";
+            } else if (response.status === 404) {
+              reason += " — no counter called \"" + name + "\" in this workspace";
+            } else if (response.status === 429) {
+              reason += " — rate limited, too many requests at once";
+            }
+            window.lastCounterError = reason;
+            throw new Error(reason);
+          }
+
+          const counts = readCounts(await response.json());
+          if (counts === null) {
+            window.lastCounterError = "The response from " + name + " had no counts in it.";
+          }
+          return counts;
         } catch (error) {
-          console.error("CounterAPI failed:", reference, suffix, error);
+          if (!window.lastCounterError || error.name === "TypeError") {
+            /* fetch() throws a bare TypeError for CORS and network failures,
+               including opening this page as a file:// URL. */
+            window.lastCounterError =
+              "The request never reached CounterAPI (" + error.message + "). " +
+              (window.location.protocol === "file:"
+                ? "This page is open as a file:// URL — serve it over http(s) instead."
+                : "Check the network, a school content filter, or CORS.");
+          }
+          console.error("CounterAPI failed:", name, suffix, error);
           return null;
         }
       }
 
-      function counterApiHit(reference, direction) {
-        return counterApiCall(reference, "/" + direction);
+      function counterApiHit(name, direction) {
+        return counterApiCall(name, "/" + direction);
       }
 
-      function counterApiRead(reference) {
-        return counterApiCall(reference, "");
+      function counterApiRead(name) {
+        return counterApiCall(name, "");
       }
 
       /* ==================================================
@@ -3056,9 +3111,9 @@
          ================================================== */
       function initialiseTallyBlocks() {
         document.querySelectorAll("[data-tally]").forEach((block) => {
-          const yesCounter = block.dataset.tallyYes;
-          const noCounter = block.dataset.tallyNo;
-          const storageKey = block.dataset.tallyKey || yesCounter;
+          /* One counter holds the whole question: up = yes, down = no. */
+          const counterName = block.dataset.tallyCounter;
+          const storageKey = block.dataset.tallyKey || counterName;
 
           const yesButton = block.querySelector('[data-tally-vote="yes"]');
           const noButton = block.querySelector('[data-tally-vote="no"]');
@@ -3077,12 +3132,12 @@
           }
 
           async function loadCurrentCounts() {
-            const results = await Promise.all([counterApiRead(yesCounter), counterApiRead(noCounter)]);
-            if (results[0] === null && results[1] === null) {
+            const counts = await counterApiRead(counterName);
+            if (counts === null) {
               showCounterError(block);
               return;
             }
-            renderCounts(results[0] || 0, results[1] || 0);
+            renderCounts(counts.up, counts.down);
           }
 
           function addWatchAgainButton() {
@@ -3121,21 +3176,14 @@
             yesButton.setAttribute("data-selected", String(vote === "yes"));
             noButton.setAttribute("data-selected", String(vote === "no"));
 
-            const votedCounter = vote === "yes" ? yesCounter : noCounter;
-            const otherCounter = vote === "yes" ? noCounter : yesCounter;
-
             /* v2 buffers writes, so a plain re-read can miss the student's own
-               vote. The /up response carries the fresh number for their side. */
-            const votedCount = await counterApiHit(votedCounter, "up");
-            const otherCount = await counterApiRead(otherCounter);
+               vote. The response to /up or /down carries both fresh numbers. */
+            const counts = await counterApiHit(counterName, vote === "yes" ? "up" : "down");
 
-            if (votedCount === null && otherCount === null) {
+            if (counts === null) {
               showCounterError(block);
             } else {
-              renderCounts(
-                vote === "yes" ? votedCount || 0 : otherCount || 0,
-                vote === "yes" ? otherCount || 0 : votedCount || 0
-              );
+              renderCounts(counts.up, counts.down);
             }
 
             addWatchAgainButton();
@@ -3165,20 +3213,21 @@
           if (!buttons.length || !results) return;
 
           async function renderResults() {
-            const counts = await Promise.all(
+            const results = await Promise.all(
               buttons.map((button) => counterApiRead(button.dataset.pollOption))
             );
 
-            if (counts.every((count) => count === null)) {
+            if (results.every((result) => result === null)) {
               showCounterError(block);
               return;
             }
 
-            const total = counts.reduce((sum, count) => sum + (count || 0), 0) || 1;
+            const counts = results.map((result) => (result ? result.up : 0));
+            const total = counts.reduce((sum, count) => sum + count, 0) || 1;
 
             results.innerHTML = buttons
               .map((button, index) => {
-                const count = counts[index] || 0;
+                const count = counts[index];
                 const percent = Math.round((count / total) * 100);
                 return (
                   '<div class="poll-row"><span class="poll-row-label">' +
@@ -3616,8 +3665,7 @@
         }
 
         document.querySelectorAll("[data-tally]").forEach((block) => {
-          add(block.dataset.tallyYes);
-          add(block.dataset.tallyNo);
+          add(block.dataset.tallyCounter);
         });
         document.querySelectorAll("[data-poll-option]").forEach((button) => {
           add(button.dataset.pollOption);
@@ -3645,7 +3693,7 @@
           let detail;
 
           if (!url) {
-            detail = 'No workspace called "' + String(reference).split(":")[0] + '" in COUNTER_WORKSPACES.';
+            detail = "No counter name was set on this element.";
           } else {
             try {
               const response = await fetch(url, { headers: counterHeaders() });
@@ -3659,19 +3707,19 @@
                   detail += " (counter does not exist yet — visit its /up URL once to create it)";
                 }
               } else {
-                let value = null;
+                let counts = null;
                 try {
-                  value = readCount(JSON.parse(body));
+                  counts = readCounts(JSON.parse(body));
                 } catch (parseError) {
-                  value = null;
+                  counts = null;
                 }
 
-                if (value === null) {
-                  detail = "Responded, but no count found in: " + body.slice(0, 140);
+                if (counts === null) {
+                  detail = "Responded, but no counts found in: " + body.slice(0, 140);
                 } else {
                   ok = true;
                   passed += 1;
-                  detail = "reads back " + value;
+                  detail = "reads back up " + counts.up + " / down " + counts.down;
                 }
               }
             } catch (error) {
