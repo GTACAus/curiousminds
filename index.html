@@ -97,7 +97,7 @@
       }
 
       .page-intro-block {
-        margin-bottom: 40px;
+        margin-bottom: 28px;
       }
 
       .page-title {
@@ -131,6 +131,174 @@
 
       .page-summary p:last-child {
         margin-bottom: 0;
+      }
+
+      /* ==================================================
+         KEY WORDS (GLOSSARY)
+         ================================================== */
+      .glossary {
+        margin: 0 0 26px;
+        background: #fff;
+        border: 1px solid var(--color-card-border);
+        border-left: 5px solid var(--color-purple);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+      }
+
+      .glossary > summary {
+        cursor: pointer;
+        list-style: none;
+        padding: 16px 20px;
+        font-family: var(--font-display);
+        font-weight: 700;
+        color: var(--color-purple);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 48px;
+      }
+
+      .glossary > summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .glossary > summary::after {
+        content: "+";
+        margin-left: auto;
+        font-size: 1.4rem;
+        line-height: 1;
+        color: var(--color-ink-soft);
+      }
+
+      .glossary[open] > summary::after {
+        content: "\2212";
+      }
+
+      .glossary > summary:focus-visible {
+        outline: 3px solid var(--color-purple);
+        outline-offset: -3px;
+      }
+
+      .glossary-hint {
+        font-weight: 500;
+        font-size: 0.85rem;
+        color: var(--color-ink-soft);
+      }
+
+      .glossary-list {
+        margin: 0;
+        padding: 0 20px 20px;
+        border-top: 1px dashed var(--color-manila-dark);
+        padding-top: 14px;
+      }
+
+      .glossary-list div {
+        padding: 9px 0;
+        border-bottom: 1px dashed #eee6d2;
+        color: var(--color-ink-soft);
+        font-size: 0.95rem;
+        max-width: 66ch;
+      }
+
+      .glossary-list div:last-child {
+        border-bottom: none;
+      }
+
+      .glossary-list b {
+        color: var(--color-ink);
+      }
+
+      /* Tappable terms inside the body text. */
+      .term {
+        appearance: none;
+        -webkit-appearance: none;
+        border: none;
+        background: none;
+        padding: 0;
+        margin: 0;
+        font: inherit;
+        color: var(--color-purple);
+        font-weight: 700;
+        cursor: pointer;
+        border-bottom: 2px dotted var(--color-purple);
+        line-height: inherit;
+      }
+
+      .term:focus-visible {
+        outline: 3px solid var(--color-orange);
+        outline-offset: 2px;
+      }
+
+      /* A tapped word slides its definition up as a toast, so the text the
+         student is reading never jumps around underneath their finger.
+         Sits below the video modal (z-index 50) on purpose. */
+      .term-toast {
+        position: fixed;
+        left: 50%;
+        bottom: 0;
+        transform: translate(-50%, 120%);
+        width: min(560px, calc(100vw - 32px));
+        margin-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+        background: var(--color-ink);
+        color: #fff;
+        border-left: 5px solid var(--color-orange);
+        border-radius: var(--radius-md);
+        box-shadow: 0 20px 45px -18px rgba(38, 33, 28, 0.75);
+        padding: 16px 18px;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        z-index: 40;
+        transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.3, 1), opacity 0.2s ease;
+        opacity: 0;
+      }
+
+      .term-toast.is-showing {
+        transform: translate(-50%, 0);
+        opacity: 1;
+      }
+
+      .term-toast-body {
+        flex: 1;
+        font-size: 0.95rem;
+        line-height: 1.45;
+        color: #f1ece0;
+      }
+
+      .term-toast-term {
+        display: block;
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: 1.02rem;
+        color: #fff;
+        margin-bottom: 3px;
+      }
+
+      .term-toast-close {
+        appearance: none;
+        -webkit-appearance: none;
+        border: none;
+        background: none;
+        color: #cdc6b6;
+        font-size: 1.5rem;
+        line-height: 1;
+        cursor: pointer;
+        flex: 0 0 auto;
+        min-width: 44px;
+        min-height: 44px;
+        margin: -8px -6px 0 0;
+      }
+
+      .term-toast-close:focus-visible {
+        outline: 3px solid var(--color-orange);
+        outline-offset: 2px;
+        border-radius: 8px;
+      }
+
+      @media (max-width: 640px) {
+        .term-toast {
+          padding: 14px 14px;
+        }
       }
 
       /* ==================================================
@@ -930,44 +1098,21 @@
         opacity: 1;
       }
 
-      /* --- fill in the blanks --- */
-      .blank-row {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 12px;
+      /* A colour swatch inside a choice button, so "the red path" is
+         unmistakable even before the button changes colour. */
+      .swatch {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.9);
+        flex: 0 0 auto;
       }
-      .blank-row label {
-        font-weight: 700;
-        min-width: 4.5rem;
+      .swatch-red {
+        background: #e03b2f;
       }
-
-      .blank-input {
-        font-family: var(--font-body);
-        font-size: 1rem;
-        padding: 12px 14px;
-        border-radius: 10px;
-        border: 1px solid var(--color-manila-dark);
-        background: #fff;
-        width: 170px;
-        max-width: 100%;
-        min-height: 48px;
-      }
-      .blank-input:focus-visible {
-        outline: 3px solid var(--color-purple);
-        outline-offset: 1px;
-      }
-      .blank-input.is-correct {
-        border: 2px solid var(--color-green);
-        background: #f2fbf7;
-      }
-      .blank-input.is-wrong {
-        border: 2px solid var(--color-orange);
-        background: #fef4f1;
-      }
-      .blank-input[readonly] {
-        background: #f7f4ea;
-        color: var(--color-ink-soft);
+      .swatch-blue {
+        background: #2f6fe0;
       }
 
       .gut-brain-box {
@@ -994,6 +1139,145 @@
         max-width: 60ch;
         border-left: 3px solid var(--color-manila-dark);
         padding-left: 14px;
+      }
+
+      /* ==================================================
+         TECHNIQUE CARDS + SCOREBOARD + TAKEAWAY
+         ================================================== */
+      .technique-cards {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        margin-top: 16px;
+      }
+
+      .technique-card {
+        background: #fff;
+        border: 1px solid var(--color-card-border);
+        border-top: 5px solid var(--color-purple);
+        border-radius: var(--radius-md);
+        padding: 18px 20px;
+      }
+
+      .technique-card h3 {
+        font-family: var(--font-display);
+        font-size: 1.05rem;
+        margin: 0 0 8px;
+        color: var(--color-ink);
+      }
+
+      .technique-card p {
+        margin: 0 0 10px;
+        font-size: 0.93rem;
+        color: var(--color-ink-soft);
+      }
+
+      .technique-card p:last-child {
+        margin-bottom: 0;
+      }
+
+      .technique-card .card-tag {
+        display: inline-block;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--color-orange);
+        margin-bottom: 6px;
+      }
+
+      .scoreboard {
+        margin-top: 22px;
+        background: #fff;
+        border: 1px solid var(--color-card-border);
+        border-radius: var(--radius-md);
+        padding: 16px 20px;
+        max-width: 520px;
+      }
+
+      .scoreboard[hidden] {
+        display: none;
+      }
+
+      .scoreboard h3 {
+        font-family: var(--font-display);
+        font-size: 1rem;
+        margin: 0 0 12px;
+        color: var(--color-purple);
+      }
+
+      .score-row {
+        display: grid;
+        grid-template-columns: minmax(120px, 1fr) 2fr auto;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 10px;
+        font-size: 0.92rem;
+        color: var(--color-ink-soft);
+      }
+
+      .score-track {
+        height: 12px;
+        border-radius: 999px;
+        background: var(--color-manila-dark);
+        overflow: hidden;
+      }
+
+      .score-fill {
+        display: block;
+        height: 100%;
+        background: var(--color-purple);
+      }
+
+      .score-row.is-pending .score-fill {
+        background: var(--color-manila-dark);
+      }
+
+      .scoreboard-note {
+        margin: 10px 0 0;
+        font-size: 0.88rem;
+        color: var(--color-ink-soft);
+      }
+
+      @media (max-width: 640px) {
+        .score-row {
+          grid-template-columns: 1fr;
+          gap: 4px;
+        }
+      }
+
+      .takeaway {
+        margin-top: 28px;
+        background: var(--color-purple);
+        color: #fff;
+        border-radius: var(--radius-lg);
+        padding: 24px 26px;
+        max-width: 62ch;
+      }
+
+      .takeaway .takeaway-tag {
+        display: block;
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #d9d1ff;
+        margin-bottom: 8px;
+      }
+
+      .takeaway p {
+        margin: 0;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1.2rem;
+        line-height: 1.35;
+      }
+
+      .takeaway p + p {
+        margin-top: 10px;
+        font-weight: 500;
+        font-size: 0.98rem;
+        color: #e6e2ff;
       }
 
       /* Counter self-test panel (only shown for a ?diag=1 URL). */
@@ -1067,13 +1351,6 @@
         min-height: 44px;
       }
 
-      @media (max-width: 640px) {
-        .blank-row {
-          flex-wrap: wrap;
-          gap: 8px;
-        }
-      }
-
       @media (prefers-reduced-motion: reduce) {
         * {
           transition-duration: 0.01ms !important;
@@ -1098,17 +1375,33 @@
         <div class="page-summary">
           <h2>Psychology is the study of the human mind and behaviour.</h2>
           <p>
-            The mind itself is hard to study directly, because it doesn't always produce results we can
-            measure. That's why behavioural neuroscientists and psychologists look at both the biology of the
-            brain and the behaviours we can observe, to build a clearer picture of how the mind works.
+            The mind itself is hard to study directly, because it doesn't always produce outward signs we can
+            observe. That's why
+            <button type="button" class="term" data-term="neuroscientist">behavioural neuroscientists</button>
+            and <button type="button" class="term" data-term="psychologists">psychologists</button> look at
+            both the biology of the brain and the
+            <button type="button" class="term" data-term="behaviour">behaviours</button> we can observe, to
+            build a clearer picture of how the mind works.
           </p>
           <p>
-            This resource will walk you through three short psychology investigations. Choose one of the human
-            behaviours to get started. Record your own results, and see how your answers compare with everyone
-            else's.
+            This resource will walk you through three short psychology investigations. Choose one of the
+            <button type="button" class="term" data-term="cognitiveStates">cognitive states</button> to get
+            started. Record your own results, and see how your answers compare with everyone else's.
           </p>
         </div>
       </section>
+
+      <!-- ==================================================
+           KEY WORDS
+           Tap any underlined word in the text for the same definition.
+           ================================================== -->
+      <details class="glossary" id="glossary">
+        <summary>
+          <span>Key words</span>
+          <span class="glossary-hint">tap any underlined word as you go</span>
+        </summary>
+        <div class="glossary-list" id="glossaryList"></div>
+      </details>
 
       <!-- ==================================================
            MANILA FOLDER TABS
@@ -1167,9 +1460,9 @@
           >
             <div class="panel-step" id="attention-step-1">
               <p>
-                <b>Attention</b> describes the process when a person concentrates on some features of the
-                environment. It is the first step in committing something to memory, and therefore the first
-                step for the brain to learn.
+                <button type="button" class="term" data-term="attention">Attention</button> describes the
+                process when a person concentrates on some features of the environment. It is the first step in
+                committing something to memory, and therefore the first step for the brain to learn.
               </p>
               <p class="panel-eyebrow">Step 1</p>
               <h2 class="panel-heading">Click to test your attention</h2>
@@ -1253,17 +1546,20 @@
                 <div class="panel-body-text">
                   <p>
                     The distraction from the gorilla is an example of something called
-                    <b>selective attention</b>. When your brain concentrates hard on one task, like counting
-                    passes, it filters out other information to avoid getting overloaded.
-                    <b>Attention is limited.</b> If you're trying to listen to your teacher while checking
-                    messages, thinking about something else, or switching between lots of tasks, your brain has
-                    to divide its attention. You might feel like you're following the lesson, but you can
-                    actually miss important information.
+                    <button type="button" class="term" data-term="selectiveAttention">
+                      selective attention</button
+                    >. When your brain concentrates hard on one task, like counting passes, it filters out
+                    other information to avoid getting overloaded. <b>Attention is limited.</b> If you're
+                    trying to listen to your teacher while checking messages, thinking about something else, or
+                    switching between lots of tasks, your brain has to divide its attention. You might feel
+                    like you're following the lesson, but you can actually miss important information.
                   </p>
                   <p>
-                    It also explains why <b>"multi-tasking" is misleading.</b> Your brain doesn't really do
-                    several demanding tasks at the same time very well, it rapidly switches between them. Each
-                    switch can mean that you miss or forget information.
+                    It also explains why
+                    <button type="button" class="term" data-term="multitasking">"multi-tasking"</button>
+                    is misleading. Your brain doesn't really do several demanding tasks at the same time very
+                    well, it rapidly switches between them. Each switch can mean that you miss or forget
+                    information.
                   </p>
                   <p><b>You don't always notice what you're not paying attention to.</b></p>
                   <p>
@@ -1276,6 +1572,16 @@
                   <img src="multitasking.png" alt="Illustration of multitasking" />
                 </div>
               </div>
+
+              <div class="takeaway">
+                <span class="takeaway-tag">The big idea</span>
+                <p>You don't notice what you're not paying attention to.</p>
+                <p>
+                  Attention is a limited resource. Spend it on one thing at a time and you will see — and learn
+                  — far more.
+                </p>
+              </div>
+
               <div style="margin-top: 18px">
                 <button type="button" class="general-button" data-goto-tab="memory">
                   Next activity: Memory
@@ -1300,9 +1606,10 @@
               <p class="panel-eyebrow">Step 1</p>
               <h2 class="panel-heading">How good is your memory?</h2>
               <p class="panel-body-text">
-                Your <b>working memory</b> is the part of your mind that holds information while you're
-                actually using it — the phone number you repeat to yourself until you type it in, or the start
-                of a sentence while your teacher finishes it. It's fast, but it's small.
+                Your <button type="button" class="term" data-term="workingMemory">working memory</button> is
+                the part of your mind that holds information while you're actually using it — the phone number
+                you repeat to yourself until you type it in, or the start of a sentence while your teacher
+                finishes it. It's fast, but it's small.
               </p>
               <p class="panel-body-text">
                 <b
@@ -1382,7 +1689,8 @@
               <h2 class="panel-heading">Now try chunking</h2>
               <p class="panel-body-text">
                 Working memory can only hold a handful of items, so the trick is to make each item bigger.
-                That's called <b>chunking</b>: grouping small pieces of information into fewer, larger units.
+                That's called <button type="button" class="term" data-term="chunking">chunking</button>:
+                grouping small pieces of information into fewer, larger units.
               </p>
               <p class="panel-body-text">
                 A phone number is easier as 0412 998 341 than as ten separate digits, and "cat, dog, horse" can
@@ -1465,8 +1773,9 @@
               <p class="panel-eyebrow">Step 3</p>
               <h2 class="panel-heading">Now try a mind palace</h2>
               <p class="panel-body-text">
-                A <b>mind palace</b>, also known as the <b>method of loci</b>, uses your spatial awareness to
-                carry things your memory finds hard, like lists. Your brain is good at remembering places.
+                A <button type="button" class="term" data-term="mindPalace">mind palace</button>, also known as
+                the <b>method of loci</b>, uses your spatial awareness to carry things your memory finds hard,
+                like lists. Your brain is good at remembering places.
               </p>
               <p class="panel-body-text">
                 <b>Build your own mind palace:</b> pick a route you know without thinking — your walk from the
@@ -1573,7 +1882,59 @@
                     <div class="poll-results" data-poll-results aria-live="polite" hidden></div>
 
                     <p class="counter-error" data-counter-error hidden>
-                      Class results are unavailable right now.
+                      Class results are unavailable right now. Your answer still counts in the room.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- ---- your three scores ---- -->
+                <div class="scoreboard" id="memoryScoreboard" hidden>
+                  <h3>Your three attempts</h3>
+                  <div id="memoryScoreRows"></div>
+                  <p class="scoreboard-note" id="memoryScoreNote"></p>
+                </div>
+
+                <!-- ---- what each technique does ---- -->
+                <h3 class="panel-heading" style="margin-top: 28px">Why the techniques work</h3>
+
+                <div class="technique-cards">
+                  <div class="technique-card">
+                    <span class="card-tag">Weakest</span>
+                    <h3>Just reading the list</h3>
+                    <p>
+                      Repeating words over and over is called rehearsal. It keeps them alive in working memory,
+                      but only for as long as you keep repeating — and working memory holds about four items at
+                      once.
+                    </p>
+                    <p>
+                      Nothing links the words to each other, so there is no way back to them. Most people land
+                      around 5&ndash;8 of 20 this way.
+                    </p>
+                  </div>
+
+                  <div class="technique-card">
+                    <span class="card-tag">Stronger</span>
+                    <h3>Chunking</h3>
+                    <p>
+                      Grouping items into meaningful units means each of your four slots carries five words
+                      instead of one. Four groups is easy; twenty separate words is not.
+                    </p>
+                    <p>
+                      Use it for anything that falls into natural categories — a shopping list, the causes of
+                      an event, the steps of a method. Make the groups mean something to <i>you</i>.
+                    </p>
+                  </div>
+
+                  <div class="technique-card">
+                    <span class="card-tag">Strongest for lists</span>
+                    <h3>Mind palace</h3>
+                    <p>
+                      Your brain stores places far better than it stores lists. Putting each item along a route
+                      you already know borrows that ability, and the odder the image the harder it is to lose.
+                    </p>
+                    <p>
+                      It takes longer to set up, which is the trade-off — but it holds for days, not seconds.
+                      Worth it for a speech, a sequence, or an exam list.
                     </p>
                   </div>
                 </div>
@@ -1584,6 +1945,15 @@
                   technique — or from the list, or from simply getting better at the task. What would you
                   change to test the techniques properly?
                 </p>
+
+                <div class="takeaway">
+                  <span class="takeaway-tag">The big idea</span>
+                  <p>A better memory isn't a bigger memory — it's a better-organised one.</p>
+                  <p>
+                    Working memory holds about four things. Give information meaning or a place, and those four
+                    slots can carry a great deal more.
+                  </p>
+                </div>
 
                 <div style="margin-top: 18px">
                   <button type="button" class="general-button" data-goto-tab="anxiety">
@@ -1611,12 +1981,14 @@
               <h2 class="panel-heading">How does anxiety work?</h2>
               <div class="panel-body-text">
                 <p>
-                  <b>Anxiety</b> is the feeling of fear or worry your body produces in response to something it
-                  treats as a threat — a racing heart, tense muscles, the urge to get out. It's normal and
-                  useful in short bursts, but when it fires constantly it stops being helpful.
+                  <button type="button" class="term" data-term="anxiety">Anxiety</button> is the feeling of
+                  fear or worry your body produces in response to something it treats as a threat — a racing
+                  heart, tense muscles, the urge to get out. It's normal and useful in short bursts, but when
+                  it fires constantly it stops being helpful.
                 </p>
                 <p>
-                  Deep in your brain sits a small almond-shaped structure called the <b>amygdala</b>. It scans
+                  Deep in your brain sits a small almond-shaped structure called the
+                  <button type="button" class="term" data-term="amygdala">amygdala</button>. It scans
                   everything happening around you and decides what counts as dangerous, then triggers the
                   body's alarm response. Rats and mice have an amygdala too, and it does the same job, which is
                   why scientists can study anxiety using rodents. But they can't ask a rat how it feels, so
@@ -1652,7 +2024,13 @@
                 </div>
               </div>
 
-              <div class="question-block" id="anxiety-question-2" data-quiz data-reveal-target="anxiety-step-2" hidden>
+              <div
+                class="question-block"
+                id="anxiety-question-2"
+                data-quiz
+                data-reveal-target="anxiety-step-2"
+                hidden
+              >
                 <p class="question-label">2. Which lobe of the brain is the amygdala in?</p>
 
                 <div class="choice-buttons">
@@ -1695,14 +2073,17 @@
                     >NOTE: You will be watching a video of a rat's movement from an animal study about the
                     gut-brain axis.</b
                   >
-                  The gut-brain axis is a developing area of science that investigates the influence of the gut
-                  on the brain — like the butterflies you feel in your tummy when you're nervous.
+                  The
+                  <button type="button" class="term" data-term="gutBrainAxis">gut-brain axis</button> is a
+                  developing area of science that investigates the influence of the gut on the brain — like the
+                  butterflies you feel in your tummy when you're nervous.
                 </p>
                 <p>
                   Animal research like this is tightly regulated. Every study is reviewed by an ethics
                   committee that must be convinced the work is justified, the animal numbers are the minimum
-                  needed, and the animals' welfare is protected throughout. </p>
-                <h4> Use a clear whiteboard and a whiteboard marker to follow the movement of the rat. </h4>
+                  needed, and the animals' welfare is protected throughout.
+                </p>
+                <h4>Use a clear whiteboard and a whiteboard marker to follow the movement of the rat.</h4>
               </div>
 
               <button
@@ -1728,18 +2109,19 @@
             <div class="panel-step" id="anxiety-step-3" hidden>
               <p class="panel-eyebrow">Step 3</p>
               <h2 class="panel-heading">Watch Rat B</h2>
-              <h4> Use a clear whiteboard and a whiteboard marker to follow the movement of the rat. </h4>
+              <h4>Use a clear whiteboard and a whiteboard marker to follow the movement of the rat.</h4>
               <button
                 type="button"
                 class="general-button watch-video-button"
                 data-video-src="Group B rats.mp4"
                 data-video-title="Rat B — Place a different clear whiteboard on top of the iPad to trace Rat B's movements"
                 data-video-fullscreen="true"
-                data-reveal-target="anxiety-step-3-questions">
+                data-reveal-target="anxiety-step-3-questions"
+              >
                 <span class="bounce-symbol">&#9654;</span>
                 <span>Watch Rat B</span>
-                     </button>
-  
+              </button>
+
               <div id="anxiety-step-3-questions" hidden>
                 <p class="panel-body-text" style="margin-top: 22px">
                   <b>THINK:</b> What do you notice when you compare the movements of Rat A to Rat B?
@@ -1750,7 +2132,8 @@
 
                   <div class="choice-buttons">
                     <button type="button" class="general-button choice-button" data-quiz-option data-correct>
-                      Rat A </button>
+                      Rat A
+                    </button>
                     <button type="button" class="general-button choice-button" data-quiz-option>Rat B</button>
                   </div>
 
@@ -1775,47 +2158,40 @@
             <div class="panel-step" id="anxiety-step-4" hidden>
               <p class="panel-eyebrow">Step 4</p>
               <h2 class="panel-heading">Become a behavioural scientist</h2>
-              <p class="panel-body-text">This is the data from the two rats over 10 minutes of activity.</p>
+              <p class="panel-body-text">
+                This is the data from the two rats over 10 minutes of activity. Each line traces where one rat
+                walked.
+              </p>
 
               <div class="memory-image-frame" style="max-width: 560px; margin-top: 16px">
                 <img src="Mouse_experiment.png" alt="Movement traces of two rats recorded over ten minutes" />
               </div>
 
-              <div class="question-block" data-blank-quiz data-reveal-target="anxiety-gut-brain">
-                <p class="question-label">Which rat is which? Type <b>red</b> or <b>blue</b>.</p>
+              <div class="question-block" data-quiz data-reveal-target="anxiety-gut-brain">
+                <p class="question-label">
+                  Which colour shows the anxious rat's path — the one that stayed near the walls?
+                </p>
 
-                <div class="blank-row">
-                  <label for="ratABlank">Rat A =</label>
-                  <input
-                    type="text"
-                    id="ratABlank"
-                    class="blank-input"
-                    data-blank="a"
-                    autocomplete="off"
-                    autocapitalize="none"
-                    autocorrect="off"
-                    spellcheck="false"
-                    placeholder="red or blue"
-                  />
+                <div class="choice-buttons">
+                  <button type="button" class="general-button choice-button" data-quiz-option data-correct>
+                    <span class="swatch swatch-red"></span>
+                    <span>The red path</span>
+                  </button>
+                  <button type="button" class="general-button choice-button" data-quiz-option>
+                    <span class="swatch swatch-blue"></span>
+                    <span>The blue path</span>
+                  </button>
                 </div>
 
-                <div class="blank-row">
-                  <label for="ratBBlank">Rat B =</label>
-                  <input
-                    type="text"
-                    id="ratBBlank"
-                    class="blank-input"
-                    data-blank="b"
-                    autocomplete="off"
-                    autocapitalize="none"
-                    autocorrect="off"
-                    spellcheck="false"
-                    placeholder="red or blue"
-                  />
+                <div class="feedback-box" data-quiz-feedback hidden>
+                  <p class="feedback-score" data-quiz-verdict></p>
+                  <p>
+                    <b>Red is Rat A, the anxious rat</b> — its trace hugs the walls of the arena.
+                    <b>Blue is Rat B, the calm rat</b>, which crosses the open middle, because exploring it
+                    doesn't feel risky. That difference in behaviour is the measurement: no one had to ask the
+                    rat how it felt.
+                  </p>
                 </div>
-
-                <button type="button" class="general-button" data-blank-check>Check my answers</button>
-                <div class="feedback-box" data-blank-feedback hidden></div>
               </div>
 
               <div class="gut-brain-box" id="anxiety-gut-brain" hidden>
@@ -1823,6 +2199,15 @@
                   Using these animal models, the scientists found out that a faecal transplant was able to
                   reduce the anxiety of the anxious rats. This suggested that the gut might play a vital role
                   in the brain's activity relating to these emotions. This is called the <b>gut-brain axis</b>.
+                </p>
+              </div>
+
+              <div class="takeaway">
+                <span class="takeaway-tag">The big idea</span>
+                <p>We can't see a mind. We can see behaviour.</p>
+                <p>
+                  Measuring what an animal or a person actually does is how invisible states like anxiety
+                  become science.
                 </p>
               </div>
 
@@ -1901,14 +2286,83 @@
 
       /* Leave empty for public counters. A token here is visible to anyone
          who views the page source, so only use one if you have to. */
-      const COUNTERAPI_TOKEN = "";
-
-      /* Answer key for the open field traces. Check this against
-         Mouse_experiment.png and swap the colours if they're reversed. */
-      const RAT_TRACE_COLOURS = { a: "red", b: "blue" };
+      const COUNTERAPI_TOKEN = "ut_YW1CSPcGOykl9Ri47ek3Hjzsp8uCXDz61r4o3ALA";
 
       /* The attention video's published answer. */
       const ATTENTION_ANSWER_TEXT = "Answer: 15 passes";
+
+      /* ==================================================
+         KEY WORDS
+         One definition serves both the panel at the top of the page and
+         every tappable term in the body text, so they can never drift apart.
+         Order here is the order shown in the panel.
+         ================================================== */
+      const GLOSSARY = {
+        neuroscientist: {
+          term: "Neuroscientist",
+          definition:
+            "A scientist who studies the brain and nervous system — the physical machinery behind thought, feeling and behaviour."
+        },
+        cognitiveStates: {
+          term: "Cognitive states",
+          definition:
+            "The activity going on inside your mind — paying attention, remembering, worrying. You can't see them directly, so you work them out from behaviour."
+        },
+        psychologists: {
+          term: "Psychologists",
+          definition: "Scientists who study the mind and behaviour, and how the two are connected."
+        },
+        attention: {
+          term: "Attention",
+          definition:
+            "Concentrating on some features of the environment while ignoring others. It is the first step in learning something."
+        },
+        behaviour: {
+          term: "Behaviour",
+          definition:
+            "Anything a person or animal does that can be observed and measured from the outside — where a rat walks, how many words you write down."
+        },
+        selectiveAttention: {
+          term: "Selective attention",
+          definition:
+            "Focusing so hard on one thing that your brain filters other information out, so you never notice it."
+        },
+        multitasking: {
+          term: "Multi-tasking",
+          definition:
+            "Doing several demanding things at once. Your brain doesn't really do this — it switches rapidly between tasks, and information is lost at every switch."
+        },
+        workingMemory: {
+          term: "Working memory",
+          definition:
+            "The small, fast store that holds information while you are using it, like a phone number you repeat until you type it in. It holds roughly four items."
+        },
+        chunking: {
+          term: "Chunking",
+          definition:
+            "Grouping small pieces of information into fewer, bigger units, so working memory carries more in the same number of slots."
+        },
+        mindPalace: {
+          term: "Mind palace",
+          definition:
+            "A memory technique, also called the method of loci, where you place each item along a route you know well and then walk the route in your head to collect them again."
+        },
+        anxiety: {
+          term: "Anxiety",
+          definition:
+            "The fear or worry your body produces when it treats something as a threat — racing heart, tense muscles, the urge to escape."
+        },
+        amygdala: {
+          term: "Amygdala",
+          definition:
+            "A small almond-shaped structure deep in the temporal lobe that decides what counts as dangerous and sets off the body's alarm response."
+        },
+        gutBrainAxis: {
+          term: "Gut-brain axis",
+          definition:
+            "The two-way link between the gut and the brain — the reason nerves give you butterflies in your stomach, and the reason gut bacteria can affect mood."
+        }
+      };
 
       /* ----------------------------------------------------------
          WORD SETS
@@ -1920,6 +2374,7 @@
          ---------------------------------------------------------- */
       const MEMORY_WORD_SETS = {
         1: {
+          label: "Just reading the list",
           words: [
             "Hill", "Valley", "Climb", "Summit", "Top",
             "Molehill", "Peak", "Plain", "Glacier", "Goat",
@@ -1931,6 +2386,7 @@
         },
 
         2: {
+          label: "Chunking",
           chunks: [
             { label: "In the kitchen", words: ["Kettle", "Spoon", "Bowl", "Toaster", "Fridge"] },
             { label: "At the beach", words: ["Sand", "Wave", "Shell", "Towel", "Tide"] },
@@ -1941,6 +2397,7 @@
         },
 
         3: {
+          label: "Mind palace",
           words: [
             "Anchor", "Candle", "Ladder", "Penguin", "Compass",
             "Marble", "Trophy", "Feather", "Lantern", "Puzzle",
@@ -1955,7 +2412,8 @@
 
       /* Question 1 stashes its result here. Question 2 reports it back
          afterwards, so the free-recall feedback never gives away which
-         words are on the list before the recognition task is done. */
+         words are on the list before the recognition task is done. The
+         end-of-activity scoreboard reads the same store. */
       const RECALL_RESULTS = {};
 
       /* ==================================================
@@ -2009,6 +2467,115 @@
       function showCounterError(block) {
         const notice = block.querySelector("[data-counter-error]");
         if (notice) notice.hidden = false;
+      }
+
+      /* ==================================================
+         KEY WORDS — panel and tappable terms
+         ================================================== */
+      function buildGlossaryPanel() {
+        const list = document.getElementById("glossaryList");
+        if (!list) return;
+
+        list.innerHTML = Object.keys(GLOSSARY)
+          .map(
+            (key) =>
+              "<div><b>" +
+              escapeHtml(GLOSSARY[key].term) +
+              "</b> — " +
+              escapeHtml(GLOSSARY[key].definition) +
+              "</div>"
+          )
+          .join("");
+      }
+
+      /* A tapped word slides its definition up from the bottom of the screen
+         as a toast. It stays until the student closes it, taps the same word
+         again, or taps another word — nothing important disappears on its own,
+         and the paragraph they are reading never reflows mid-sentence. */
+      let openTermKey = null;
+      let termToastTimer = null;
+
+      function hideTermToast() {
+        const toast = document.getElementById("termToast");
+        if (!toast) return;
+
+        toast.classList.remove("is-showing");
+        openTermKey = null;
+
+        document
+          .querySelectorAll('.term[aria-expanded="true"]')
+          .forEach((button) => button.setAttribute("aria-expanded", "false"));
+
+        window.clearTimeout(termToastTimer);
+        termToastTimer = window.setTimeout(() => {
+          if (!toast.classList.contains("is-showing")) toast.remove();
+        }, 400);
+      }
+
+      function showTermToast(key, sourceButton) {
+        const entry = GLOSSARY[key];
+        if (!entry) return;
+
+        let toast = document.getElementById("termToast");
+
+        if (!toast) {
+          toast = document.createElement("div");
+          toast.id = "termToast";
+          toast.className = "term-toast";
+          toast.setAttribute("role", "status");
+          toast.setAttribute("aria-live", "polite");
+
+          const body = document.createElement("div");
+          body.className = "term-toast-body";
+          body.id = "termToastBody";
+
+          const close = document.createElement("button");
+          close.type = "button";
+          close.className = "term-toast-close";
+          close.setAttribute("aria-label", "Close definition");
+          close.innerHTML = "&times;";
+          close.addEventListener("click", hideTermToast);
+
+          toast.appendChild(body);
+          toast.appendChild(close);
+          document.body.appendChild(toast);
+        }
+
+        window.clearTimeout(termToastTimer);
+
+        const body = toast.querySelector(".term-toast-body");
+        body.innerHTML =
+          '<span class="term-toast-term">' +
+          escapeHtml(entry.term) +
+          "</span>" +
+          escapeHtml(entry.definition);
+
+        document
+          .querySelectorAll('.term[aria-expanded="true"]')
+          .forEach((button) => button.setAttribute("aria-expanded", "false"));
+        sourceButton.setAttribute("aria-expanded", "true");
+        openTermKey = key;
+
+        /* One frame on the untransformed element first, or a toast that is
+           already on screen slides sideways instead of just swapping text. */
+        window.requestAnimationFrame(() => toast.classList.add("is-showing"));
+      }
+
+      function initialiseGlossaryTerms() {
+        document.querySelectorAll(".term").forEach((button) => {
+          const key = button.dataset.term;
+          const entry = GLOSSARY[key];
+          if (!entry) return;
+
+          button.setAttribute("aria-expanded", "false");
+          button.setAttribute("aria-label", entry.term + " — tap for a definition");
+
+          button.addEventListener("click", () => {
+            /* Tapping the same word again closes it. */
+            if (openTermKey === key) hideTermToast();
+            else showTermToast(key, button);
+          });
+        });
       }
 
       /* ==================================================
@@ -2248,6 +2815,7 @@
       }
 
       function openModalShell(title) {
+        hideTermToast();
         const modal = document.getElementById("videoModal");
         document.getElementById("videoModalTitle").textContent = title || "Video";
         modal.classList.add("is-open");
@@ -2810,9 +3378,65 @@
             input.blur();
             checkButton.disabled = true;
 
+            renderMemoryScoreboard();
+
             if (block.dataset.revealTarget) revealPanelStep(block.dataset.revealTarget);
           });
         });
+      }
+
+      /* ==================================================
+         YOUR THREE SCORES
+         Fills in as the student works, so the technique cards at the end
+         are read against their own data rather than in the abstract.
+         ================================================== */
+      function renderMemoryScoreboard() {
+        const board = document.getElementById("memoryScoreboard");
+        const rows = document.getElementById("memoryScoreRows");
+        const note = document.getElementById("memoryScoreNote");
+        if (!board || !rows) return;
+
+        const sets = ["1", "2", "3"];
+        const done = sets.filter((key) => RECALL_RESULTS[key]);
+        if (!done.length) return;
+
+        rows.innerHTML = sets
+          .map((key) => {
+            const label = MEMORY_WORD_SETS[key].label;
+            const result = RECALL_RESULTS[key];
+            const total = result ? result.total : memorySetWords(MEMORY_WORD_SETS[key]).length;
+            const score = result ? result.found.length : 0;
+            const percent = Math.round((score / total) * 100);
+
+            return (
+              '<div class="score-row' +
+              (result ? "" : " is-pending") +
+              '"><span>' +
+              escapeHtml(label) +
+              '</span><span class="score-track"><span class="score-fill" style="width:' +
+              (result ? percent : 0) +
+              '%"></span></span><span>' +
+              (result ? score + " / " + total : "not done yet") +
+              "</span></div>"
+            );
+          })
+          .join("");
+
+        if (note) {
+          if (done.length < 3) {
+            note.textContent = "Your scores appear here as you finish each list.";
+          } else {
+            const best = done.reduce((a, b) =>
+              RECALL_RESULTS[b].found.length > RECALL_RESULTS[a].found.length ? b : a
+            );
+            note.innerHTML =
+              "Your best result came from <b>" +
+              escapeHtml(MEMORY_WORD_SETS[best].label.toLowerCase()) +
+              "</b>. Read on for why each technique does what it does.";
+          }
+        }
+
+        board.hidden = false;
       }
 
       /* ==================================================
@@ -2971,101 +3595,10 @@
               if (verdict) {
                 verdict.textContent = gotItRight
                   ? "Correct."
-                  : "Not quite — the answer is " + correctOption.textContent.trim() + ".";
+                  : "Not quite — the answer is: " + correctOption.textContent.trim().replace(/\s+/g, " ");
               }
               if (feedback) feedback.hidden = false;
               if (revealTarget) revealPanelStep(revealTarget);
-            });
-          });
-        });
-      }
-
-      /* ==================================================
-         ANXIETY — FILL IN THE BLANKS
-         ================================================== */
-      function initialiseBlankQuiz() {
-        document.querySelectorAll("[data-blank-quiz]").forEach((block) => {
-          const inputs = Array.from(block.querySelectorAll("[data-blank]"));
-          const checkButton = block.querySelector("[data-blank-check]");
-          const feedback = block.querySelector("[data-blank-feedback]");
-          const revealTarget = block.dataset.revealTarget;
-          let attempts = 0;
-
-          if (!inputs.length || !checkButton || !feedback) return;
-
-          function check() {
-            const answers = inputs.map((input) => ({
-              input: input,
-              typed: input.value.trim().toLowerCase(),
-              expected: RAT_TRACE_COLOURS[input.dataset.blank]
-            }));
-
-            if (answers.some((entry) => entry.typed === "")) {
-              feedback.innerHTML = "<p>Fill in both blanks before checking.</p>";
-              feedback.hidden = false;
-              return;
-            }
-
-            if (answers.some((entry) => entry.typed !== "red" && entry.typed !== "blue")) {
-              feedback.innerHTML = "<p>Type either <b>red</b> or <b>blue</b> in each blank.</p>";
-              feedback.hidden = false;
-              return;
-            }
-
-            attempts += 1;
-            let allCorrect = true;
-
-            answers.forEach((entry) => {
-              entry.input.classList.remove("is-correct", "is-wrong");
-              if (entry.typed === entry.expected) {
-                entry.input.classList.add("is-correct");
-              } else {
-                entry.input.classList.add("is-wrong");
-                allCorrect = false;
-              }
-            });
-
-            if (allCorrect) {
-              feedback.innerHTML =
-                '<p class="feedback-score">Both correct.</p>' +
-                "<p>The anxious rat's trace hugs the walls of the arena. The calm rat crosses the open " +
-                "middle, because exploring it doesn't feel risky.</p>";
-              inputs.forEach((input) => {
-                input.readOnly = true;
-                input.blur();
-              });
-              checkButton.disabled = true;
-            } else if (attempts >= 3) {
-              feedback.innerHTML =
-                "<p>The answers are Rat A = <b>" +
-                RAT_TRACE_COLOURS.a +
-                "</b> and Rat B = <b>" +
-                RAT_TRACE_COLOURS.b +
-                "</b>.</p>" +
-                "<p>The anxious rat's trace hugs the walls of the arena. The calm rat crosses the open " +
-                "middle, because exploring it doesn't feel risky.</p>";
-              inputs.forEach((input) => {
-                input.readOnly = true;
-                input.blur();
-              });
-              checkButton.disabled = true;
-            } else {
-              feedback.innerHTML =
-                "<p>Not quite. Look again at which trace stays around the edges of the arena and which one " +
-                "crosses the middle.</p>";
-            }
-
-            feedback.hidden = false;
-            if ((allCorrect || attempts >= 3) && revealTarget) revealPanelStep(revealTarget);
-          }
-
-          checkButton.addEventListener("click", check);
-          inputs.forEach((input) => {
-            input.addEventListener("keydown", (event) => {
-              if (event.key === "Enter") {
-                event.preventDefault();
-                check();
-              }
             });
           });
         });
@@ -3112,7 +3645,7 @@
           let detail;
 
           if (!url) {
-            detail = "No workspace called \"" + String(reference).split(":")[0] + "\" in COUNTER_WORKSPACES.";
+            detail = 'No workspace called "' + String(reference).split(":")[0] + '" in COUNTER_WORKSPACES.';
           } else {
             try {
               const response = await fetch(url, { headers: counterHeaders() });
@@ -3171,8 +3704,13 @@
 
         if (summary) {
           summary.textContent =
-            passed + " of " + references.length + " counters responded. " +
-            (COUNTERAPI_TOKEN ? "Requests were sent with an access token." : "Requests were sent without a token.");
+            passed +
+            " of " +
+            references.length +
+            " counters responded. " +
+            (COUNTERAPI_TOKEN
+              ? "Requests were sent with an access token."
+              : "Requests were sent without a token.");
         }
       }
 
@@ -3201,6 +3739,8 @@
          ================================================== */
       document.addEventListener("DOMContentLoaded", () => {
         initialiseDeviceReset();
+        buildGlossaryPanel();
+        initialiseGlossaryTerms();
         initialiseFolderTabs();
         initialiseNavigationButtons();
         initialiseWatchButtons();
@@ -3211,7 +3751,6 @@
         initialiseWordChoiceBlocks();
         initialisePollBlocks();
         initialiseQuizBlocks();
-        initialiseBlankQuiz();
 
         if (window.location.search.indexOf("diag=1") !== -1) runCounterDiagnostics();
 
@@ -3239,7 +3778,9 @@
         }
 
         document.addEventListener("keydown", (event) => {
-          if (event.key === "Escape" && modal && modal.classList.contains("is-open")) closeVideoModal();
+          if (event.key !== "Escape") return;
+          if (modal && modal.classList.contains("is-open")) closeVideoModal();
+          else hideTermToast();
         });
       });
 
