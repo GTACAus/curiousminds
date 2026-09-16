@@ -1853,33 +1853,34 @@
                 <div class="question-block">
                   <p class="question-label">3. Which technique helped you the most?</p>
 
+                  <!-- FIX: counter names are alphanumeric only (no hyphens). -->
                   <div class="poll-block" data-poll data-poll-key="memoryTechnique">
                     <div class="poll-options">
                       <button
                         type="button"
                         class="general-button poll-option"
-                        data-poll-option="memory-reading"
+                        data-poll-option="memoryReading"
                       >
                         Just reading the list
                       </button>
                       <button
                         type="button"
                         class="general-button poll-option"
-                        data-poll-option="memory-chunking"
+                        data-poll-option="memoryChunking"
                       >
                         Chunking
                       </button>
                       <button
                         type="button"
                         class="general-button poll-option"
-                        data-poll-option="memory-palace"
+                        data-poll-option="memoryPalace"
                       >
                         Mind palace
                       </button>
                       <button
                         type="button"
                         class="general-button poll-option"
-                        data-poll-option="memory-same"
+                        data-poll-option="memorySame"
                       >
                         About the same
                       </button>
@@ -2282,19 +2283,17 @@
          SETTINGS YOU MIGHT CHANGE
          ================================================== */
 
-      /* CounterAPI v2 workspaces. Counter references elsewhere in this file
-         are written as "workspaceKey:counterName".
-         Counter names must be alphanumeric only and 100 characters or fewer. */
       /* Your CounterAPI workspace. Every counter below lives inside it.
-         Confirmed working: a GET on
-         https://api.counterapi.dev/v2/gene-technology-access-centres-team-5261/gorilla
-         returns the "Gorilla Yes or No" counter. */
+         Counter names must be alphanumeric only and 100 characters or fewer. */
       const COUNTERAPI_BASE =
         "https://api.counterapi.dev/v2/gene-technology-access-centres-team-5261";
 
-      /* Leave empty for public counters. A token here is visible to anyone
-         who views the page source, so only use one if you have to. */
-      const COUNTERAPI_TOKEN = "ut_YW1CSPcGOykl9Ri47ek3Hjzsp8uCXDz61r4o3ALA";
+      /* FIX: left empty. Sending an Authorization header forces a CORS
+         preflight, which can block every request from the browser, and a
+         token here is visible to anyone who views the page source.
+         Only fill this in if ?diag=1 reports HTTP 401/403 (private counters),
+         and use a freshly regenerated token if you do. */
+      const COUNTERAPI_TOKEN = "";
 
       /* The attention video's published answer. */
       const ATTENTION_ANSWER_TEXT = "Answer: 15 passes";
@@ -2625,6 +2624,9 @@
       window.lastCounterError = "";
 
       async function counterApiCall(name, suffix) {
+        /* FIX: clear any old error so a stale reason is never shown. */
+        window.lastCounterError = "";
+
         const url = counterUrl(name, suffix);
         if (!url) {
           window.lastCounterError = "No counter name given.";
@@ -3213,16 +3215,17 @@
           if (!buttons.length || !results) return;
 
           async function renderResults() {
-            const results = await Promise.all(
+            /* FIX: named "replies" so it no longer hides the results <div>. */
+            const replies = await Promise.all(
               buttons.map((button) => counterApiRead(button.dataset.pollOption))
             );
 
-            if (results.every((result) => result === null)) {
+            if (replies.every((reply) => reply === null)) {
               showCounterError(block);
               return;
             }
 
-            const counts = results.map((result) => (result ? result.up : 0));
+            const counts = replies.map((reply) => (reply ? reply.up : 0));
             const total = counts.reduce((sum, count) => sum + count, 0) || 1;
 
             results.innerHTML = buttons
