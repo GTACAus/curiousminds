@@ -606,6 +606,10 @@
         background: var(--color-orange);
       }
 
+      .tally-results[hidden] {
+        display: none;
+      }
+
       .tally-bar {
         display: flex;
         height: 14px;
@@ -1524,7 +1528,8 @@
                   <button type="button" class="general-button tally-button" data-tally-vote="no">No</button>
                 </div>
 
-                <div class="tally-results" aria-live="polite">
+                <!-- Hidden until this device has voted, so the class result can't sway the answer. -->
+                <div class="tally-results" data-tally-results aria-live="polite" hidden>
                   <div class="tally-bar">
                     <div class="tally-bar-fill tally-bar-yes" style="width: 0%"></div>
                     <div class="tally-bar-fill tally-bar-no" style="width: 0%"></div>
@@ -3158,7 +3163,12 @@
           const noCountEl = block.querySelector("[data-tally-no-count]");
           const yesBar = block.querySelector(".tally-bar-yes");
           const noBar = block.querySelector(".tally-bar-no");
+          const resultsBox = block.querySelector("[data-tally-results]");
           if (!yesButton || !noButton) return;
+
+          function revealResults() {
+            if (resultsBox) resultsBox.hidden = false;
+          }
 
           /* Highest counts seen so far. CounterAPI v2 buffers votes, so for a
              short while it can hand back an older, lower number. Keeping the
@@ -3243,6 +3253,7 @@
               up: Math.max(counts.up, before.up + (vote === "yes" ? 1 : 0)),
               down: Math.max(counts.down, before.down + (vote === "no" ? 1 : 0))
             });
+            revealResults();
 
             addWatchAgainButton();
           }
@@ -3254,11 +3265,14 @@
             block.dataset.voted = "true";
             yesButton.disabled = true;
             noButton.disabled = true;
+            revealResults();
           }
 
+          /* Read once in the background so a vote adds to the real starting
+             numbers, even though nothing is shown yet. */
           loadCurrentCounts();
-          /* Keeps the bar live as other students vote. */
-          refreshWhileVisible(block, loadCurrentCounts);
+          /* Keeps the bar live as other students vote, once it's showing. */
+          refreshWhileVisible(block, loadCurrentCounts, () => !resultsBox || !resultsBox.hidden);
         });
       }
 
