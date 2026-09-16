@@ -3866,17 +3866,46 @@
       function initialiseDeviceReset() {
         const button = document.getElementById("deviceResetButton");
         if (button) {
+          const originalLabel = button.textContent;
+          let armed = false;
+          let disarmTimer = null;
+
+          /* Two taps instead of window.confirm(). iPad Safari can silently
+             block confirm pop-ups (after a few in a row, or inside an embedded
+             page), which made the old button do nothing at all. */
           button.addEventListener("click", () => {
-            if (!window.confirm("Clear this iPad's answers and start again from the top?")) return;
+            if (!armed) {
+              armed = true;
+              button.textContent = "Tap again to clear this iPad";
+              disarmTimer = window.setTimeout(() => {
+                armed = false;
+                button.textContent = originalLabel;
+              }, 4000);
+              return;
+            }
+
+            window.clearTimeout(disarmTimer);
+            button.disabled = true;
+            button.textContent = "Resetting…";
             clearDeviceAnswers();
-            window.location.href = window.location.pathname;
+
+            /* A brand-new URL forces a true fresh load. Going to the same
+               address can let Safari restore the old page from memory, with
+               the buttons still locked. */
+            window.location.replace(window.location.pathname + "?reset=" + Date.now());
           });
         }
 
-        if (window.location.search.indexOf("reset=1") !== -1) {
+        if (window.location.search.indexOf("reset=") !== -1) {
           clearDeviceAnswers();
           window.history.replaceState({}, "", window.location.pathname);
         }
+
+        /* If Safari restores this page from its back/forward memory, reload
+           it properly so it reflects what's actually stored on the device. */
+        window.addEventListener("pageshow", (event) => {
+          if (event.persisted) window.location.reload();
+        });
       }
 
       /* ==================================================
