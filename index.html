@@ -2634,7 +2634,7 @@
         }
 
         try {
-          const response = await fetch(url, { headers: counterHeaders() });
+          const response = await fetch(url, { headers: counterHeaders(), cache: "no-store" });
 
           /* A counter nobody has voted on yet may not exist server-side.
              For a read that genuinely means zero, not a broken connection. */
@@ -3111,6 +3111,27 @@
       /* ==================================================
          LIVE YES/NO TALLY
          ================================================== */
+      /* How often open results re-check CounterAPI for other students' votes.
+         CounterAPI v2 allows about 600 requests a minute per counter, shared
+         by every device, so keep this at 8 seconds or more for a full class. */
+      const RESULTS_REFRESH_SECONDS = 8;
+
+      /* Runs refresh() on a timer, but only while the block is on screen:
+         not on a hidden step, another folder tab, or a sleeping iPad. */
+      function refreshWhileVisible(block, refresh, extraCheck) {
+        window.setInterval(() => {
+          if (document.hidden) return;
+          if (block.closest("[hidden]")) return;
+          if (extraCheck && !extraCheck()) return;
+          refresh();
+        }, RESULTS_REFRESH_SECONDS * 1000);
+      }
+
+      function hideCounterError(block) {
+        const notice = block.querySelector("[data-counter-error]");
+        if (notice) notice.hidden = true;
+      }
+
       function initialiseTallyBlocks() {
         document.querySelectorAll("[data-tally]").forEach((block) => {
           /* One counter holds the whole question: up = yes, down = no. */
@@ -3125,12 +3146,19 @@
           const noBar = block.querySelector(".tally-bar-no");
           if (!yesButton || !noButton) return;
 
-          function renderCounts(yesCount, noCount) {
-            const total = yesCount + noCount || 1;
-            yesCountEl.textContent = yesCount;
-            noCountEl.textContent = noCount;
-            yesBar.style.width = (yesCount / total) * 100 + "%";
-            noBar.style.width = (noCount / total) * 100 + "%";
+          /* Highest counts seen so far. CounterAPI v2 buffers votes, so for a
+             short while it can hand back an older, lower number. Keeping the
+             highest stops the display stepping backwards. */
+          const known = { up: 0, down: 0 };
+
+          function renderCounts(counts) {
+            known.up = Math.max(known.up, counts.up);
+            known.down = Math.max(known.down, counts.down);
+            const total = known.up + known.down || 1;
+            yesCountEl.textContent = known.up;
+            noCountEl.textContent = known.down;
+            yesBar.style.width = (known.up / total) * 100 + "%";
+            noBar.style.width = (known.down / total) * 100 + "%";
           }
 
           async function loadCurrentCounts() {
@@ -3139,7 +3167,8 @@
               showCounterError(block);
               return;
             }
-            renderCounts(counts.up, counts.down);
+            hideCounterError(block);
+            renderCounts(counts);
           }
 
           function addWatchAgainButton() {
@@ -3171,22 +3200,35 @@
           async function castVote(vote) {
             if (block.dataset.voted === "true") return;
             block.dataset.voted = "true";
-            markVoted(storageKey);
 
             yesButton.disabled = true;
             noButton.disabled = true;
             yesButton.setAttribute("data-selected", String(vote === "yes"));
             noButton.setAttribute("data-selected", String(vote === "no"));
 
-            /* v2 buffers writes, so a plain re-read can miss the student's own
-               vote. The response to /up or /down carries both fresh numbers. */
+            const before = { up: known.up, down: known.down };
             const counts = await counterApiHit(counterName, vote === "yes" ? "up" : "down");
 
             if (counts === null) {
+              /* The vote never landed: unlock so the student can try again. */
               showCounterError(block);
-            } else {
-              renderCounts(counts.up, counts.down);
+              block.dataset.voted = "false";
+              yesButton.disabled = false;
+              noButton.disabled = false;
+              yesButton.removeAttribute("data-selected");
+              noButton.removeAttribute("data-selected");
+              return;
             }
+
+            markVoted(storageKey);
+            hideCounterError(block);
+
+            /* The reply to /up or /down may not include this vote yet, because
+               of buffering, so make sure the student's own vote is shown. */
+            renderCounts({
+              up: Math.max(counts.up, before.up + (vote === "yes" ? 1 : 0)),
+              down: Math.max(counts.down, before.down + (vote === "no" ? 1 : 0))
+            });
 
             addWatchAgainButton();
           }
@@ -3201,6 +3243,8 @@
           }
 
           loadCurrentCounts();
+          /* Keeps the bar live as other students vote. */
+          refreshWhileVisible(block, loadCurrentCounts);
         });
       }
 
@@ -3214,23 +3258,26 @@
           const storageKey = block.dataset.pollKey || "poll";
           if (!buttons.length || !results) return;
 
-          async function renderResults() {
-            /* FIX: named "replies" so it no longer hides the results <div>. */
+          /* Highest count seen for each option (see the tally for why). */
+          const known = buttons.map(() => 0);
+
+          async function loadCounts() {
             const replies = await Promise.all(
               buttons.map((button) => counterApiRead(button.dataset.pollOption))
             );
+            if (replies.every((reply) => reply === null)) return false;
+            replies.forEach((reply, index) => {
+              if (reply) known[index] = Math.max(known[index], reply.up);
+            });
+            return true;
+          }
 
-            if (replies.every((reply) => reply === null)) {
-              showCounterError(block);
-              return;
-            }
-
-            const counts = replies.map((reply) => (reply ? reply.up : 0));
-            const total = counts.reduce((sum, count) => sum + count, 0) || 1;
+          function drawResults() {
+            const total = known.reduce((sum, count) => sum + count, 0) || 1;
 
             results.innerHTML = buttons
               .map((button, index) => {
-                const count = counts[index];
+                const count = known[index];
                 const percent = Math.round((count / total) * 100);
                 return (
                   '<div class="poll-row"><span class="poll-row-label">' +
@@ -3249,19 +3296,46 @@
             results.hidden = false;
           }
 
-          buttons.forEach((button) => {
+          async function refreshResults() {
+            if (await loadCounts()) {
+              hideCounterError(block);
+              drawResults();
+            } else {
+              showCounterError(block);
+            }
+          }
+
+          buttons.forEach((button, index) => {
             button.addEventListener("click", async () => {
               if (block.dataset.voted === "true") return;
               block.dataset.voted = "true";
-              markVoted(storageKey);
 
               buttons.forEach((other) => {
                 other.disabled = true;
                 other.setAttribute("data-selected", String(other === button));
               });
 
-              await counterApiHit(button.dataset.pollOption, "up");
-              renderResults();
+              const before = known[index];
+              const hit = await counterApiHit(button.dataset.pollOption, "up");
+
+              if (hit === null) {
+                /* The vote never landed: unlock so the student can try again. */
+                showCounterError(block);
+                block.dataset.voted = "false";
+                buttons.forEach((other) => {
+                  other.disabled = false;
+                  other.removeAttribute("data-selected");
+                });
+                return;
+              }
+
+              markVoted(storageKey);
+              hideCounterError(block);
+
+              /* Make sure the student's own vote shows despite buffering. */
+              known[index] = Math.max(known[index], hit.up, before + 1);
+              await loadCounts();
+              drawResults();
             });
           });
 
@@ -3270,8 +3344,14 @@
             buttons.forEach((button) => {
               button.disabled = true;
             });
-            renderResults();
+            refreshResults();
+          } else {
+            /* Quiet read, so a vote is added to the real starting numbers. */
+            loadCounts();
           }
+
+          /* Once results are showing, keep them live. */
+          refreshWhileVisible(block, refreshResults, () => !results.hidden);
         });
       }
 
@@ -3699,7 +3779,7 @@
             detail = "No counter name was set on this element.";
           } else {
             try {
-              const response = await fetch(url, { headers: counterHeaders() });
+              const response = await fetch(url, { headers: counterHeaders(), cache: "no-store" });
               const body = await response.text();
 
               if (!response.ok) {
