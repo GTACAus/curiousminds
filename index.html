@@ -2604,6 +2604,20 @@
         return COUNTERAPI_BASE + "/" + name + (suffix || "");
       }
 
+      /* Adds a unique value to the end of every request. iPad Safari (and
+         some school proxies) will otherwise reuse a saved reply for a URL it
+         has fetched before, so a second vote from the same iPad never
+         reaches CounterAPI at all. A new URL each time can't be reused. */
+      function uncachedUrl(url) {
+        return (
+          url +
+          (url.indexOf("?") === -1 ? "?" : "&") +
+          "nocache=" +
+          Date.now() +
+          Math.random().toString(36).slice(2, 8)
+        );
+      }
+
       function counterHeaders() {
         return COUNTERAPI_TOKEN ? { Authorization: "Bearer " + COUNTERAPI_TOKEN } : {};
       }
@@ -2634,7 +2648,7 @@
         }
 
         try {
-          const response = await fetch(url, { headers: counterHeaders(), cache: "no-store" });
+          const response = await fetch(uncachedUrl(url), { headers: counterHeaders(), cache: "no-store" });
 
           /* A counter nobody has voted on yet may not exist server-side.
              For a read that genuinely means zero, not a broken connection. */
@@ -3779,7 +3793,7 @@
             detail = "No counter name was set on this element.";
           } else {
             try {
-              const response = await fetch(url, { headers: counterHeaders(), cache: "no-store" });
+              const response = await fetch(uncachedUrl(url), { headers: counterHeaders(), cache: "no-store" });
               const body = await response.text();
 
               if (!response.ok) {
